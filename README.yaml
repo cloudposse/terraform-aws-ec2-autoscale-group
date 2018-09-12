@@ -1,0 +1,111 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name: terraform-aws-ec2-autoscale-group
+
+# Logo for this project
+#logo: docs/logo.png
+
+# License of this project
+license: "APACHE2"
+
+# Canonical GitHub repo
+github_repo: cloudposse/terraform-aws-ec2-autoscale-group
+
+# Badges to display
+badges:
+  - name: "Build Status"
+    image: "https://travis-ci.org/cloudposse/terraform-aws-ec2-autoscale-group.svg?branch=master"
+    url: "https://travis-ci.org/cloudposse/terraform-aws-ec2-autoscale-group"
+  - name: "Latest Release"
+    image: "https://img.shields.io/github/release/cloudposse/terraform-aws-ec2-autoscale-group.svg"
+    url: "https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/releases/latest"
+  - name: "Slack Community"
+    image: "https://slack.cloudposse.com/badge.svg"
+    url: "https://slack.cloudposse.com"
+
+related:
+  - name: "terraform-aws-ec2-instance"
+    description: "Terraform module for providing a general purpose EC2 instance"
+    url: "https://github.com/cloudposse/terraform-aws-ec2-instance"
+  - name: "terraform-aws-ec2-bastion-server"
+    description: "Terraform module to define a generic bastion host with parameterized user data"
+    url: "https://github.com/cloudposse/terraform-aws-ec2-bastion-server"
+  - name: "terraform-aws-ec2-admin-server"
+    description: "Terraform module for providing an EC2 instance capable of running admin tasks"
+    url: "https://github.com/cloudposse/terraform-aws-ec2-admin-server"
+  - name: "terraform-aws-ec2-instance-group"
+    description: "Terraform module for provisioning multiple general purpose EC2 hosts for stateful applications"
+    url: "https://github.com/cloudposse/terraform-aws-ec2-instance-group"
+  - name: "terraform-aws-ec2-ami-snapshot"
+    description: "Terraform module to easily generate AMI snapshots to create replica instances"
+    url: "https://github.com/cloudposse/terraform-aws-ec2-ami-snapshot"
+
+# Short description of this project
+description: |-
+  Terraform module to provision [Auto Scaling Group](https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html) and [Launch Configuration](https://www.terraform.io/docs/providers/aws/r/launch_configuration.html) on AWS.
+
+  __NOTE:__ By default, the module will create an Auto Scaling Group and a Launch Configuration and bind them together.
+  If you want to provide an external Launch Configuration, set the variable `launch_configuration_enabled` to `"false"` and provide the existing Launch Configuration name in the variable `launch_configuration`.
+
+# How to use this project
+usage: |-
+
+  ```hcl
+  provider "aws" {
+    region = "us-west-2"
+  }
+
+  module "autoscale_group" {
+    source = "git::https://github.com/cloudposse/terraform-aws-ec2-autoscale-group.git?ref=master"
+
+    namespace = "eg"
+    stage     = "dev"
+    name      = "test"
+
+    image_id                    = "ami-08cab282f9979fc7a"
+    instance_type               = "t2.small"
+    security_groups             = ["sg-xxxxxxxx"]
+    subnet_ids                  = ["subnet-xxxxxxxx", "subnet-yyyyyyyy", "subnet-zzzzzzzz"]
+    health_check_type           = "EC2"
+    min_size                    = 1
+    max_size                    = 3
+    desired_capacity            = 2
+    wait_for_capacity_timeout   = "5m"
+    associate_public_ip_address = true
+
+    root_block_device = [
+      {
+        volume_type           = "gp2"
+        volume_size           = "20"
+        delete_on_termination = true
+      },
+    ]
+
+    ebs_block_device = [
+      {
+        device_name           = "/dev/xvdd"
+        volume_type           = "gp2"
+        volume_size           = "100"
+        delete_on_termination = true
+      },
+    ]
+  }
+  ```
+
+include:
+  - "docs/targets.md"
+  - "docs/terraform.md"
+
+# Contributors to this project
+contributors:
+  - name: "Erik Osterman"
+    github: "osterman"
+  - name: "Andriy Knysh"
+    github: "aknysh"
+  - name: "Igor Rodionov"
+    github: "goruha"
