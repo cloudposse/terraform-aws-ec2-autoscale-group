@@ -129,7 +129,7 @@ Available targets:
 | ebs_block_device | Additional EBS block devices to attach to the instance | list | `<list>` | no |
 | ebs_optimized | If true, the launched EC2 instance will be EBS-optimized | string | `false` | no |
 | enable_monitoring | Enables/disables detailed monitoring. This is enabled by default. | string | `true` | no |
-| enabled_metrics | A list of metrics to collect. The allowed values are GroupMinSize, GroupMaxSize, GroupDesiredCapacity, GroupInServiceInstances, GroupPendingInstances, GroupStandbyInstances, GroupTerminatingInstances, GroupTotalInstances | list | `<list>` | no |
+| enabled_metrics | A list of metrics to collect. The allowed values are `GroupMinSize`, `GroupMaxSize`, `GroupDesiredCapacity`, `GroupInServiceInstances`, `GroupPendingInstances`, `GroupStandbyInstances`, `GroupTerminatingInstances`, `GroupTotalInstances` | list | `<list>` | no |
 | environment | Environment, e.g. 'testing', 'UAT' | string | `` | no |
 | ephemeral_block_device | Customize Ephemeral (also known as 'Instance Store') volumes on the instance | list | `<list>` | no |
 | existing_launch_configuration_name | The name of the existing launch configuration to use | string | `` | no |
@@ -166,7 +166,7 @@ Available targets:
 | termination_policies | A list of policies to decide how the instances in the auto scale group should be terminated. The allowed values are `OldestInstance`, `NewestInstance`, `OldestLaunchConfiguration`, `ClosestToNextInstanceHour`, `Default` | list | `<list>` | no |
 | user_data_base64 | Used to pass base64-encoded binary data to the EC2 instances. For example, gzip-encoded user data must be base64-encoded and passed via this argument to avoid corruption | string | `` | no |
 | wait_for_capacity_timeout | A maximum duration that Terraform should wait for ASG instances to be healthy before timing out. (See also Waiting for Capacity below.) Setting this to '0' causes Terraform to skip all Capacity Waiting behavior | string | `10m` | no |
-| wait_for_elb_capacity | Setting this will cause Terraform to wait for exactly this number of healthy instances in all attached load balancers on both create and update operations. Takes precedence over min_elb_capacity behavior | string | `false` | no |
+| wait_for_elb_capacity | Setting this will cause Terraform to wait for exactly this number of healthy instances in all attached load balancers on both create and update operations. Takes precedence over `min_elb_capacity` behavior | string | `false` | no |
 
 ## Outputs
 

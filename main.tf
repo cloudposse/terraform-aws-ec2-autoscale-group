@@ -48,17 +48,15 @@ resource "aws_launch_configuration" "default" {
 resource "aws_autoscaling_group" "default" {
   count = "${var.autoscaling_group_enabled == "true" ? 1 : 0}"
 
-  name_prefix          = "${format("%s%s", module.label.id, var.delimiter)}"
-  launch_configuration = "${var.launch_configuration_enabled == "true" ? join("", aws_launch_configuration.default.*.name) : var.existing_launch_configuration_name}"
-  vpc_zone_identifier  = ["${var.subnet_ids}"]
-  max_size             = "${var.max_size}"
-  min_size             = "${var.min_size}"
-  desired_capacity     = "${var.desired_capacity > 0 ? var.desired_capacity : var.min_size}"
-
+  name_prefix               = "${format("%s%s", module.label.id, var.delimiter)}"
+  launch_configuration      = "${var.launch_configuration_enabled == "true" ? join("", aws_launch_configuration.default.*.name) : var.existing_launch_configuration_name}"
+  vpc_zone_identifier       = ["${var.subnet_ids}"]
+  max_size                  = "${var.max_size}"
+  min_size                  = "${var.min_size}"
+  desired_capacity          = "${var.desired_capacity > 0 ? var.desired_capacity : var.min_size}"
   load_balancers            = ["${var.load_balancers}"]
   health_check_grace_period = "${var.health_check_grace_period}"
   health_check_type         = "${var.health_check_type}"
-
   min_elb_capacity          = "${var.min_elb_capacity}"
   wait_for_elb_capacity     = "${var.wait_for_elb_capacity}"
   target_group_arns         = ["${var.target_group_arns}"]
