@@ -8,7 +8,7 @@
 | autoscaling_group_enabled | Whether to create autoscaling group | string | `true` | no |
 | default_cooldown | The amount of time, in seconds, after a scaling activity completes before another scaling activity can start | string | `300` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
-| desired_capacity | The number of Amazon EC2 instances that should be running in the group | string | - | yes |
+| desired_capacity | The number of Amazon EC2 instances that should be running in the group. If set to 0, the value will be taken from the `min_size` variable | string | `0` | no |
 | ebs_block_device | Additional EBS block devices to attach to the instance | list | `<list>` | no |
 | ebs_optimized | If true, the launched EC2 instance will be EBS-optimized | string | `false` | no |
 | enable_monitoring | Enables/disables detailed monitoring. This is enabled by default. | string | `true` | no |

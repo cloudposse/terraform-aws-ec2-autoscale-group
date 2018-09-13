@@ -151,7 +151,8 @@ variable "min_size" {
 }
 
 variable "desired_capacity" {
-  description = "The number of Amazon EC2 instances that should be running in the group"
+  description = "The number of Amazon EC2 instances that should be running in the group. If set to 0, the value will be taken from the `min_size` variable"
+  default     = 0
 }
 
 variable "subnet_ids" {

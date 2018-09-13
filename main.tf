@@ -9,7 +9,7 @@ module "label" {
   tags        = "${var.tags}"
 
   additional_tag_map = {
-    "propagate_at_launch" = true
+    propagate_at_launch = true
   }
 }
 
@@ -53,7 +53,7 @@ resource "aws_autoscaling_group" "default" {
   vpc_zone_identifier  = ["${var.subnet_ids}"]
   max_size             = "${var.max_size}"
   min_size             = "${var.min_size}"
-  desired_capacity     = "${var.desired_capacity}"
+  desired_capacity     = "${var.desired_capacity > 0 ? var.desired_capacity : var.min_size}"
 
   load_balancers            = ["${var.load_balancers}"]
   health_check_grace_period = "${var.health_check_grace_period}"
