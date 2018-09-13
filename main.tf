@@ -13,32 +13,47 @@ module "label" {
   }
 }
 
-resource "aws_launch_configuration" "default" {
-  count = "${var.launch_configuration_enabled == "true" ? 1: 0}"
+resource "aws_launch_template" "default" {
+  count = "${var.enabled == "true" ? 1 : 0}"
 
-  name_prefix                 = "${format("%s%s", module.label.id, var.delimiter)}"
-  image_id                    = "${var.image_id}"
-  instance_type               = "${var.instance_type}"
-  iam_instance_profile        = "${var.iam_instance_profile}"
-  key_name                    = "${var.key_name}"
-  security_groups             = ["${var.security_groups}"]
-  associate_public_ip_address = "${var.associate_public_ip_address}"
-  user_data_base64            = "${var.user_data_base64}"
-  enable_monitoring           = "${var.enable_monitoring}"
-  ebs_optimized               = "${var.ebs_optimized}"
-  ebs_block_device            = "${var.ebs_block_device}"
-  ephemeral_block_device      = "${var.ephemeral_block_device}"
-  spot_price                  = "${var.spot_price}"
-  placement_tenancy           = "${var.placement_tenancy}"
+  name_prefix                          = "${format("%s%s", module.label.id, var.delimiter)}"
+  block_device_mappings                = ["${var.block_device_mappings}"]
+  credit_specification                 = ["${var.credit_specification}"]
+  disable_api_termination              = "${var.disable_api_termination}"
+  ebs_optimized                        = "${var.ebs_optimized}"
+  elastic_gpu_specifications           = ["${var.elastic_gpu_specifications}"]
+  image_id                             = "${var.image_id}"
+  instance_initiated_shutdown_behavior = "${var.instance_initiated_shutdown_behavior}"
+  instance_market_options              = ["${var.instance_market_options }"]
+  instance_type                        = "${var.instance_type}"
+  key_name                             = "${var.key_name}"
+  placement                            = ["${var.placement}"]
 
-  root_block_device = [
-    {
-      volume_type           = "${var.root_block_device_volume_type}"
-      volume_size           = "${var.root_block_device_volume_size}"
-      iops                  = "${var.root_block_device_iops}"
-      delete_on_termination = "${var.root_block_device_delete_on_termination}"
-    },
-  ]
+  iam_instance_profile {
+    name = "${var.iam_instance_profile_name}"
+  }
+
+  vpc_security_group_ids = ["${var.security_group_ids}"]
+
+  monitoring {
+    enabled = "${var.enable_monitoring}"
+  }
+
+  network_interfaces {
+    associate_public_ip_address = "${var.associate_public_ip_address}"
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+    tags          = "${module.label.tags}"
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags          = "${module.label.tags}"
+  }
+
+  user_data = "${var.user_data_base64}"
 
   lifecycle {
     create_before_destroy = true
@@ -46,10 +61,9 @@ resource "aws_launch_configuration" "default" {
 }
 
 resource "aws_autoscaling_group" "default" {
-  count = "${var.autoscaling_group_enabled == "true" ? 1 : 0}"
+  count = "${var.enabled == "true" ? 1 : 0}"
 
   name_prefix               = "${format("%s%s", module.label.id, var.delimiter)}"
-  launch_configuration      = "${var.launch_configuration_enabled == "true" ? join("", aws_launch_configuration.default.*.name) : var.existing_launch_configuration_name}"
   vpc_zone_identifier       = ["${var.subnet_ids}"]
   max_size                  = "${var.max_size}"
   min_size                  = "${var.min_size}"
@@ -70,6 +84,11 @@ resource "aws_autoscaling_group" "default" {
   wait_for_capacity_timeout = "${var.wait_for_capacity_timeout}"
   protect_from_scale_in     = "${var.protect_from_scale_in}"
   service_linked_role_arn   = "${var.service_linked_role_arn}"
+
+  launch_template = {
+    id      = "${join("", aws_launch_template.default.*.id)}"
+    version = "${var.launch_template_version}"
+  }
 
   tags = ["${module.label.tags_as_list_of_maps}"]
 

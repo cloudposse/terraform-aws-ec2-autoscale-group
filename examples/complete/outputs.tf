@@ -1,11 +1,11 @@
-output "launch_configuration_id" {
-  description = "The ID of the launch configuration"
-  value       = "${module.autoscale_group.launch_configuration_id}"
+output "launch_template_id" {
+  description = "The ID of the launch template"
+  value       = "${module.autoscale_group.launch_template_id}"
 }
 
-output "launch_configuration_name" {
-  description = "The name of the launch configuration"
-  value       = "${module.autoscale_group.launch_configuration_name}"
+output "launch_template_arn" {
+  description = "The ARN of the launch template"
+  value       = "${module.autoscale_group.launch_template_arn}"
 }
 
 output "autoscaling_group_id" {

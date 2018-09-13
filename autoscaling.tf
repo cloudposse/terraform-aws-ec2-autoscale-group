@@ -1,7 +1,7 @@
 # https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ec2-metricscollected.html
 
 locals {
-  autoscaling_policies_enabled = "${var.autoscaling_policies_enabled == "true" && var.autoscaling_group_enabled == "true" ? true : false}"
+  autoscaling_policies_enabled = "${var.autoscaling_policies_enabled == "true" && var.enabled == "true" ? true : false}"
 }
 
 resource "aws_autoscaling_policy" "scale_up" {

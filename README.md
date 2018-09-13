@@ -5,10 +5,7 @@
 # terraform-aws-ec2-autoscale-group [![Build Status](https://travis-ci.org/cloudposse/terraform-aws-ec2-autoscale-group.svg?branch=master)](https://travis-ci.org/cloudposse/terraform-aws-ec2-autoscale-group) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-ec2-autoscale-group.svg)](https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 
-Terraform module to provision [Auto Scaling Group](https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html) and [Launch Configuration](https://www.terraform.io/docs/providers/aws/r/launch_configuration.html) on AWS.
-
-By default, the module creates an Auto Scaling Group and a Launch Configuration and bind them together.
-If you want to provide an external Launch Configuration, set the variable `launch_configuration_enabled` to `"false"` and provide an existing Launch Configuration in the variable `existing_launch_configuration_name`.
+Terraform module to provision [Auto Scaling Group](https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html) and [Launch Template](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-templates.html) on AWS.
 
 The module also creates AutoScaling Policies and CloudWatch Metric Alarms to monitor CPU utilization on the EC2 instances and scale the number of instance in the AutoScaling Group up or down.
 If you don't want to use the provided functionality, or want to provide your own policies, disable it by setting the variable `autoscaling_policies_enabled` to `"false"`.
@@ -40,25 +37,13 @@ provider "aws" {
 
 locals {
   userdata = <<USERDATA
-    #!/bin/bash -xe
-    CA_CERTIFICATE_DIRECTORY=/etc/kubernetes/pki
-    CA_CERTIFICATE_FILE_PATH=$CA_CERTIFICATE_DIRECTORY/ca.crt
-    mkdir -p $CA_CERTIFICATE_DIRECTORY
-    echo XXXXXXXXXXXX | base64 -d >  $CA_CERTIFICATE_FILE_PATH
-    INTERNAL_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
-    sed -i s,MASTER_ENDPOINT,master.us-west-2.testing.cloudposse.co,g /var/lib/kubelet/kubeconfig
-    sed -i s,CLUSTER_NAME,us-west-2.testing.cloudposse.co,g /var/lib/kubelet/kubeconfig
-    sed -i s,REGION,us-west-2,g /etc/systemd/system/kubelet.service
-    sed -i s,MAX_PODS,20,g /etc/systemd/system/kubelet.service
-    sed -i s,MASTER_ENDPOINT,master.us-west-2.testing.cloudposse.co,g /etc/systemd/system/kubelet.service
-    sed -i s,INTERNAL_IP,$INTERNAL_IP,g /etc/systemd/system/kubelet.service
-    DNS_CLUSTER_IP=10.100.0.10
-    if [[ $INTERNAL_IP == 10.* ]] ; then DNS_CLUSTER_IP=172.20.0.10; fi
-    sed -i s,DNS_CLUSTER_IP,$DNS_CLUSTER_IP,g /etc/systemd/system/kubelet.service
-    sed -i s,CERTIFICATE_AUTHORITY_FILE,$CA_CERTIFICATE_FILE_PATH,g /var/lib/kubelet/kubeconfig
-    sed -i s,CLIENT_CA_FILE,$CA_CERTIFICATE_FILE_PATH,g  /etc/systemd/system/kubelet.service
-    systemctl daemon-reload
-    systemctl restart kubelet
+    #!/bin/bash
+    cat <<"__EOF__" > /home/ec2-user/.ssh/config
+    Host *
+      StrictHostKeyChecking no
+    __EOF__
+    chmod 600 /home/ec2-user/.ssh/config
+    chown ec2-user:ec2-user /home/ec2-user/.ssh/config
   USERDATA
 }
 
@@ -69,34 +54,18 @@ module "autoscale_group" {
   stage     = "dev"
   name      = "test"
 
-  launch_configuration_enabled            = "true"
-  autoscaling_group_enabled               = "true"
-  image_id                                = "ami-08cab282f9979fc7a"
-  instance_type                           = "t2.small"
-  security_groups                         = ["sg-xxxxxxxx"]
-  subnet_ids                              = ["subnet-xxxxxxxx", "subnet-yyyyyyyy", "subnet-zzzzzzzz"]
-  health_check_type                       = "EC2"
-  min_size                                = 1
-  max_size                                = 3
-  desired_capacity                        = 2
-  wait_for_capacity_timeout               = "5m"
-  associate_public_ip_address             = true
-  root_block_device_volume_type           = "gp2"
-  root_block_device_volume_size           = "50"
-  root_block_device_delete_on_termination = true
+  image_id                    = "ami-08cab282f9979fc7a"
+  instance_type               = "t2.small"
+  security_group_ids          = ["sg-xxxxxxxx"]
+  subnet_ids                  = ["subnet-xxxxxxxx", "subnet-yyyyyyyy", "subnet-zzzzzzzz"]
+  health_check_type           = "EC2"
+  min_size                    = 2
+  max_size                    = 3
+  wait_for_capacity_timeout   = "5m"
+  associate_public_ip_address = true
+  user_data_base64            = "${base64encode(local.userdata)}"
 
-  user_data_base64 = "${base64encode(local.userdata)}"
-
-  ebs_block_device = [
-    {
-      device_name           = "/dev/xvdd"
-      volume_type           = "gp2"
-      volume_size           = "100"
-      delete_on_termination = true
-    },
-  ]
-
-  tags {
+  tags = {
     Tier              = "1"
     KubernetesCluster = "us-west-2.testing.cloudposse.co"
   }
@@ -128,20 +97,21 @@ Available targets:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| associate_public_ip_address | Associate a public ip address with an instance in a VPC | string | `false` | no |
+| associate_public_ip_address | Associate a public IP address with an instance in a VPC | string | `false` | no |
 | attributes | Additional attributes (e.g. `1`) | list | `<list>` | no |
-| autoscaling_group_enabled | Whether to create autoscaling group | string | `true` | no |
 | autoscaling_policies_enabled | Whether to create `aws_autoscaling_policy` and `aws_cloudwatch_metric_alarm` resources to control Auto Scaling | string | `true` | no |
+| block_device_mappings | Specify volumes to attach to the instance besides the volumes specified by the AMI | list | `<list>` | no |
+| credit_specification | Customize the credit specification of the instances | list | `<list>` | no |
 | default_cooldown | The amount of time, in seconds, after a scaling activity completes before another scaling activity can start | string | `300` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
 | desired_capacity | The number of Amazon EC2 instances that should be running in the group. If set to 0, the value will be taken from the `min_size` variable | string | `0` | no |
-| ebs_block_device | Additional EBS block devices to attach to the instance | list | `<list>` | no |
+| disable_api_termination | If `true`, enables EC2 Instance Termination Protection | string | `false` | no |
 | ebs_optimized | If true, the launched EC2 instance will be EBS-optimized | string | `false` | no |
-| enable_monitoring | Enables/disables detailed monitoring. This is enabled by default. | string | `true` | no |
+| elastic_gpu_specifications | Specifications of Elastic GPU to attach to the instances | list | `<list>` | no |
+| enable_monitoring | Enable/disable detailed monitoring | string | `true` | no |
+| enabled | Whether to create the resources. Set to `false` to prevent the module from creating any resources | string | `true` | no |
 | enabled_metrics | A list of metrics to collect. The allowed values are `GroupMinSize`, `GroupMaxSize`, `GroupDesiredCapacity`, `GroupInServiceInstances`, `GroupPendingInstances`, `GroupStandbyInstances`, `GroupTerminatingInstances`, `GroupTotalInstances` | list | `<list>` | no |
 | environment | Environment, e.g. 'testing', 'UAT' | string | `` | no |
-| ephemeral_block_device | Customize Ephemeral (also known as 'Instance Store') volumes on the instance | list | `<list>` | no |
-| existing_launch_configuration_name | The name of the existing launch configuration to use | string | `` | no |
 | force_delete | Allows deleting the autoscaling group without waiting for all instances in the pool to terminate. You can force an autoscaling group to delete even if it's in the process of scaling a resource. Normally, Terraform drains all the instances before deleting the group. This bypasses that behavior and potentially leaves resources dangling | string | `false` | no |
 | health_check_grace_period | Time (in seconds) after instance comes into service before checking health | string | `300` | no |
 | health_check_type | Controls how health checking is done. Valid values are `EC2` or `ELB` | string | `EC2` | no |
@@ -149,11 +119,13 @@ Available targets:
 | high_cpu_period_seconds | The period in seconds over which the specified statistic is applied | string | `300` | no |
 | high_cpu_statistic | The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum` | string | `Average` | no |
 | high_cpu_threshold_percent | The value against which the specified statistic is compared | string | `90` | no |
-| iam_instance_profile | The IAM instance profile to associate with launched instances | string | `` | no |
+| iam_instance_profile_name | The IAM instance profile name to associate with launched instances | string | `` | no |
 | image_id | The EC2 image ID to launch | string | `` | no |
-| instance_type | Instance type to launch | string | `` | no |
+| instance_initiated_shutdown_behavior | Shutdown behavior for the instances. Can be `stop` or `terminate` | string | `terminate` | no |
+| instance_market_options | The market (purchasing) option for the instances | list | `<list>` | no |
+| instance_type | Instance type to launch | string | - | yes |
 | key_name | The SSH key name that should be used for the instance | string | `` | no |
-| launch_configuration_enabled | Whether to create launch configuration | string | `true` | no |
+| launch_template_version | Launch template version. Can be version number, `$Latest` or `$Default` | string | `$$Latest` | no |
 | load_balancers | A list of elastic load balancer names to add to the autoscaling group names. Only valid for classic load balancers. For ALBs, use `target_group_arns` instead | list | `<list>` | no |
 | low_cpu_evaluation_periods | The number of periods over which data is compared to the specified threshold | string | `2` | no |
 | low_cpu_period_seconds | The period in seconds over which the specified statistic is applied | string | `300` | no |
@@ -165,13 +137,9 @@ Available targets:
 | min_size | The minimum size of the autoscale group | string | - | yes |
 | name | Solution name, e.g. 'app' or 'cluster' | string | `app` | no |
 | namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | - | yes |
+| placement | The placement specifications of the instances | list | `<list>` | no |
 | placement_group | The name of the placement group into which you'll launch your instances, if any | string | `` | no |
-| placement_tenancy | The tenancy of the instance. Valid values are 'default' or 'dedicated' | string | `default` | no |
 | protect_from_scale_in | Allows setting instance protection. The autoscaling group will not select instances with this setting for terminination during scale in events | string | `false` | no |
-| root_block_device_delete_on_termination | Whether the root volume should be destroyed on instance termination | string | `true` | no |
-| root_block_device_iops | The amount of provisioned IOPS for the root volume. This must be set with a volume_type of `io1` | string | `0` | no |
-| root_block_device_volume_size | The size of the root volume in gigabytes | string | `20` | no |
-| root_block_device_volume_type | The type of the root volume. Can be `standard`, `gp2` or `io1` | string | `gp2` | no |
 | scale_down_adjustment_type | Specifies whether the adjustment is an absolute number or a percentage of the current capacity. Valid values are `ChangeInCapacity`, `ExactCapacity` and `PercentChangeInCapacity` | string | `ChangeInCapacity` | no |
 | scale_down_cooldown_seconds | The amount of time, in seconds, after a scaling activity completes and before the next scaling activity can start | string | `300` | no |
 | scale_down_policy_type | The scalling policy type, either `SimpleScaling`, `StepScaling` or `TargetTrackingScaling` | string | `SimpleScaling` | no |
@@ -180,16 +148,15 @@ Available targets:
 | scale_up_cooldown_seconds | The amount of time, in seconds, after a scaling activity completes and before the next scaling activity can start | string | `300` | no |
 | scale_up_policy_type | The scalling policy type, either `SimpleScaling`, `StepScaling` or `TargetTrackingScaling` | string | `SimpleScaling` | no |
 | scale_up_scaling_adjustment | The number of instances by which to scale. `scale_up_adjustment_type` determines the interpretation of this number (e.g. as an absolute number or as a percentage of the existing Auto Scaling group size). A positive increment adds to the current capacity and a negative value removes from the current capacity | string | `1` | no |
-| security_groups | A list of associated security group IDs | list | `<list>` | no |
+| security_group_ids | A list of associated security group IDs | list | `<list>` | no |
 | service_linked_role_arn | The ARN of the service-linked role that the ASG will use to call other AWS services | string | `` | no |
-| spot_price | The price to use for reserving spot instances | string | `` | no |
 | stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | - | yes |
 | subnet_ids | A list of subnet IDs to launch resources in | list | - | yes |
 | suspended_processes | A list of processes to suspend for the AutoScaling Group. The allowed values are `Launch`, `Terminate`, `HealthCheck`, `ReplaceUnhealthy`, `AZRebalance`, `AlarmNotification`, `ScheduledActions`, `AddToLoadBalancer`. Note that if you suspend either the `Launch` or `Terminate` process types, it can prevent your autoscaling group from functioning properly. | list | `<list>` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | map | `<map>` | no |
 | target_group_arns | A list of aws_alb_target_group ARNs, for use with Application Load Balancing | list | `<list>` | no |
 | termination_policies | A list of policies to decide how the instances in the auto scale group should be terminated. The allowed values are `OldestInstance`, `NewestInstance`, `OldestLaunchConfiguration`, `ClosestToNextInstanceHour`, `Default` | list | `<list>` | no |
-| user_data_base64 | Used to pass base64-encoded binary data to the EC2 instances. For example, gzip-encoded user data must be base64-encoded and passed via this argument to avoid corruption | string | `` | no |
+| user_data_base64 | The Base64-encoded user data to provide when launching the instances | string | `` | no |
 | wait_for_capacity_timeout | A maximum duration that Terraform should wait for ASG instances to be healthy before timing out. (See also Waiting for Capacity below.) Setting this to '0' causes Terraform to skip all Capacity Waiting behavior | string | `10m` | no |
 | wait_for_elb_capacity | Setting this will cause Terraform to wait for exactly this number of healthy instances in all attached load balancers on both create and update operations. Takes precedence over `min_elb_capacity` behavior | string | `false` | no |
 
@@ -206,8 +173,8 @@ Available targets:
 | autoscaling_group_max_size | The maximum size of the autoscale group |
 | autoscaling_group_min_size | The minimum size of the autoscale group |
 | autoscaling_group_name | The autoscaling group name |
-| launch_configuration_id | The ID of the launch configuration |
-| launch_configuration_name | The name of the launch configuration |
+| launch_template_arn | The ARN of the launch template |
+| launch_template_id | The ID of the launch template |
 
 
 
