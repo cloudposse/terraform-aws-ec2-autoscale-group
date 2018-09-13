@@ -254,3 +254,88 @@ variable "service_linked_role_arn" {
   description = "The ARN of the service-linked role that the ASG will use to call other AWS services"
   default     = ""
 }
+
+variable "autoscaling_policies_enabled" {
+  default     = "true"
+  description = "Whether to create `aws_autoscaling_policy` and `aws_cloudwatch_metric_alarm` resources to control Auto Scaling"
+}
+
+variable "scale_up_cooldown_seconds" {
+  default     = "300"
+  description = "The amount of time, in seconds, after a scaling activity completes and before the next scaling activity can start"
+}
+
+variable "scale_up_scaling_adjustment" {
+  default     = 1
+  description = "The number of instances by which to scale. `scale_up_adjustment_type` determines the interpretation of this number (e.g. as an absolute number or as a percentage of the existing Auto Scaling group size). A positive increment adds to the current capacity and a negative value removes from the current capacity"
+}
+
+variable "scale_up_adjustment_type" {
+  default     = "ChangeInCapacity"
+  description = "Specifies whether the adjustment is an absolute number or a percentage of the current capacity. Valid values are `ChangeInCapacity`, `ExactCapacity` and `PercentChangeInCapacity`"
+}
+
+variable "scale_up_policy_type" {
+  default     = "SimpleScaling"
+  description = "The scalling policy type, either `SimpleScaling`, `StepScaling` or `TargetTrackingScaling`"
+}
+
+variable "scale_down_cooldown_seconds" {
+  default     = "300"
+  description = "The amount of time, in seconds, after a scaling activity completes and before the next scaling activity can start"
+}
+
+variable "scale_down_scaling_adjustment" {
+  default     = -1
+  description = "The number of instances by which to scale. `scale_down_scaling_adjustment` determines the interpretation of this number (e.g. as an absolute number or as a percentage of the existing Auto Scaling group size). A positive increment adds to the current capacity and a negative value removes from the current capacity"
+}
+
+variable "scale_down_adjustment_type" {
+  default     = "ChangeInCapacity"
+  description = "Specifies whether the adjustment is an absolute number or a percentage of the current capacity. Valid values are `ChangeInCapacity`, `ExactCapacity` and `PercentChangeInCapacity`"
+}
+
+variable "scale_down_policy_type" {
+  default     = "SimpleScaling"
+  description = "The scalling policy type, either `SimpleScaling`, `StepScaling` or `TargetTrackingScaling`"
+}
+
+variable "high_cpu_evaluation_periods" {
+  default     = "2"
+  description = "The number of periods over which data is compared to the specified threshold"
+}
+
+variable "high_cpu_period_seconds" {
+  default     = "300"
+  description = "The period in seconds over which the specified statistic is applied"
+}
+
+variable "high_cpu_threshold_percent" {
+  default     = "90"
+  description = "The value against which the specified statistic is compared"
+}
+
+variable "high_cpu_statistic" {
+  default     = "Average"
+  description = "The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum`"
+}
+
+variable "low_cpu_evaluation_periods" {
+  default     = "2"
+  description = "The number of periods over which data is compared to the specified threshold"
+}
+
+variable "low_cpu_period_seconds" {
+  default     = "300"
+  description = "The period in seconds over which the specified statistic is applied"
+}
+
+variable "low_cpu_threshold_percent" {
+  default     = "10"
+  description = "The value against which the specified statistic is compared"
+}
+
+variable "low_cpu_statistic" {
+  default     = "Average"
+  description = "The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum`"
+}

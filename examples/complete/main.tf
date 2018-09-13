@@ -27,7 +27,8 @@ locals {
 }
 
 module "autoscale_group" {
-  source = "git::https://github.com/cloudposse/terraform-aws-ec2-autoscale-group.git?ref=master"
+  #source = "git::https://github.com/cloudposse/terraform-aws-ec2-autoscale-group.git?ref=master"
+  source = "../../"
 
   namespace = "eg"
   stage     = "dev"
@@ -64,4 +65,9 @@ module "autoscale_group" {
     Tier              = "1"
     KubernetesCluster = "us-west-2.testing.cloudposse.co"
   }
+
+  # Auto-scaling policies and CloudWatch metric alarms
+  autoscaling_policies_enabled = "true"
+  high_cpu_threshold_percent   = "70"
+  low_cpu_threshold_percent    = "20"
 }

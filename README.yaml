@@ -49,8 +49,11 @@ related:
 description: |-
   Terraform module to provision [Auto Scaling Group](https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html) and [Launch Configuration](https://www.terraform.io/docs/providers/aws/r/launch_configuration.html) on AWS.
 
-  __NOTE:__ By default, the module will create an Auto Scaling Group and a Launch Configuration and bind them together.
-  If you want to provide an external Launch Configuration, set the variable `launch_configuration_enabled` to `"false"` and provide the existing Launch Configuration name in the variable `launch_configuration`.
+  By default, the module creates an Auto Scaling Group and a Launch Configuration and bind them together.
+  If you want to provide an external Launch Configuration, set the variable `launch_configuration_enabled` to `"false"` and provide an existing Launch Configuration in the variable `existing_launch_configuration_name`.
+
+  The module also creates AutoScaling Policies and CloudWatch Metric Alarms to monitor CPU utilization on the EC2 instances and scale the number of instance in the AutoScaling Group up or down.
+  If you don't want to use the provided functionality, or want to provide your own policies, disable it by setting the variable `autoscaling_policies_enabled` to `"false"`.
 
 # How to use this project
 usage: |-
@@ -122,6 +125,11 @@ usage: |-
       Tier              = "1"
       KubernetesCluster = "us-west-2.testing.cloudposse.co"
     }
+
+    # Auto-scaling policies and CloudWatch metric alarms
+    autoscaling_policies_enabled = "true"
+    high_cpu_threshold_percent   = "70"
+    low_cpu_threshold_percent    = "20"
   }
   ```
 
