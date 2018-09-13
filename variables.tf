@@ -42,7 +42,7 @@ variable "launch_configuration_enabled" {
   default     = "true"
 }
 
-variable "launch_configuration" {
+variable "existing_launch_configuration_name" {
   description = "The name of the existing launch configuration to use"
   default     = ""
 }
@@ -98,10 +98,26 @@ variable "ebs_optimized" {
   default     = false
 }
 
-variable "root_block_device" {
-  description = "Customize details about the root block device of the instance"
-  type        = "list"
-  default     = []
+variable "root_block_device_volume_type" {
+  description = "The type of the root volume. Can be `standard`, `gp2` or `io1`"
+  type        = "string"
+  default     = "gp2"
+}
+
+variable "root_block_device_volume_size" {
+  description = "The size of the root volume in gigabytes"
+  type        = "string"
+  default     = "20"
+}
+
+variable "root_block_device_iops" {
+  description = "The amount of provisioned IOPS for the root volume. This must be set with a volume_type of `io1`"
+  default     = 0
+}
+
+variable "root_block_device_delete_on_termination" {
+  description = " Whether the root volume should be destroyed on instance termination"
+  default     = true
 }
 
 variable "ebs_block_device" {

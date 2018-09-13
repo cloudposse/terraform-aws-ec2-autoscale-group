@@ -15,6 +15,7 @@
 | enabled_metrics | A list of metrics to collect. The allowed values are GroupMinSize, GroupMaxSize, GroupDesiredCapacity, GroupInServiceInstances, GroupPendingInstances, GroupStandbyInstances, GroupTerminatingInstances, GroupTotalInstances | list | `<list>` | no |
 | environment | Environment, e.g. 'testing', 'UAT' | string | `` | no |
 | ephemeral_block_device | Customize Ephemeral (also known as 'Instance Store') volumes on the instance | list | `<list>` | no |
+| existing_launch_configuration_name | The name of the existing launch configuration to use | string | `` | no |
 | force_delete | Allows deleting the autoscaling group without waiting for all instances in the pool to terminate. You can force an autoscaling group to delete even if it's in the process of scaling a resource. Normally, Terraform drains all the instances before deleting the group. This bypasses that behavior and potentially leaves resources dangling | string | `false` | no |
 | health_check_grace_period | Time (in seconds) after instance comes into service before checking health | string | `300` | no |
 | health_check_type | Controls how health checking is done. Valid values are `EC2` or `ELB` | string | `EC2` | no |
@@ -22,7 +23,6 @@
 | image_id | The EC2 image ID to launch | string | `` | no |
 | instance_type | Instance type to launch | string | `` | no |
 | key_name | The SSH key name that should be used for the instance | string | `` | no |
-| launch_configuration | The name of the existing launch configuration to use | string | `` | no |
 | launch_configuration_enabled | Whether to create launch configuration | string | `true` | no |
 | load_balancers | A list of elastic load balancer names to add to the autoscaling group names. Only valid for classic load balancers. For ALBs, use `target_group_arns` instead | list | `<list>` | no |
 | max_size | The maximum size of the autoscale group | string | - | yes |
@@ -34,7 +34,10 @@
 | placement_group | The name of the placement group into which you'll launch your instances, if any | string | `` | no |
 | placement_tenancy | The tenancy of the instance. Valid values are 'default' or 'dedicated' | string | `default` | no |
 | protect_from_scale_in | Allows setting instance protection. The autoscaling group will not select instances with this setting for terminination during scale in events | string | `false` | no |
-| root_block_device | Customize details about the root block device of the instance | list | `<list>` | no |
+| root_block_device_delete_on_termination | Whether the root volume should be destroyed on instance termination | string | `true` | no |
+| root_block_device_iops | The amount of provisioned IOPS for the root volume. This must be set with a volume_type of `io1` | string | `0` | no |
+| root_block_device_volume_size | The size of the root volume in gigabytes | string | `20` | no |
+| root_block_device_volume_type | The type of the root volume. Can be `standard`, `gp2` or `io1` | string | `gp2` | no |
 | security_groups | A list of associated security group IDs | list | `<list>` | no |
 | service_linked_role_arn | The ARN of the service-linked role that the ASG will use to call other AWS services | string | `` | no |
 | spot_price | The price to use for reserving spot instances | string | `` | no |

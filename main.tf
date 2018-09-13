@@ -9,7 +9,7 @@ module "label" {
   tags        = "${var.tags}"
 
   additional_tag_map = {
-    "propagate_at_launch" = "true"
+    "propagate_at_launch" = true
   }
 }
 
@@ -26,11 +26,19 @@ resource "aws_launch_configuration" "default" {
   user_data_base64            = "${var.user_data_base64}"
   enable_monitoring           = "${var.enable_monitoring}"
   ebs_optimized               = "${var.ebs_optimized}"
-  root_block_device           = "${var.root_block_device}"
   ebs_block_device            = "${var.ebs_block_device}"
   ephemeral_block_device      = "${var.ephemeral_block_device}"
   spot_price                  = "${var.spot_price}"
-  placement_tenancy           = "${var.spot_price == "" ? var.placement_tenancy : ""}"
+  placement_tenancy           = "${var.placement_tenancy}"
+
+  root_block_device = [
+    {
+      volume_type           = "${var.root_block_device_volume_type}"
+      volume_size           = "${var.root_block_device_volume_size}"
+      iops                  = "${var.root_block_device_iops}"
+      delete_on_termination = "${var.root_block_device_delete_on_termination}"
+    },
+  ]
 
   lifecycle {
     create_before_destroy = true
@@ -41,7 +49,7 @@ resource "aws_autoscaling_group" "default" {
   count = "${var.autoscaling_group_enabled == "true" ? 1 : 0}"
 
   name_prefix          = "${format("%s%s", module.label.id, var.delimiter)}"
-  launch_configuration = "${var.launch_configuration_enabled == "true" ? join("", aws_launch_configuration.default.*.name) : var.launch_configuration}"
+  launch_configuration = "${var.launch_configuration_enabled == "true" ? join("", aws_launch_configuration.default.*.name) : var.existing_launch_configuration_name}"
   vpc_zone_identifier  = ["${var.subnet_ids}"]
   max_size             = "${var.max_size}"
   min_size             = "${var.min_size}"

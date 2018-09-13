@@ -1,11 +1,11 @@
 output "launch_configuration_id" {
   description = "The ID of the launch configuration"
-  value       = "${var.launch_configuration == "" && var.launch_configuration_enabled ? join("", aws_launch_configuration.default.*.id) : var.launch_configuration}"
+  value       = "${var.existing_launch_configuration_name == "" && var.launch_configuration_enabled ? join("", aws_launch_configuration.default.*.id) : var.existing_launch_configuration_name}"
 }
 
 output "launch_configuration_name" {
   description = "The name of the launch configuration"
-  value       = "${var.launch_configuration == "" && var.launch_configuration_enabled ? join("", aws_launch_configuration.default.*.name) : var.launch_configuration}"
+  value       = "${var.existing_launch_configuration_name == "" && var.launch_configuration_enabled ? join("", aws_launch_configuration.default.*.name) : var.existing_launch_configuration_name}"
 }
 
 output "autoscaling_group_id" {

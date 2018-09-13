@@ -35,6 +35,30 @@ provider "aws" {
   region = "us-west-2"
 }
 
+locals {
+  userdata = <<USERDATA
+    #!/bin/bash -xe
+    CA_CERTIFICATE_DIRECTORY=/etc/kubernetes/pki
+    CA_CERTIFICATE_FILE_PATH=$CA_CERTIFICATE_DIRECTORY/ca.crt
+    mkdir -p $CA_CERTIFICATE_DIRECTORY
+    echo XXXXXXXXXXXX | base64 -d >  $CA_CERTIFICATE_FILE_PATH
+    INTERNAL_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
+    sed -i s,MASTER_ENDPOINT,master.us-west-2.testing.cloudposse.co,g /var/lib/kubelet/kubeconfig
+    sed -i s,CLUSTER_NAME,us-west-2.testing.cloudposse.co,g /var/lib/kubelet/kubeconfig
+    sed -i s,REGION,us-west-2,g /etc/systemd/system/kubelet.service
+    sed -i s,MAX_PODS,20,g /etc/systemd/system/kubelet.service
+    sed -i s,MASTER_ENDPOINT,master.us-west-2.testing.cloudposse.co,g /etc/systemd/system/kubelet.service
+    sed -i s,INTERNAL_IP,$INTERNAL_IP,g /etc/systemd/system/kubelet.service
+    DNS_CLUSTER_IP=10.100.0.10
+    if [[ $INTERNAL_IP == 10.* ]] ; then DNS_CLUSTER_IP=172.20.0.10; fi
+    sed -i s,DNS_CLUSTER_IP,$DNS_CLUSTER_IP,g /etc/systemd/system/kubelet.service
+    sed -i s,CERTIFICATE_AUTHORITY_FILE,$CA_CERTIFICATE_FILE_PATH,g /var/lib/kubelet/kubeconfig
+    sed -i s,CLIENT_CA_FILE,$CA_CERTIFICATE_FILE_PATH,g  /etc/systemd/system/kubelet.service
+    systemctl daemon-reload
+    systemctl restart kubelet
+  USERDATA
+}
+
 module "autoscale_group" {
   source = "git::https://github.com/cloudposse/terraform-aws-ec2-autoscale-group.git?ref=master"
 
@@ -42,24 +66,23 @@ module "autoscale_group" {
   stage     = "dev"
   name      = "test"
 
-  image_id                    = "ami-08cab282f9979fc7a"
-  instance_type               = "t2.small"
-  security_groups             = ["sg-xxxxxxxx"]
-  subnet_ids                  = ["subnet-xxxxxxxx", "subnet-yyyyyyyy", "subnet-zzzzzzzz"]
-  health_check_type           = "EC2"
-  min_size                    = 1
-  max_size                    = 3
-  desired_capacity            = 2
-  wait_for_capacity_timeout   = "5m"
-  associate_public_ip_address = true
+  launch_configuration_enabled            = "true"
+  autoscaling_group_enabled               = "true"
+  image_id                                = "ami-08cab282f9979fc7a"
+  instance_type                           = "t2.small"
+  security_groups                         = ["sg-xxxxxxxx"]
+  subnet_ids                              = ["subnet-xxxxxxxx", "subnet-yyyyyyyy", "subnet-zzzzzzzz"]
+  health_check_type                       = "EC2"
+  min_size                                = 1
+  max_size                                = 3
+  desired_capacity                        = 2
+  wait_for_capacity_timeout               = "5m"
+  associate_public_ip_address             = true
+  root_block_device_volume_type           = "gp2"
+  root_block_device_volume_size           = "50"
+  root_block_device_delete_on_termination = true
 
-  root_block_device = [
-    {
-      volume_type           = "gp2"
-      volume_size           = "20"
-      delete_on_termination = true
-    },
-  ]
+  user_data_base64 = "${base64encode(local.userdata)}"
 
   ebs_block_device = [
     {
@@ -69,6 +92,11 @@ module "autoscale_group" {
       delete_on_termination = true
     },
   ]
+
+  tags {
+    Tier              = "1"
+    KubernetesCluster = "us-west-2.testing.cloudposse.co"
+  }
 }
 ```
 
@@ -104,6 +132,7 @@ Available targets:
 | enabled_metrics | A list of metrics to collect. The allowed values are GroupMinSize, GroupMaxSize, GroupDesiredCapacity, GroupInServiceInstances, GroupPendingInstances, GroupStandbyInstances, GroupTerminatingInstances, GroupTotalInstances | list | `<list>` | no |
 | environment | Environment, e.g. 'testing', 'UAT' | string | `` | no |
 | ephemeral_block_device | Customize Ephemeral (also known as 'Instance Store') volumes on the instance | list | `<list>` | no |
+| existing_launch_configuration_name | The name of the existing launch configuration to use | string | `` | no |
 | force_delete | Allows deleting the autoscaling group without waiting for all instances in the pool to terminate. You can force an autoscaling group to delete even if it's in the process of scaling a resource. Normally, Terraform drains all the instances before deleting the group. This bypasses that behavior and potentially leaves resources dangling | string | `false` | no |
 | health_check_grace_period | Time (in seconds) after instance comes into service before checking health | string | `300` | no |
 | health_check_type | Controls how health checking is done. Valid values are `EC2` or `ELB` | string | `EC2` | no |
@@ -111,7 +140,6 @@ Available targets:
 | image_id | The EC2 image ID to launch | string | `` | no |
 | instance_type | Instance type to launch | string | `` | no |
 | key_name | The SSH key name that should be used for the instance | string | `` | no |
-| launch_configuration | The name of the existing launch configuration to use | string | `` | no |
 | launch_configuration_enabled | Whether to create launch configuration | string | `true` | no |
 | load_balancers | A list of elastic load balancer names to add to the autoscaling group names. Only valid for classic load balancers. For ALBs, use `target_group_arns` instead | list | `<list>` | no |
 | max_size | The maximum size of the autoscale group | string | - | yes |
@@ -123,7 +151,10 @@ Available targets:
 | placement_group | The name of the placement group into which you'll launch your instances, if any | string | `` | no |
 | placement_tenancy | The tenancy of the instance. Valid values are 'default' or 'dedicated' | string | `default` | no |
 | protect_from_scale_in | Allows setting instance protection. The autoscaling group will not select instances with this setting for terminination during scale in events | string | `false` | no |
-| root_block_device | Customize details about the root block device of the instance | list | `<list>` | no |
+| root_block_device_delete_on_termination | Whether the root volume should be destroyed on instance termination | string | `true` | no |
+| root_block_device_iops | The amount of provisioned IOPS for the root volume. This must be set with a volume_type of `io1` | string | `0` | no |
+| root_block_device_volume_size | The size of the root volume in gigabytes | string | `20` | no |
+| root_block_device_volume_type | The type of the root volume. Can be `standard`, `gp2` or `io1` | string | `gp2` | no |
 | security_groups | A list of associated security group IDs | list | `<list>` | no |
 | service_linked_role_arn | The ARN of the service-linked role that the ASG will use to call other AWS services | string | `` | no |
 | spot_price | The price to use for reserving spot instances | string | `` | no |
