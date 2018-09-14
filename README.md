@@ -31,10 +31,6 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 
 ```hcl
-provider "aws" {
-  region = "us-west-2"
-}
-
 locals {
   userdata = <<USERDATA
     #!/bin/bash
