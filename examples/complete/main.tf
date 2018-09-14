@@ -38,7 +38,7 @@ module "autoscale_group" {
   }
 
   # Auto-scaling policies and CloudWatch metric alarms
-  autoscaling_policies_enabled = "true"
-  high_cpu_threshold_percent   = "70"
-  low_cpu_threshold_percent    = "20"
+  autoscaling_policies_enabled           = "true"
+  cpu_utilization_high_threshold_percent = "70"
+  cpu_utilization_low_threshold_percent  = "20"
 }

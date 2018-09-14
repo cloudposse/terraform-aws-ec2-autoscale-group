@@ -311,49 +311,49 @@ variable "scale_down_policy_type" {
   description = "The scalling policy type, either `SimpleScaling`, `StepScaling` or `TargetTrackingScaling`"
 }
 
-variable "high_cpu_evaluation_periods" {
+variable "cpu_utilization_high_evaluation_periods" {
   type        = "string"
   default     = "2"
   description = "The number of periods over which data is compared to the specified threshold"
 }
 
-variable "high_cpu_period_seconds" {
+variable "cpu_utilization_high_period_seconds" {
   type        = "string"
   default     = "300"
   description = "The period in seconds over which the specified statistic is applied"
 }
 
-variable "high_cpu_threshold_percent" {
+variable "cpu_utilization_high_threshold_percent" {
   type        = "string"
   default     = "90"
   description = "The value against which the specified statistic is compared"
 }
 
-variable "high_cpu_statistic" {
+variable "cpu_utilization_high_statistic" {
   type        = "string"
   default     = "Average"
   description = "The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum`"
 }
 
-variable "low_cpu_evaluation_periods" {
+variable "cpu_utilization_low_evaluation_periods" {
   type        = "string"
   default     = "2"
   description = "The number of periods over which data is compared to the specified threshold"
 }
 
-variable "low_cpu_period_seconds" {
+variable "cpu_utilization_low_period_seconds" {
   type        = "string"
   default     = "300"
   description = "The period in seconds over which the specified statistic is applied"
 }
 
-variable "low_cpu_threshold_percent" {
+variable "cpu_utilization_low_threshold_percent" {
   type        = "string"
   default     = "10"
   description = "The value against which the specified statistic is compared"
 }
 
-variable "low_cpu_statistic" {
+variable "cpu_utilization_low_statistic" {
   type        = "string"
   default     = "Average"
   description = "The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum`"

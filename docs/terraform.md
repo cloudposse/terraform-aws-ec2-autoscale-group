@@ -7,6 +7,14 @@
 | attributes | Additional attributes (e.g. `1`) | list | `<list>` | no |
 | autoscaling_policies_enabled | Whether to create `aws_autoscaling_policy` and `aws_cloudwatch_metric_alarm` resources to control Auto Scaling | string | `true` | no |
 | block_device_mappings | Specify volumes to attach to the instance besides the volumes specified by the AMI | list | `<list>` | no |
+| cpu_utilization_high_evaluation_periods | The number of periods over which data is compared to the specified threshold | string | `2` | no |
+| cpu_utilization_high_period_seconds | The period in seconds over which the specified statistic is applied | string | `300` | no |
+| cpu_utilization_high_statistic | The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum` | string | `Average` | no |
+| cpu_utilization_high_threshold_percent | The value against which the specified statistic is compared | string | `90` | no |
+| cpu_utilization_low_evaluation_periods | The number of periods over which data is compared to the specified threshold | string | `2` | no |
+| cpu_utilization_low_period_seconds | The period in seconds over which the specified statistic is applied | string | `300` | no |
+| cpu_utilization_low_statistic | The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum` | string | `Average` | no |
+| cpu_utilization_low_threshold_percent | The value against which the specified statistic is compared | string | `10` | no |
 | credit_specification | Customize the credit specification of the instances | list | `<list>` | no |
 | default_cooldown | The amount of time, in seconds, after a scaling activity completes before another scaling activity can start | string | `300` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
@@ -21,10 +29,6 @@
 | force_delete | Allows deleting the autoscaling group without waiting for all instances in the pool to terminate. You can force an autoscaling group to delete even if it's in the process of scaling a resource. Normally, Terraform drains all the instances before deleting the group. This bypasses that behavior and potentially leaves resources dangling | string | `false` | no |
 | health_check_grace_period | Time (in seconds) after instance comes into service before checking health | string | `300` | no |
 | health_check_type | Controls how health checking is done. Valid values are `EC2` or `ELB` | string | `EC2` | no |
-| high_cpu_evaluation_periods | The number of periods over which data is compared to the specified threshold | string | `2` | no |
-| high_cpu_period_seconds | The period in seconds over which the specified statistic is applied | string | `300` | no |
-| high_cpu_statistic | The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum` | string | `Average` | no |
-| high_cpu_threshold_percent | The value against which the specified statistic is compared | string | `90` | no |
 | iam_instance_profile_name | The IAM instance profile name to associate with launched instances | string | `` | no |
 | image_id | The EC2 image ID to launch | string | `` | no |
 | instance_initiated_shutdown_behavior | Shutdown behavior for the instances. Can be `stop` or `terminate` | string | `terminate` | no |
@@ -33,10 +37,6 @@
 | key_name | The SSH key name that should be used for the instance | string | `` | no |
 | launch_template_version | Launch template version. Can be version number, `$Latest` or `$Default` | string | `$$Latest` | no |
 | load_balancers | A list of elastic load balancer names to add to the autoscaling group names. Only valid for classic load balancers. For ALBs, use `target_group_arns` instead | list | `<list>` | no |
-| low_cpu_evaluation_periods | The number of periods over which data is compared to the specified threshold | string | `2` | no |
-| low_cpu_period_seconds | The period in seconds over which the specified statistic is applied | string | `300` | no |
-| low_cpu_statistic | The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum` | string | `Average` | no |
-| low_cpu_threshold_percent | The value against which the specified statistic is compared | string | `10` | no |
 | max_size | The maximum size of the autoscale group | string | - | yes |
 | metrics_granularity | The granularity to associate with the metrics to collect. The only valid value is 1Minute | string | `1Minute` | no |
 | min_elb_capacity | Setting this causes Terraform to wait for this number of instances to show up healthy in the ELB only on creation. Updates will not wait on ELB instance number changes | string | `0` | no |
