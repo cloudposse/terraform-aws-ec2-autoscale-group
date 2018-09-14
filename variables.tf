@@ -149,11 +149,6 @@ variable "min_size" {
   description = "The minimum size of the autoscale group"
 }
 
-variable "desired_capacity" {
-  description = "The number of Amazon EC2 instances that should be running in the group. If set to 0, the value will be taken from the `min_size` variable"
-  default     = 0
-}
-
 variable "subnet_ids" {
   description = "A list of subnet IDs to launch resources in"
   type        = "list"
