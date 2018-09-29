@@ -1,16 +1,12 @@
 module "label" {
-  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.5.3"
-  namespace   = "${var.namespace}"
-  name        = "${var.name}"
-  stage       = "${var.stage}"
-  environment = "${var.environment}"
-  delimiter   = "${var.delimiter}"
-  attributes  = "${var.attributes}"
-  tags        = "${var.tags}"
-
-  additional_tag_map = {
-    propagate_at_launch = true
-  }
+  source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.1.6"
+  namespace  = "${var.namespace}"
+  name       = "${var.name}"
+  stage      = "${var.stage}"
+  delimiter  = "${var.delimiter}"
+  attributes = "${var.attributes}"
+  tags       = "${var.tags}"
+  enabled    = "${var.enabled}"
 }
 
 resource "aws_launch_template" "default" {
@@ -29,7 +25,6 @@ resource "aws_launch_template" "default" {
   key_name                             = "${var.key_name}"
   placement                            = ["${var.placement}"]
   user_data                            = "${var.user_data_base64}"
-  vpc_security_group_ids               = ["${var.security_group_ids}"]
 
   iam_instance_profile {
     name = "${var.iam_instance_profile_name}"
@@ -39,8 +34,13 @@ resource "aws_launch_template" "default" {
     enabled = "${var.enable_monitoring}"
   }
 
+  # https://github.com/terraform-providers/terraform-provider-aws/issues/4570
   network_interfaces {
+    description                 = "${module.label.id}"
+    device_index                = 0
     associate_public_ip_address = "${var.associate_public_ip_address}"
+    delete_on_termination       = true
+    security_groups             = ["${var.security_group_ids}"]
   }
 
   tag_specifications {
@@ -56,6 +56,16 @@ resource "aws_launch_template" "default" {
   lifecycle {
     create_before_destroy = true
   }
+}
+
+data "null_data_source" "tags_as_list_of_maps" {
+  count = "${var.enabled == "true" ? length(keys(var.tags)) : 0}"
+
+  inputs = "${map(
+    "key", "${element(keys(var.tags), count.index)}",
+    "value", "${element(values(var.tags), count.index)}",
+    "propagate_at_launch", true
+  )}"
 }
 
 resource "aws_autoscaling_group" "default" {
@@ -84,10 +94,10 @@ resource "aws_autoscaling_group" "default" {
 
   launch_template = {
     id      = "${join("", aws_launch_template.default.*.id)}"
-    version = "${var.launch_template_version}"
+    version = "${aws_launch_template.default.latest_version}"
   }
 
-  tags = ["${module.label.tags_as_list_of_maps}"]
+  tags = ["${data.null_data_source.tags_as_list_of_maps.*.outputs}"]
 
   lifecycle {
     create_before_destroy = true
