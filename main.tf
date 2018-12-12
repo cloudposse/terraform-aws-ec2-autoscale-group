@@ -53,6 +53,8 @@ resource "aws_launch_template" "default" {
     tags          = "${module.label.tags}"
   }
 
+  tags = "${module.label.tags}"
+
   lifecycle {
     create_before_destroy = true
   }
