@@ -1,4 +1,3 @@
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -15,7 +14,7 @@
 | cpu_utilization_low_period_seconds | The period in seconds over which the specified statistic is applied | string | `300` | no |
 | cpu_utilization_low_statistic | The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum` | string | `Average` | no |
 | cpu_utilization_low_threshold_percent | The value against which the specified statistic is compared | string | `10` | no |
-| credit_specification | Customize the credit specification of the instances | list | `<list>` | no |
+| credit_specification | Customize the credit specification of the instances | string | `` | no |
 | default_cooldown | The amount of time, in seconds, after a scaling activity completes before another scaling activity can start | string | `300` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
 | disable_api_termination | If `true`, enables EC2 Instance Termination Protection | string | `false` | no |
