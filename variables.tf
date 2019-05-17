@@ -126,8 +126,8 @@ variable "placement" {
 
 variable "credit_specification" {
   description = "Customize the credit specification of the instances"
-  type        = "list"
-  default     = []
+  type        = "string"
+  default     = ""
 }
 
 variable "elastic_gpu_specifications" {

@@ -14,7 +14,6 @@ resource "aws_launch_template" "default" {
 
   name_prefix                          = "${format("%s%s", module.label.id, var.delimiter)}"
   block_device_mappings                = ["${var.block_device_mappings}"]
-  credit_specification                 = ["${var.credit_specification}"]
   disable_api_termination              = "${var.disable_api_termination}"
   ebs_optimized                        = "${var.ebs_optimized}"
   elastic_gpu_specifications           = ["${var.elastic_gpu_specifications}"]
@@ -25,6 +24,10 @@ resource "aws_launch_template" "default" {
   key_name                             = "${var.key_name}"
   placement                            = ["${var.placement}"]
   user_data                            = "${var.user_data_base64}"
+
+  credit_specification {
+    cpu_credits = "${var.credit_specification}"
+  }
 
   iam_instance_profile {
     name = "${var.iam_instance_profile_name}"
