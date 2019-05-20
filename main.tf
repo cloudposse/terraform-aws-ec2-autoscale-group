@@ -26,7 +26,7 @@ resource "aws_launch_template" "default" {
   user_data                            = "${var.user_data_base64}"
 
   credit_specification {
-    cpu_credits = "${var.credit_specification}"
+    cpu_credits = "${var. cpu_credits}"
   }
 
   iam_instance_profile {
