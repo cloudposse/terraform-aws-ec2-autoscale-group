@@ -124,7 +124,7 @@ variable "placement" {
   default     = []
 }
 
-variable "credit_specification" {
+variable "cpu_credits" {
   description = "Customize the credit specification of the instances"
   type        = "string"
   default     = ""
