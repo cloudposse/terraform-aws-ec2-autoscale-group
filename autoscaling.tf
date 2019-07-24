@@ -2,7 +2,9 @@
 
 locals {
   autoscaling_enabled = "${var.enabled == "true" && var.autoscaling_policies_enabled == "true" ? true : false}"
+  aws_autoscaling_group_name = "${var.enabled == "true" && var.autoscaling_policies_enabled == "true" && var.mixed_type=="true" ? join("", aws_autoscaling_group.default_mixed.*.name) : join("", aws_autoscaling_group.default.*.name)}"
 }
+
 
 resource "aws_autoscaling_policy" "scale_up" {
   count                  = "${local.autoscaling_enabled ? 1 : 0}"
@@ -11,7 +13,7 @@ resource "aws_autoscaling_policy" "scale_up" {
   adjustment_type        = "${var.scale_up_adjustment_type}"
   policy_type            = "${var.scale_up_policy_type}"
   cooldown               = "${var.scale_up_cooldown_seconds}"
-  autoscaling_group_name = "${join("", aws_autoscaling_group.default.*.name)}"
+  autoscaling_group_name = "${local.aws_autoscaling_group_name}"
 }
 
 resource "aws_autoscaling_policy" "scale_down" {
@@ -21,7 +23,7 @@ resource "aws_autoscaling_policy" "scale_down" {
   adjustment_type        = "${var.scale_down_adjustment_type}"
   policy_type            = "${var.scale_down_policy_type}"
   cooldown               = "${var.scale_down_cooldown_seconds}"
-  autoscaling_group_name = "${join("", aws_autoscaling_group.default.*.name)}"
+  autoscaling_group_name = "${local.aws_autoscaling_group_name}"
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_high" {
@@ -36,7 +38,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   threshold           = "${var.cpu_utilization_high_threshold_percent}"
 
   dimensions {
-    AutoScalingGroupName = "${join("", aws_autoscaling_group.default.*.name)}"
+    AutoScalingGroupName = "${local.aws_autoscaling_group_name}"
   }
 
   alarm_description = "Scale up if CPU utilization is above ${var.cpu_utilization_high_threshold_percent} for ${var.cpu_utilization_high_period_seconds} seconds"
@@ -55,7 +57,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low" {
   threshold           = "${var.cpu_utilization_low_threshold_percent}"
 
   dimensions {
-    AutoScalingGroupName = "${join("", aws_autoscaling_group.default.*.name)}"
+    AutoScalingGroupName = "${local.aws_autoscaling_group_name}"
   }
 
   alarm_description = "Scale down if the CPU utilization is below ${var.cpu_utilization_low_threshold_percent} for ${var.cpu_utilization_low_period_seconds} seconds"

@@ -353,3 +353,26 @@ variable "cpu_utilization_low_statistic" {
   default     = "Average"
   description = "The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum`"
 }
+
+variable "mixed_type" {
+  type        = "string"
+  default     = "false"
+}
+
+variable "autoscaling_configs" {
+  default = {
+      on_demand_base_capacity = 0
+      spot_instance_pools = 1
+      health_check_grace_period = 300
+      on_demand_percentage_above_base_capacity = 10
+      spot_max_price = ""
+  }
+}
+
+variable "autoscaling_instances" {
+  default = {
+      supported_instance_1 = "t3.medium"
+      supported_instance_2 = "t2.medium"
+      supported_instance_3 = "t3.large"
+  }
+}
