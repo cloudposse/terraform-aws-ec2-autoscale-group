@@ -162,9 +162,9 @@ resource "aws_autoscaling_group" "default_mixed" {
 
   lifecycle {
     create_before_destroy = true
-    ignore_changes = [
-      "launch_template",
-      "mixed_instances_policy",
-    ]
+    //ignore_changes = [
+    //  "launch_template",
+    //  "mixed_instances_policy",
+    //]
   }
 }
