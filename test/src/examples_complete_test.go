@@ -39,4 +39,14 @@ func TestExamplesComplete(t *testing.T) {
 	publicSubnetCidrs := terraform.OutputList(t, terraformOptions, "public_subnet_cidrs")
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, []string{"172.16.128.0/18", "172.16.192.0/18"}, publicSubnetCidrs)
+
+	// Run `terraform output` to get the value of an output variable
+	autoscalingGroupName := terraform.Output(t, terraformOptions, "autoscaling_group_name")
+	// Verify we're getting back the outputs we expect
+	assert.Contains(t, autoscalingGroupName, "eg-test-ec2-autoscale-group")
+
+	// Run `terraform output` to get the value of an output variable
+	launchTemplateArn := terraform.Output(t, terraformOptions, "launch_template_arn")
+	// Verify we're getting back the outputs we expect
+	assert.Contains(t, launchTemplateArn, "arn:aws:ec2:us-east-2:126450723953:launch-template")
 }
