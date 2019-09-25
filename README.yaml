@@ -18,9 +18,9 @@ github_repo: cloudposse/terraform-aws-ec2-autoscale-group
 
 # Badges to display
 badges:
-  - name: "Build Status"
-    image: "https://travis-ci.org/cloudposse/terraform-aws-ec2-autoscale-group.svg?branch=master"
-    url: "https://travis-ci.org/cloudposse/terraform-aws-ec2-autoscale-group"
+  - name: "Codefresh Build Status"
+    image: "https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-ec2-autoscale-group?type=cf-1"
+    url: "https://g.codefresh.io/public/accounts/cloudposse/pipelines/5d8b7d3d4cba337a81a18256"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/terraform-aws-ec2-autoscale-group.svg"
     url: "https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/releases/latest"
@@ -57,7 +57,7 @@ usage: |-
 
   ```hcl
   locals {
-    userdata = <<USERDATA
+    userdata = <<-USERDATA
       #!/bin/bash
       cat <<"__EOF__" > /home/ec2-user/.ssh/config
       Host *
