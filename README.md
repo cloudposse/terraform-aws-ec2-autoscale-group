@@ -3,7 +3,7 @@
 
 [![Cloud Posse][logo]](https://cpco.io/homepage)
 
-# terraform-aws-ec2-autoscale-group [![Build Status](https://travis-ci.org/cloudposse/terraform-aws-ec2-autoscale-group.svg?branch=master)](https://travis-ci.org/cloudposse/terraform-aws-ec2-autoscale-group) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-ec2-autoscale-group.svg)](https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+# terraform-aws-ec2-autoscale-group [![Codefresh Build Status](https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-ec2-autoscale-group?type=cf-1)](https://g.codefresh.io/public/accounts/cloudposse/pipelines/5d8b7d3d4cba337a81a18256) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-ec2-autoscale-group.svg)](https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 
 Terraform module to provision [Auto Scaling Group](https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html) and [Launch Template](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-templates.html) on AWS.
@@ -53,7 +53,7 @@ Instead pin to the release tag (e.g. `?ref=tags/x.y.z`) of one of our [latest re
 
 ```hcl
 locals {
-  userdata = <<USERDATA
+  userdata = <<-USERDATA
     #!/bin/bash
     cat <<"__EOF__" > /home/ec2-user/.ssh/config
     Host *
@@ -116,7 +116,7 @@ Available targets:
 | associate_public_ip_address | Associate a public IP address with an instance in a VPC | bool | `false` | no |
 | attributes | Additional attributes (e.g. `1`) | list(string) | `<list>` | no |
 | autoscaling_policies_enabled | Whether to create `aws_autoscaling_policy` and `aws_cloudwatch_metric_alarm` resources to control Auto Scaling | bool | `true` | no |
-| block_device_mappings | Specify volumes to attach to the instance besides the volumes specified by the AMI | list(string) | `<list>` | no |
+| block_device_mappings | Specify volumes to attach to the instance besides the volumes specified by the AMI | object | `<list>` | no |
 | cpu_utilization_high_evaluation_periods | The number of periods over which data is compared to the specified threshold | number | `2` | no |
 | cpu_utilization_high_period_seconds | The period in seconds over which the specified statistic is applied | number | `300` | no |
 | cpu_utilization_high_statistic | The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum` | string | `Average` | no |
@@ -125,12 +125,12 @@ Available targets:
 | cpu_utilization_low_period_seconds | The period in seconds over which the specified statistic is applied | number | `300` | no |
 | cpu_utilization_low_statistic | The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum` | string | `Average` | no |
 | cpu_utilization_low_threshold_percent | The value against which the specified statistic is compared | number | `10` | no |
-| credit_specification | Customize the credit specification of the instances | list(string) | `<list>` | no |
+| credit_specification | Customize the credit specification of the instances | object | `null` | no |
 | default_cooldown | The amount of time, in seconds, after a scaling activity completes before another scaling activity can start | number | `300` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
 | disable_api_termination | If `true`, enables EC2 Instance Termination Protection | bool | `false` | no |
 | ebs_optimized | If true, the launched EC2 instance will be EBS-optimized | bool | `false` | no |
-| elastic_gpu_specifications | Specifications of Elastic GPU to attach to the instances | list(string) | `<list>` | no |
+| elastic_gpu_specifications | Specifications of Elastic GPU to attach to the instances | object | `null` | no |
 | enable_monitoring | Enable/disable detailed monitoring | bool | `true` | no |
 | enabled | Whether to create the resources. Set to `false` to prevent the module from creating any resources | string | `true` | no |
 | enabled_metrics | A list of metrics to collect. The allowed values are `GroupMinSize`, `GroupMaxSize`, `GroupDesiredCapacity`, `GroupInServiceInstances`, `GroupPendingInstances`, `GroupStandbyInstances`, `GroupTerminatingInstances`, `GroupTotalInstances` | list(string) | `<list>` | no |
@@ -140,7 +140,7 @@ Available targets:
 | iam_instance_profile_name | The IAM instance profile name to associate with launched instances | string | `` | no |
 | image_id | The EC2 image ID to launch | string | `` | no |
 | instance_initiated_shutdown_behavior | Shutdown behavior for the instances. Can be `stop` or `terminate` | string | `terminate` | no |
-| instance_market_options | The market (purchasing) option for the instances | list(string) | `<list>` | no |
+| instance_market_options | The market (purchasing) option for the instances | object | `null` | no |
 | instance_type | Instance type to launch | string | - | yes |
 | key_name | The SSH key name that should be used for the instance | string | `` | no |
 | launch_template_version | Launch template version. Can be version number, `$Latest` or `$Default` | string | `$Latest` | no |
@@ -151,7 +151,7 @@ Available targets:
 | min_size | The minimum size of the autoscale group | number | - | yes |
 | name | Solution name, e.g. 'app' or 'cluster' | string | `app` | no |
 | namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | `` | no |
-| placement | The placement specifications of the instances | list(string) | `<list>` | no |
+| placement | The placement specifications of the instances | object | `null` | no |
 | placement_group | The name of the placement group into which you'll launch your instances, if any | string | `` | no |
 | protect_from_scale_in | Allows setting instance protection. The autoscaling group will not select instances with this setting for terminination during scale in events | bool | `false` | no |
 | scale_down_adjustment_type | Specifies whether the adjustment is an absolute number or a percentage of the current capacity. Valid values are `ChangeInCapacity`, `ExactCapacity` and `PercentChangeInCapacity` | string | `ChangeInCapacity` | no |

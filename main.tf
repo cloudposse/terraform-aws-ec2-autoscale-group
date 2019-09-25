@@ -15,14 +15,14 @@ resource "aws_launch_template" "default" {
   name_prefix = format("%s%s", module.label.id, var.delimiter)
 
   dynamic "block_device_mappings" {
-    for_each = [var.block_device_mappings]
+    for_each = var.block_device_mappings
     content {
       device_name  = lookup(block_device_mappings.value, "device_name", null)
       no_device    = lookup(block_device_mappings.value, "no_device", null)
       virtual_name = lookup(block_device_mappings.value, "virtual_name", null)
 
       dynamic "ebs" {
-        for_each = lookup(block_device_mappings.value, "ebs", [])
+        for_each = flatten(list(lookup(block_device_mappings.value, "ebs", [])))
         content {
           delete_on_termination = lookup(ebs.value, "delete_on_termination", null)
           encrypted             = lookup(ebs.value, "encrypted", null)
@@ -37,7 +37,7 @@ resource "aws_launch_template" "default" {
   }
 
   dynamic "credit_specification" {
-    for_each = [var.credit_specification]
+    for_each = var.credit_specification != null ? [var.credit_specification] : []
     content {
       cpu_credits = lookup(credit_specification.value, "cpu_credits", null)
     }
@@ -47,9 +47,9 @@ resource "aws_launch_template" "default" {
   ebs_optimized           = var.ebs_optimized
 
   dynamic "elastic_gpu_specifications" {
-    for_each = [var.elastic_gpu_specifications]
+    for_each = var.elastic_gpu_specifications != null ? [var.elastic_gpu_specifications] : []
     content {
-      type = elastic_gpu_specifications.value.type
+      type = lookup(elastic_gpu_specifications.value, "type", null)
     }
   }
 
@@ -57,12 +57,12 @@ resource "aws_launch_template" "default" {
   instance_initiated_shutdown_behavior = var.instance_initiated_shutdown_behavior
 
   dynamic "instance_market_options" {
-    for_each = [var.instance_market_options]
+    for_each = var.instance_market_options != null ? [var.instance_market_options] : []
     content {
       market_type = lookup(instance_market_options.value, "market_type", null)
 
       dynamic "spot_options" {
-        for_each = lookup(instance_market_options.value, "spot_options", [])
+        for_each = flatten(list(lookup(instance_market_options.value, "spot_options", [])))
         content {
           block_duration_minutes         = lookup(spot_options.value, "block_duration_minutes", null)
           instance_interruption_behavior = lookup(spot_options.value, "instance_interruption_behavior", null)
@@ -78,13 +78,12 @@ resource "aws_launch_template" "default" {
   key_name      = var.key_name
 
   dynamic "placement" {
-    for_each = [var.placement]
+    for_each = var.placement != null ? [var.placement] : []
     content {
       affinity          = lookup(placement.value, "affinity", null)
       availability_zone = lookup(placement.value, "availability_zone", null)
       group_name        = lookup(placement.value, "group_name", null)
       host_id           = lookup(placement.value, "host_id", null)
-      spread_domain     = lookup(placement.value, "spread_domain", null)
       tenancy           = lookup(placement.value, "tenancy", null)
     }
   }
@@ -125,16 +124,6 @@ resource "aws_launch_template" "default" {
   }
 }
 
-data "null_data_source" "tags_as_list_of_maps" {
-  count = var.enabled ? length(keys(var.tags)) : 0
-
-  inputs = {
-    "key"                 = keys(var.tags)[count.index]
-    "value"               = values(var.tags)[count.index]
-    "propagate_at_launch" = true
-  }
-}
-
 resource "aws_autoscaling_group" "default" {
   count = var.enabled ? 1 : 0
 
@@ -161,10 +150,17 @@ resource "aws_autoscaling_group" "default" {
 
   launch_template {
     id      = join("", aws_launch_template.default.*.id)
-    version = aws_launch_template.default[0].latest_version
+    version = var.launch_template_version != "" ? var.launch_template_version : join("", aws_launch_template.default.*.latest_version)
   }
 
-  tags = data.null_data_source.tags_as_list_of_maps.*.outputs
+  tags = flatten([
+    for key in keys(module.label.tags) :
+    {
+      key                 = key
+      value               = module.label.tags[key]
+      propagate_at_launch = true
+    }
+  ])
 
   lifecycle {
     create_before_destroy = true

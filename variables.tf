@@ -107,32 +107,74 @@ variable "ebs_optimized" {
 
 variable "block_device_mappings" {
   description = "Specify volumes to attach to the instance besides the volumes specified by the AMI"
-  type        = list(string)
-  default     = []
+
+  type = list(object({
+    device_name  = string
+    no_device    = bool
+    virtual_name = string
+    ebs = object({
+      delete_on_termination = bool
+      encrypted             = bool
+      iops                  = number
+      kms_key_id            = string
+      snapshot_id           = string
+      volume_size           = number
+      volume_type           = string
+    })
+  }))
+
+  default = []
 }
 
 variable "instance_market_options" {
   description = "The market (purchasing) option for the instances"
-  type        = list(string)
-  default     = []
+
+  type = object({
+    market_type = string
+    spot_options = object({
+      block_duration_minutes         = bool
+      instance_interruption_behavior = string
+      max_price                      = number
+      spot_instance_type             = string
+      valid_until                    = string
+    })
+  })
+
+  default = null
 }
 
 variable "placement" {
   description = "The placement specifications of the instances"
-  type        = list(string)
-  default     = []
+
+  type = object({
+    affinity          = string
+    availability_zone = string
+    group_name        = string
+    host_id           = string
+    tenancy           = string
+  })
+
+  default = null
 }
 
 variable "credit_specification" {
   description = "Customize the credit specification of the instances"
-  type        = list(string)
-  default     = []
+
+  type = object({
+    cpu_credits = string
+  })
+
+  default = null
 }
 
 variable "elastic_gpu_specifications" {
   description = "Specifications of Elastic GPU to attach to the instances"
-  type        = list(string)
-  default     = []
+
+  type = object({
+    type = string
+  })
+
+  default = null
 }
 
 variable "disable_api_termination" {
