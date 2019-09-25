@@ -178,15 +178,15 @@ Available targets:
 
 | Name | Description |
 |------|-------------|
-| autoscaling_group_arn | The ARN for this AutoScaling Group |
+| autoscaling_group_arn | ARN of the AutoScaling Group |
 | autoscaling_group_default_cooldown | Time between a scaling activity and the succeeding scaling activity |
 | autoscaling_group_desired_capacity | The number of Amazon EC2 instances that should be running in the group |
 | autoscaling_group_health_check_grace_period | Time after instance comes into service before checking health |
 | autoscaling_group_health_check_type | `EC2` or `ELB`. Controls how health checking is done |
-| autoscaling_group_id | The autoscaling group id |
+| autoscaling_group_id | The AutoScaling Group id |
 | autoscaling_group_max_size | The maximum size of the autoscale group |
 | autoscaling_group_min_size | The minimum size of the autoscale group |
-| autoscaling_group_name | The autoscaling group name |
+| autoscaling_group_name | The AutoScaling Group name |
 | launch_template_arn | The ARN of the launch template |
 | launch_template_id | The ID of the launch template |
 

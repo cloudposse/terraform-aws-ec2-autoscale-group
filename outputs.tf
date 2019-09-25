@@ -9,17 +9,17 @@ output "launch_template_arn" {
 }
 
 output "autoscaling_group_id" {
-  description = "The autoscaling group id"
+  description = "The AutoScaling Group id"
   value       = join("", aws_autoscaling_group.default.*.id)
 }
 
 output "autoscaling_group_name" {
-  description = "The autoscaling group name"
+  description = "The AutoScaling Group name"
   value       = join("", aws_autoscaling_group.default.*.name)
 }
 
 output "autoscaling_group_arn" {
-  description = "The ARN for this AutoScaling Group"
+  description = "ARN of the AutoScaling Group"
   value       = join("", aws_autoscaling_group.default.*.arn)
 }
 
