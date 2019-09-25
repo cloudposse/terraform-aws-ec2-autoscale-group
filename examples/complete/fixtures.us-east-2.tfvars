@@ -8,7 +8,7 @@ stage = "test"
 
 name = "ec2-autoscale-group"
 
-image_id = "ami-08cab282f9979fc7a"
+image_id = "ami-00c03f7f7f2ec15c3"
 
 instance_type = "t2.small"
 
