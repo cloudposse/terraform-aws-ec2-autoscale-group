@@ -405,3 +405,37 @@ variable "cpu_utilization_low_statistic" {
   default     = "Average"
   description = "The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum`"
 }
+
+
+// Mixed Type Autoscale
+variable "mixedspot_asg" {
+  description = "Enabled Mixed Instance Policy AutoScaling"
+  type    = string
+  default = "false"
+}
+
+#https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html#instances_distribution
+variable "mixedspot_instance_distribution" {
+  description = "Sets Mixed Instance Policy instance distribution "
+  type = object({
+    on_demand_base_capacity                  = number
+    spot_instance_pools                      = number
+    health_check_grace_period                = number
+    on_demand_percentage_above_base_capacity = number
+    spot_max_price                           = string
+  })
+  default = {
+    on_demand_base_capacity                  = 0
+    spot_instance_pools                      = 1
+    health_check_grace_period                = 300
+    on_demand_percentage_above_base_capacity = 10
+    spot_max_price                           = ""
+  }
+}
+
+variable "mixedspot_instance_types" {
+  description = "Instance Sizes to use for Mixed Instance Policy spot requests"
+
+  type = list(string)
+  default = []
+}

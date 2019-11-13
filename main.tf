@@ -125,7 +125,7 @@ resource "aws_launch_template" "default" {
 }
 
 resource "aws_autoscaling_group" "default" {
-  count = var.enabled ? 1 : 0
+  count = var.enabled && ! var.mixedspot_asg ? 1 : 0
 
   name_prefix               = format("%s%s", module.label.id, var.delimiter)
   vpc_zone_identifier       = var.subnet_ids
@@ -152,6 +152,68 @@ resource "aws_autoscaling_group" "default" {
     id      = join("", aws_launch_template.default.*.id)
     version = var.launch_template_version != "" ? var.launch_template_version : join("", aws_launch_template.default.*.latest_version)
   }
+
+  tags = flatten([
+    for key in keys(module.label.tags) :
+    {
+      key                 = key
+      value               = module.label.tags[key]
+      propagate_at_launch = true
+    }
+  ])
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_autoscaling_group" "default_mixed" {
+  count = var.enabled && var.mixedspot_asg ? 1 : 0
+
+  name_prefix               = format("%s%s", module.label.id, var.delimiter)
+  vpc_zone_identifier       = var.subnet_ids
+  max_size                  = var.max_size
+  min_size                  = var.min_size
+  load_balancers            = var.load_balancers
+  health_check_grace_period = var.health_check_grace_period
+  health_check_type         = var.health_check_type
+  min_elb_capacity          = var.min_elb_capacity
+  wait_for_elb_capacity     = var.wait_for_elb_capacity
+  target_group_arns         = var.target_group_arns
+  default_cooldown          = var.default_cooldown
+  force_delete              = var.force_delete
+  termination_policies      = var.termination_policies
+  suspended_processes       = var.suspended_processes
+  placement_group           = var.placement_group
+  enabled_metrics           = var.enabled_metrics
+  metrics_granularity       = var.metrics_granularity
+  wait_for_capacity_timeout = var.wait_for_capacity_timeout
+  protect_from_scale_in     = var.protect_from_scale_in
+  service_linked_role_arn   = var.service_linked_role_arn
+
+  mixed_instances_policy {
+    instances_distribution {
+      on_demand_base_capacity                  = var.mixedspot_instance_distribution["on_demand_base_capacity"]
+      on_demand_percentage_above_base_capacity = var.mixedspot_instance_distribution["on_demand_percentage_above_base_capacity"]
+      spot_instance_pools                      = var.mixedspot_instance_distribution["spot_instance_pools"]
+      spot_max_price                           = var.mixedspot_instance_distribution["spot_max_price"]
+    }
+
+    launch_template {
+      launch_template_specification {
+        launch_template_id = join("", aws_launch_template.default.*.id)
+        version            = var.launch_template_version != "" ? var.launch_template_version : join("", aws_launch_template.default.*.latest_version)
+      }
+
+      dynamic "override" {
+        for_each = var.mixedspot_instance_types
+        content {
+          instance_type = override.value
+        }
+      }
+    }
+  }
+
 
   tags = flatten([
     for key in keys(module.label.tags) :
