@@ -25,7 +25,7 @@ cpu_utilization_high_threshold_percent = 80
 cpu_utilization_low_threshold_percent = 20
 
 //
-mixed_type = "true"
+mixedspot_asg = "true"
 mixedspot_instance_distribution = {
   on_demand_base_capacity                  = 0
   spot_instance_pools                      = 1
