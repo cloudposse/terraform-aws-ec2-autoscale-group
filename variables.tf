@@ -410,8 +410,8 @@ variable "cpu_utilization_low_statistic" {
 // Mixed Type Autoscale
 variable "mixedspot_asg" {
   description = "Enabled Mixed Instance Policy AutoScaling"
-  type    = string
-  default = "false"
+  type        = string
+  default     = "false"
 }
 
 #https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html#instances_distribution
@@ -436,6 +436,6 @@ variable "mixedspot_instance_distribution" {
 variable "mixedspot_instance_types" {
   description = "Instance Sizes to use for Mixed Instance Policy spot requests"
 
-  type = list(string)
+  type    = list(string)
   default = []
 }

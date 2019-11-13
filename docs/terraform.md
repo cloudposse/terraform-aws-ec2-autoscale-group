@@ -38,6 +38,9 @@
 | metrics_granularity | The granularity to associate with the metrics to collect. The only valid value is 1Minute | string | `1Minute` | no |
 | min_elb_capacity | Setting this causes Terraform to wait for this number of instances to show up healthy in the ELB only on creation. Updates will not wait on ELB instance number changes | number | `0` | no |
 | min_size | The minimum size of the autoscale group | number | - | yes |
+| mixedspot_asg | Enabled Mixed Instance Policy AutoScaling | string | `false` | no |
+| mixedspot_instance_distribution | Sets Mixed Instance Policy instance distribution | object | `<map>` | no |
+| mixedspot_instance_types | Instance Sizes to use for Mixed Instance Policy spot requests | list(string) | `<list>` | no |
 | name | Solution name, e.g. 'app' or 'cluster' | string | `app` | no |
 | namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | `` | no |
 | placement | The placement specifications of the instances | object | `null` | no |
