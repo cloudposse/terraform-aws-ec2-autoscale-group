@@ -148,15 +148,15 @@ variable mixed_instances_policy {
 
   type = object({
     instances_distribution = object({
-      on_demand_allocation_strategy = string
-      on_demand_base_capacity = number
+      on_demand_allocation_strategy            = string
+      on_demand_base_capacity                  = number
       on_demand_percentage_above_base_capacity = number
-      spot_allocation_strategy = string
-      spot_instance_pools = number
-      spot_max_price = string
+      spot_allocation_strategy                 = string
+      spot_instance_pools                      = number
+      spot_max_price                           = string
     })
     override = list(object({
-      instance_type = string
+      instance_type     = string
       weighted_capacity = number
     }))
   })
