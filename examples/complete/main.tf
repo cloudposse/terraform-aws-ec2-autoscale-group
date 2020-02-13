@@ -11,7 +11,7 @@ module "vpc" {
 }
 
 module "subnets" {
-  source               = "git::https://github.com/cloudposse/terraform-aws-dynamic-subnets.git?ref=tags/0.16.0"
+  source               = "git::https://github.com/cloudposse/terraform-aws-dynamic-subnets.git?ref=tags/0.18.1"
   availability_zones   = var.availability_zones
   namespace            = var.namespace
   stage                = var.stage
@@ -32,6 +32,8 @@ module "autoscale_group" {
 
   image_id                    = var.image_id
   instance_type               = var.instance_type
+  instance_market_options     = var.instance_market_options
+  mixed_instances_policy      = var.mixed_instances_policy
   subnet_ids                  = module.subnets.public_subnet_ids
   health_check_type           = var.health_check_type
   min_size                    = var.min_size
