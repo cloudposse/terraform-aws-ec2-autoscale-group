@@ -27,10 +27,10 @@ cpu_utilization_low_threshold_percent = 20
 mixed_instances_policy = {
   instances_distribution = null
   override = [{
-    instance_type = "t3.small"
+    instance_type     = "t3.small"
     weighted_capacity = null
-  }, {
-    instance_type = "t3a.small"
+    }, {
+    instance_type     = "t3a.small"
     weighted_capacity = null
   }]
 }
