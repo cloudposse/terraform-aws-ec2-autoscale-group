@@ -23,6 +23,7 @@
 | enable_monitoring | Enable/disable detailed monitoring | bool | `true` | no |
 | enabled | Whether to create the resources. Set to `false` to prevent the module from creating any resources | string | `true` | no |
 | enabled_metrics | A list of metrics to collect. The allowed values are `GroupMinSize`, `GroupMaxSize`, `GroupDesiredCapacity`, `GroupInServiceInstances`, `GroupPendingInstances`, `GroupStandbyInstances`, `GroupTerminatingInstances`, `GroupTotalInstances` | list(string) | `<list>` | no |
+| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | string | `` | no |
 | force_delete | Allows deleting the autoscaling group without waiting for all instances in the pool to terminate. You can force an autoscaling group to delete even if it's in the process of scaling a resource. Normally, Terraform drains all the instances before deleting the group. This bypasses that behavior and potentially leaves resources dangling | bool | `false` | no |
 | health_check_grace_period | Time (in seconds) after instance comes into service before checking health | number | `300` | no |
 | health_check_type | Controls how health checking is done. Valid values are `EC2` or `ELB` | string | `EC2` | no |

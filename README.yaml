@@ -71,9 +71,10 @@ usage: |-
   module "autoscale_group" {
     source = "git::https://github.com/cloudposse/terraform-aws-ec2-autoscale-group.git?ref=master"
 
-    namespace = "eg"
-    stage     = "dev"
-    name      = "test"
+    namespace   = var.namespace
+    stage       = var.stage
+    environment = var.environment
+    name        = var.name
 
     image_id                    = "ami-08cab282f9979fc7a"
     instance_type               = "t2.small"
