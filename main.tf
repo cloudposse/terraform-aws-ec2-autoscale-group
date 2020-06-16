@@ -232,7 +232,7 @@ resource "aws_autoscaling_group" "default" {
   resource "aws_autoscaling_lifecycle_hook" "k8asg_hook" {
   depends_on = [aws_autoscaling_group.default]
   name                   = "k8asg_hook"
-  autoscaling_group_name = var.autoscaling_group_name
+  autoscaling_group_name = var.name
   default_result         = var.default_result
   heartbeat_timeout      = var.heartbeat_timeout
   lifecycle_transition   = var.lifecycle_transition
