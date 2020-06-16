@@ -228,3 +228,24 @@ resource "aws_autoscaling_group" "default" {
     create_before_destroy = true
   }
 }
+    
+  resource "aws_autoscaling_lifecycle_hook" "k8asg_hook" {
+  depends_on = [aws_autoscaling_group.default]
+  name                   = "k8asg_hook"
+  autoscaling_group_name = var.autoscaling_group_name
+  default_result         = var.default_result
+  heartbeat_timeout      = var.heartbeat_timeout
+  lifecycle_transition   = "var.lifecycle_transition"
+
+ 
+
+  notification_metadata = <<EOF
+{
+}
+EOF
+
+ 
+
+  notification_target_arn = "var.notification_target_arn"
+  role_arn                = "var.role_arn"
+}
