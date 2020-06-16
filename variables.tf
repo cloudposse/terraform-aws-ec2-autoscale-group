@@ -431,3 +431,46 @@ variable "cpu_utilization_low_statistic" {
   default     = "Average"
   description = "The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum`"
 }
+
+variable "autoscaling_group_name" {
+  type        = string
+  default     = ""
+  description = "autoscaling_group_name"
+}
+
+variable "default_result" {
+  type        = string
+  default     = ""
+  description = "default_result"
+ }
+
+variable "heartbeat_timeout" {
+  type        = string
+  default     = ""
+  description = "heartbeat_timeout"
+ }
+
+variable "heartbeat_timeout" {
+  type        = string
+  default     = ""
+  description = "heartbeat_timeout"
+ }
+
+variable "lifecycle_transition" {
+  type        = string
+  default     = ""
+  description = "lifecycle_transition"
+ }
+
+variable "notification_target_arn" {
+  type        = string
+  default     = ""
+  description = "notification_target_arn"
+ }
+
+variable "role_arn" {
+  type        = string
+  default     = ""
+  description = "role_arn"
+ }
+
