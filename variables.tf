@@ -445,8 +445,8 @@ variable "default_result" {
  }
 
 variable "heartbeat_timeout" {
-  type        = string
-  default     = ""
+  type        = number
+  default     = 300
   description = "heartbeat_timeout"
  }
 
