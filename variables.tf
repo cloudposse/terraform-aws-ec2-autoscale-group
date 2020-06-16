@@ -432,12 +432,6 @@ variable "cpu_utilization_low_statistic" {
   description = "The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum`"
 }
 
-variable "autoscaling_group_name" {
-  type        = string
-  default     = ""
-  description = "autoscaling_group_name"
-}
-
 variable "default_result" {
   type        = string
   default     = ""
