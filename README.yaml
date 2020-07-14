@@ -1,4 +1,3 @@
----
 #
 # This is the canonical configuration for the `README.md`
 # Run `make readme` to rebuild the `README.md`
@@ -6,28 +5,21 @@
 
 # Name of this project
 name: terraform-aws-ec2-autoscale-group
-
 # Logo for this project
 #logo: docs/logo.png
 
 # License of this project
 license: "APACHE2"
-
 # Canonical GitHub repo
 github_repo: cloudposse/terraform-aws-ec2-autoscale-group
-
 # Badges to display
 badges:
-  - name: "Codefresh Build Status"
-    image: "https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-ec2-autoscale-group?type=cf-1"
-    url: "https://g.codefresh.io/public/accounts/cloudposse/pipelines/5d8b7d3d4cba337a81a18256"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/terraform-aws-ec2-autoscale-group.svg"
     url: "https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/releases/latest"
   - name: "Slack Community"
     image: "https://slack.cloudposse.com/badge.svg"
     url: "https://slack.cloudposse.com"
-
 related:
   - name: "terraform-aws-ec2-instance"
     description: "Terraform module for providing a general purpose EC2 instance"
@@ -44,16 +36,14 @@ related:
   - name: "terraform-aws-ec2-ami-snapshot"
     description: "Terraform module to easily generate AMI snapshots to create replica instances"
     url: "https://github.com/cloudposse/terraform-aws-ec2-ami-snapshot"
-
 # Short description of this project
 description: |-
   Terraform module to provision [Auto Scaling Group](https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html) and [Launch Template](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-templates.html) on AWS.
 
   The module also creates AutoScaling Policies and CloudWatch Metric Alarms to monitor CPU utilization on the EC2 instances and scale the number of instance in the AutoScaling Group up or down.
   If you don't want to use the provided functionality, or want to provide your own policies, disable it by setting the variable `autoscaling_policies_enabled` to `"false"`.
-
 # How to use this project
-usage: |-
+usage: |2-
 
   ```hcl
   locals {
@@ -98,11 +88,9 @@ usage: |-
     cpu_utilization_low_threshold_percent  = "20"
   }
   ```
-
 include:
   - "docs/targets.md"
   - "docs/terraform.md"
-
 # Contributors to this project
 contributors:
   - name: "Erik Osterman"
