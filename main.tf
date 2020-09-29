@@ -119,6 +119,16 @@ resource "aws_launch_template" "default" {
     tags          = module.label.tags
   }
 
+  tag_specifications {
+    resource_type = "spot-instances-request"
+    tags          = module.label.tags
+  }
+
+  tag_specifications {
+    resource_type = "elastic-gpu"
+    tags          = module.label.tags
+  }
+
   tags = module.label.tags
 
   lifecycle {
