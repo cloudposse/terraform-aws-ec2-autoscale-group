@@ -131,12 +131,13 @@ Available targets:
 
 ```
 <!-- markdownlint-restore -->
+<!-- markdownlint-disable -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | terraform | >= 0.12.0, < 0.14.0 |
-| aws | ~> 2.0 |
+| aws | >= 2.0 |
 | null | ~> 2.0 |
 | template | ~> 2.0 |
 
@@ -144,7 +145,7 @@ Available targets:
 
 | Name | Version |
 |------|---------|
-| aws | ~> 2.0 |
+| aws | >= 2.0 |
 
 ## Inputs
 
@@ -229,6 +230,7 @@ Available targets:
 | launch\_template\_arn | The ARN of the launch template |
 | launch\_template\_id | The ID of the launch template |
 
+<!-- markdownlint-restore -->
 
 
 
