@@ -22,6 +22,12 @@ variable "name" {
   description = "Solution name, e.g. 'app' or 'cluster'"
 }
 
+variable "label_order" {
+  type        = list(string)
+  default     = null
+  description = "The order of the label components. Defaults to the module default."
+}
+
 variable "delimiter" {
   type        = string
   default     = "-"

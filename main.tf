@@ -4,6 +4,7 @@ module "label" {
   name        = var.name
   stage       = var.stage
   environment = var.environment
+  label_order = var.label_order
   delimiter   = var.delimiter
   attributes  = var.attributes
   tags        = var.tags
