@@ -49,6 +49,7 @@
 | instance\_market\_options | The market (purchasing) option for the instances | <pre>object({<br>    market_type = string<br>    spot_options = object({<br>      block_duration_minutes         = number<br>      instance_interruption_behavior = string<br>      max_price                      = number<br>      spot_instance_type             = string<br>      valid_until                    = string<br>    })<br>  })</pre> | `null` | no |
 | instance\_type | Instance type to launch | `string` | n/a | yes |
 | key\_name | The SSH key name that should be used for the instance | `string` | `""` | no |
+| label\_order | The naming order of the id output and Name tag.<br>Defaults to ["namespace", "environment", "stage", "name", "attributes"].<br>You can omit any of the 5 elements, but at least one must be present. | `list(string)` | `null` | no |
 | launch\_template\_version | Launch template version. Can be version number, `$Latest` or `$Default` | `string` | `"$Latest"` | no |
 | load\_balancers | A list of elastic load balancer names to add to the autoscaling group names. Only valid for classic load balancers. For ALBs, use `target_group_arns` instead | `list(string)` | `[]` | no |
 | max\_size | The maximum size of the autoscale group | `number` | n/a | yes |

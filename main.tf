@@ -1,9 +1,10 @@
 module "label" {
-  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.17.0"
+  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.19.2"
   namespace   = var.namespace
   name        = var.name
   stage       = var.stage
   environment = var.environment
+  label_order = var.label_order
   delimiter   = var.delimiter
   attributes  = var.attributes
   tags        = var.tags
