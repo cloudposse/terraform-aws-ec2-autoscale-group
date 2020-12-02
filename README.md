@@ -1,4 +1,6 @@
+<!-- markdownlint-disable -->
 # terraform-aws-ec2-autoscale-group [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-ec2-autoscale-group.svg)](https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+<!-- markdownlint-restore -->
 
 [![README Header][readme_header_img]][readme_header_link]
 
@@ -166,6 +168,7 @@ Available targets:
 | credit\_specification | Customize the credit specification of the instances | <pre>object({<br>    cpu_credits = string<br>  })</pre> | `null` | no |
 | default\_cooldown | The amount of time, in seconds, after a scaling activity completes before another scaling activity can start | `number` | `300` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | `string` | `"-"` | no |
+| desired\_capacity | The number of Amazon EC2 instances that should be running in the group, if not set will use `min_size` as value | `number` | `0` | no |
 | disable\_api\_termination | If `true`, enables EC2 Instance Termination Protection | `bool` | `false` | no |
 | ebs\_optimized | If true, the launched EC2 instance will be EBS-optimized | `bool` | `false` | no |
 | elastic\_gpu\_specifications | Specifications of Elastic GPU to attach to the instances | <pre>object({<br>    type = string<br>  })</pre> | `null` | no |
@@ -382,8 +385,10 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 
 ### Contributors
 
+<!-- markdownlint-disable -->
 |  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] | [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] |
 |---|---|---|
+<!-- markdownlint-restore -->
 
   [osterman_homepage]: https://github.com/osterman
   [osterman_avatar]: https://img.cloudposse.com/150x150/https://github.com/osterman.png

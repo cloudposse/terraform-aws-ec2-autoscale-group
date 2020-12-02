@@ -33,6 +33,7 @@
 | credit\_specification | Customize the credit specification of the instances | <pre>object({<br>    cpu_credits = string<br>  })</pre> | `null` | no |
 | default\_cooldown | The amount of time, in seconds, after a scaling activity completes before another scaling activity can start | `number` | `300` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | `string` | `"-"` | no |
+| desired\_capacity | The number of Amazon EC2 instances that should be running in the group, if not set will use `min_size` as value | `number` | `0` | no |
 | disable\_api\_termination | If `true`, enables EC2 Instance Termination Protection | `bool` | `false` | no |
 | ebs\_optimized | If true, the launched EC2 instance will be EBS-optimized | `bool` | `false` | no |
 | elastic\_gpu\_specifications | Specifications of Elastic GPU to attach to the instances | <pre>object({<br>    type = string<br>  })</pre> | `null` | no |
