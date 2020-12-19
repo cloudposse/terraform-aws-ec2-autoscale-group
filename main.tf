@@ -1,20 +1,7 @@
-module "label" {
-  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.19.2"
-  namespace   = var.namespace
-  name        = var.name
-  stage       = var.stage
-  environment = var.environment
-  label_order = var.label_order
-  delimiter   = var.delimiter
-  attributes  = var.attributes
-  tags        = var.tags
-  enabled     = var.enabled
-}
-
 resource "aws_launch_template" "default" {
   count = var.enabled ? 1 : 0
 
-  name_prefix = format("%s%s", module.label.id, var.delimiter)
+  name_prefix = format("%s%s", module.this.id, var.delimiter)
 
   dynamic "block_device_mappings" {
     for_each = var.block_device_mappings
@@ -103,7 +90,7 @@ resource "aws_launch_template" "default" {
 
   # https://github.com/terraform-providers/terraform-provider-aws/issues/4570
   network_interfaces {
-    description                 = module.label.id
+    description                 = module.this.id
     device_index                = 0
     associate_public_ip_address = var.associate_public_ip_address
     delete_on_termination       = true
@@ -112,15 +99,15 @@ resource "aws_launch_template" "default" {
 
   tag_specifications {
     resource_type = "volume"
-    tags          = module.label.tags
+    tags          = module.this.tags
   }
 
   tag_specifications {
     resource_type = "instance"
-    tags          = module.label.tags
+    tags          = module.this.tags
   }
 
-  tags = module.label.tags
+  tags = module.this.tags
 
   lifecycle {
     create_before_destroy = true
@@ -146,7 +133,7 @@ locals {
 resource "aws_autoscaling_group" "default" {
   count = var.enabled ? 1 : 0
 
-  name_prefix               = format("%s%s", module.label.id, var.delimiter)
+  name_prefix               = format("%s%s", module.this.id, var.delimiter)
   vpc_zone_identifier       = var.subnet_ids
   max_size                  = var.max_size
   min_size                  = var.min_size
@@ -217,10 +204,10 @@ resource "aws_autoscaling_group" "default" {
   }
 
   tags = flatten([
-    for key in keys(module.label.tags) :
+    for key in keys(module.this.tags) :
     {
       key                 = key
-      value               = module.label.tags[key]
+      value               = module.this.tags[key]
       propagate_at_launch = true
     }
   ])
