@@ -1,12 +1,12 @@
 # https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ec2-metricscollected.html
 
 locals {
-  autoscaling_enabled = var.enabled && var.autoscaling_policies_enabled ? true : false
+  autoscaling_enabled = module.this.enabled && var.autoscaling_policies_enabled ? true : false
 }
 
 resource "aws_autoscaling_policy" "scale_up" {
   count                  = local.autoscaling_enabled ? 1 : 0
-  name                   = "${module.label.id}${var.delimiter}scale${var.delimiter}up"
+  name                   = "${module.this.id}${module.this.delimiter}scale${module.this.delimiter}up"
   scaling_adjustment     = var.scale_up_scaling_adjustment
   adjustment_type        = var.scale_up_adjustment_type
   policy_type            = var.scale_up_policy_type
@@ -16,7 +16,7 @@ resource "aws_autoscaling_policy" "scale_up" {
 
 resource "aws_autoscaling_policy" "scale_down" {
   count                  = local.autoscaling_enabled ? 1 : 0
-  name                   = "${module.label.id}${var.delimiter}scale${var.delimiter}down"
+  name                   = "${module.this.id}${module.this.delimiter}scale${module.this.delimiter}down"
   scaling_adjustment     = var.scale_down_scaling_adjustment
   adjustment_type        = var.scale_down_adjustment_type
   policy_type            = var.scale_down_policy_type
@@ -26,7 +26,7 @@ resource "aws_autoscaling_policy" "scale_down" {
 
 resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   count               = local.autoscaling_enabled ? 1 : 0
-  alarm_name          = "${module.label.id}${var.delimiter}cpu${var.delimiter}utilization${var.delimiter}high"
+  alarm_name          = "${module.this.id}${module.this.delimiter}cpu${module.this.delimiter}utilization${module.this.delimiter}high"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = var.cpu_utilization_high_evaluation_periods
   metric_name         = "CPUUtilization"
@@ -45,7 +45,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
 
 resource "aws_cloudwatch_metric_alarm" "cpu_low" {
   count               = local.autoscaling_enabled ? 1 : 0
-  alarm_name          = "${module.label.id}${var.delimiter}cpu${var.delimiter}utilization${var.delimiter}low"
+  alarm_name          = "${module.this.id}${module.this.delimiter}cpu${module.this.delimiter}utilization${module.this.delimiter}low"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = var.cpu_utilization_low_evaluation_periods
   metric_name         = "CPUUtilization"
