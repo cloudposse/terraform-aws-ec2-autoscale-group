@@ -59,7 +59,9 @@ usage: |2-
   }
 
   module "autoscale_group" {
-    source = "git::https://github.com/cloudposse/terraform-aws-ec2-autoscale-group.git?ref=master"
+    source = "cloudposse/ec2-autoscale-group/aws"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version = "x.x.x"
 
     namespace   = var.namespace
     stage       = var.stage
