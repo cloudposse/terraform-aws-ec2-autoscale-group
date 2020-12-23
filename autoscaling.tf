@@ -6,7 +6,7 @@ locals {
 
 resource "aws_autoscaling_policy" "scale_up" {
   count                  = local.autoscaling_enabled ? 1 : 0
-  name                   = "${module.label.id}${var.delimiter}scale${var.delimiter}up"
+  name                   = "${module.this.id}${var.delimiter}scale${var.delimiter}up"
   scaling_adjustment     = var.scale_up_scaling_adjustment
   adjustment_type        = var.scale_up_adjustment_type
   policy_type            = var.scale_up_policy_type
