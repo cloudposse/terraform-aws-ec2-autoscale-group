@@ -24,46 +24,43 @@ resource "aws_autoscaling_policy" "scale_down" {
   autoscaling_group_name = join("", aws_autoscaling_group.default.*.name)
 }
 
-resource "aws_cloudwatch_metric_alarm" "cpu_high" {
-  count               = local.autoscaling_enabled ? 1 : 0
-  alarm_name          = "${module.this.id}${module.this.delimiter}cpu${module.this.delimiter}utilization${module.this.delimiter}high"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = var.cpu_utilization_high_evaluation_periods
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/EC2"
-  period              = var.cpu_utilization_high_period_seconds
-  statistic           = var.cpu_utilization_high_statistic
-  threshold           = var.cpu_utilization_high_threshold_percent
 
-  dimensions = {
-    AutoScalingGroupName = join("", aws_autoscaling_group.default.*.name)
+locals {
+  default_alarms = {
+    cpu_high = {
+      alarm_name          = "${module.this.id}${module.this.delimiter}cpu${module.this.delimiter}utilization${module.this.delimiter}high"
+      comparison_operator = "GreaterThanOrEqualToThreshold"
+      evaluation_periods  = var.cpu_utilization_high_evaluation_periods
+      metric_name         = "CPUUtilization"
+      namespace           = "AWS/EC2"
+      period              = var.cpu_utilization_high_period_seconds
+      statistic           = var.cpu_utilization_high_statistic
+      threshold           = var.cpu_utilization_high_threshold_percent
+      dimensions_name     = "AutoScalingGroupName"
+      dimensions_target   = join("", aws_autoscaling_group.default.*.name)
+      alarm_description   = "Scale up if CPU utilization is above ${var.cpu_utilization_high_threshold_percent} for ${var.cpu_utilization_high_period_seconds} seconds"
+      alarm_actions       = [join("", aws_autoscaling_policy.scale_up.*.arn)]
+    },
+    cpu_low = {
+      alarm_name          = "${module.this.id}${module.this.delimiter}cpu${module.this.delimiter}utilization${module.this.delimiter}low"
+      comparison_operator = "LessThanOrEqualToThreshold"
+      evaluation_periods  = var.cpu_utilization_low_evaluation_periods
+      metric_name         = "CPUUtilization"
+      namespace           = "AWS/EC2"
+      period              = var.cpu_utilization_low_period_seconds
+      statistic           = var.cpu_utilization_low_statistic
+      threshold           = var.cpu_utilization_low_threshold_percent
+      dimensions_name     = "AutoScalingGroupName"
+      dimensions_target   = join("", aws_autoscaling_group.default.*.name)
+      alarm_description   = "Scale down if the CPU utilization is below ${var.cpu_utilization_low_threshold_percent} for ${var.cpu_utilization_low_period_seconds} seconds"
+      alarm_actions       = [join("", aws_autoscaling_policy.scale_down.*.arn)]
+    }
   }
-
-  alarm_description = "Scale up if CPU utilization is above ${var.cpu_utilization_high_threshold_percent} for ${var.cpu_utilization_high_period_seconds} seconds"
-  alarm_actions     = [join("", aws_autoscaling_policy.scale_up.*.arn)]
+  all_alarms = merge(var.custom_alarms, local.default_alarms["cpu_high"], local.default_alarms["cpu_low"])
 }
 
-resource "aws_cloudwatch_metric_alarm" "cpu_low" {
-  count               = local.autoscaling_enabled ? 1 : 0
-  alarm_name          = "${module.this.id}${module.this.delimiter}cpu${module.this.delimiter}utilization${module.this.delimiter}low"
-  comparison_operator = "LessThanOrEqualToThreshold"
-  evaluation_periods  = var.cpu_utilization_low_evaluation_periods
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/EC2"
-  period              = var.cpu_utilization_low_period_seconds
-  statistic           = var.cpu_utilization_low_statistic
-  threshold           = var.cpu_utilization_low_threshold_percent
-
-  dimensions = {
-    AutoScalingGroupName = join("", aws_autoscaling_group.default.*.name)
-  }
-
-  alarm_description = "Scale down if the CPU utilization is below ${var.cpu_utilization_low_threshold_percent} for ${var.cpu_utilization_low_period_seconds} seconds"
-  alarm_actions     = [join("", aws_autoscaling_policy.scale_down.*.arn)]
-}
-
-resource "aws_cloudwatch_metric_alarm" "custom_alarms" {
-  for_each                  = module.this.enabled ? var.custom_alarms : {}
+resource "aws_cloudwatch_metric_alarm" "all_alarms" {
+  for_each                  = module.this.enabled ? local.all_alarms : {}
   alarm_name                = format("%s%s", "${module.this.id}${module.this.delimiter}", each.value.alarm_name)
   comparison_operator       = lookup(each.value, "comparison_operator", null)
   evaluation_periods        = lookup(each.value, "evaluation_periods", null)
