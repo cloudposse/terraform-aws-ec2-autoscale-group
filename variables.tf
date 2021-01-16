@@ -383,3 +383,42 @@ variable "cpu_utilization_low_statistic" {
   default     = "Average"
   description = "The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum`"
 }
+
+variable "custom_alarms" {
+  type = map(object({
+    alarm_name                = string
+    comparison_operator       = string
+    evaluation_periods        = string
+    metric_name               = string
+    namespace                 = string
+    period                    = string
+    statistic                 = string
+    threshold                 = string
+    treat_missing_data        = string
+    ok_actions                = list(string)
+    insufficient_data_actions = list(string)
+    dimensions_name           = string
+    dimensions_target         = string
+    alarm_description         = string
+    alarm_actions             = list(string)
+  }))
+  default = {
+    null = {
+      alarm_name                = null
+      comparison_operator       = null
+      evaluation_periods        = null
+      metric_name               = null
+      namespace                 = null
+      period                    = null
+      statistic                 = null
+      threshold                 = null
+      treat_missing_data        = null
+      ok_actions                = []
+      insufficient_data_actions = []
+      dimensions_name           = null
+      dimensions_target         = null
+      alarm_description         = null
+      alarm_actions             = []
+  } }
+  description = "List of custom CloudWatch alarms configurations"
+}
