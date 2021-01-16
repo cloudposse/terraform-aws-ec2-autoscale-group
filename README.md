@@ -124,31 +124,6 @@ module "autoscale_group" {
   cpu_utilization_low_threshold_percent  = "20"
 }
 ```
-To define custom cloudwatch alarms 
-```
-locals {
-  alarms = {
-    alarm_1 = {
-      alarm_name                = "${module.this.id}-alb-target-response-time-for-scale-up"
-      comparison_operator       = "GreaterThanThreshold"
-      evaluation_periods        = var.alb_target_group_alarms_evaluation_periods
-      metric_name               = "TargetResponseTime"
-      namespace                 = "AWS/ApplicationELB"
-      period                    = var.alb_target_group_alarms_period
-      statistic                 = "Average"
-      threshold                 = var.alb_target_group_alarms_response_time_max_threshold
-      treat_missing_data        = "missing"
-      alarm_description         = "ALB Target response time is over ${var.alb_target_group_alarms_response_time_max_threshold} for more than ${var.alb_target_group_alarms_period}"
-      alarm_actions             = [module.autoscaling.scale_up_policy_arn]
-      ok_actions                = var.alb_target_group_alarms_ok_actions
-      insufficient_data_actions = var.alb_target_group_alarms_insufficient_data_actions
-      dimensions_name           = "LoadBalancer"
-      dimensions_target         = module.alb.alb_prefix
-      tags                      = var.tags
-    }
-  }
-}
-``` 
 
 
 
@@ -202,6 +177,7 @@ Available targets:
 | cpu\_utilization\_low\_statistic | The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum` | `string` | `"Average"` | no |
 | cpu\_utilization\_low\_threshold\_percent | The value against which the specified statistic is compared | `number` | `10` | no |
 | credit\_specification | Customize the credit specification of the instances | <pre>object({<br>    cpu_credits = string<br>  })</pre> | `null` | no |
+| custom\_alarms | List of custom CloudWatch alarms configurations | <pre>map(object({<br>    alarm_name                = string<br>    comparison_operator       = string<br>    evaluation_periods        = string<br>    metric_name               = string<br>    namespace                 = string<br>    period                    = string<br>    statistic                 = string<br>    threshold                 = string<br>    treat_missing_data        = string<br>    ok_actions                = list(string)<br>    insufficient_data_actions = list(string)<br>    dimensions_name           = string<br>    dimensions_target         = string<br>    alarm_description         = string<br>    alarm_actions             = list(string)<br>  }))</pre> | `{}` | no |
 | default\_cooldown | The amount of time, in seconds, after a scaling activity completes before another scaling activity can start | `number` | `300` | no |
 | delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.<br>Defaults to `-` (hyphen). Set to `""` to use no delimiter at all. | `string` | `null` | no |
 | disable\_api\_termination | If `true`, enables EC2 Instance Termination Protection | `bool` | `false` | no |
