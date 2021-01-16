@@ -402,23 +402,6 @@ variable "custom_alarms" {
     alarm_description         = string
     alarm_actions             = list(string)
   }))
-  default = {
-    null = {
-      alarm_name                = null
-      comparison_operator       = null
-      evaluation_periods        = null
-      metric_name               = null
-      namespace                 = null
-      period                    = null
-      statistic                 = null
-      threshold                 = null
-      treat_missing_data        = null
-      ok_actions                = []
-      insufficient_data_actions = []
-      dimensions_name           = null
-      dimensions_target         = null
-      alarm_description         = null
-      alarm_actions             = []
-  } }
+  default     = {}
   description = "List of custom CloudWatch alarms configurations"
 }
