@@ -56,11 +56,11 @@ locals {
       alarm_actions       = [join("", aws_autoscaling_policy.scale_down.*.arn)]
     }
   }
-  all_alarms = merge(var.custom_alarms, local.default_alarms["cpu_high"], local.default_alarms["cpu_low"])
+  all_alarms = merge(var.custom_alarms, local.default_alarms)
 }
 
 resource "aws_cloudwatch_metric_alarm" "all_alarms" {
-  for_each                  = module.this.enabled ? local.all_alarms : {}
+  for_each                  = module.this.enabled ? local.all_alarms : null
   alarm_name                = format("%s%s", "${module.this.id}${module.this.delimiter}", each.value.alarm_name)
   comparison_operator       = lookup(each.value, "comparison_operator", null)
   evaluation_periods        = lookup(each.value, "evaluation_periods", null)
