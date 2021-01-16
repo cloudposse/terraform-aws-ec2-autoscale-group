@@ -124,6 +124,31 @@ module "autoscale_group" {
   cpu_utilization_low_threshold_percent  = "20"
 }
 ```
+To define custom cloudwatch alarms 
+```
+locals {
+  alarms = {
+    alarm_1 = {
+      alarm_name                = "${module.this.id}-alb-target-response-time-for-scale-up"
+      comparison_operator       = "GreaterThanThreshold"
+      evaluation_periods        = var.alb_target_group_alarms_evaluation_periods
+      metric_name               = "TargetResponseTime"
+      namespace                 = "AWS/ApplicationELB"
+      period                    = var.alb_target_group_alarms_period
+      statistic                 = "Average"
+      threshold                 = var.alb_target_group_alarms_response_time_max_threshold
+      treat_missing_data        = "missing"
+      alarm_description         = "ALB Target response time is over ${var.alb_target_group_alarms_response_time_max_threshold} for more than ${var.alb_target_group_alarms_period}"
+      alarm_actions             = [module.autoscaling.scale_up_policy_arn]
+      ok_actions                = var.alb_target_group_alarms_ok_actions
+      insufficient_data_actions = var.alb_target_group_alarms_insufficient_data_actions
+      dimensions_name           = "LoadBalancer"
+      dimensions_target         = module.alb.alb_prefix
+      tags                      = var.tags
+    }
+  }
+}
+``` 
 
 
 
