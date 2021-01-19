@@ -384,6 +384,11 @@ variable "cpu_utilization_low_statistic" {
   description = "The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum`"
 }
 
+variable "default_alarms" {
+  type        = bool
+  default     = true
+  description = "Enable or disable cpu and memory Cloudwatch alarms"
+}
 variable "custom_alarms" {
   type = map(object({
     alarm_name                = string
