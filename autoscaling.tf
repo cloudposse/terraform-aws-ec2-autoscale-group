@@ -57,11 +57,11 @@ locals {
     }
   }
   default_alarms = var.default_alarms_enabled ? local.default_ec2_alarms : {}
-  all_alarms     = merge(var.custom_alarms, local.default_alarms)
+  all_alarms     = module.this.enabled ? merge(var.custom_alarms, local.default_alarms) : {}
 }
 
 resource "aws_cloudwatch_metric_alarm" "all_alarms" {
-  for_each                  = module.this.enabled ? local.all_alarms : null
+  for_each                  = local.all_alarms
   alarm_name                = format("%s%s", "${module.this.id}${module.this.delimiter}", each.value.alarm_name)
   comparison_operator       = lookup(each.value, "comparison_operator", null)
   evaluation_periods        = lookup(each.value, "evaluation_periods", null)
