@@ -79,4 +79,5 @@ resource "aws_cloudwatch_metric_alarm" "all_alarms" {
 
   alarm_description = lookup(each.value, "alarm_description", null)
   alarm_actions     = [join("", aws_autoscaling_policy.scale_down.*.arn)]
+  tags              = var.tags
 }
