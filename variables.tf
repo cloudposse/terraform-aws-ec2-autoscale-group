@@ -384,7 +384,7 @@ variable "cpu_utilization_low_statistic" {
   description = "The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum`"
 }
 
-variable "default_alarms" {
+variable "default_alarms_enabled" {
   type        = bool
   default     = true
   description = "Enable or disable cpu and memory Cloudwatch alarms"
