@@ -26,7 +26,7 @@ resource "aws_autoscaling_policy" "scale_down" {
 
 
 locals {
-  default_alarms = {
+  default_ec2_alarms = {
     cpu_high = {
       alarm_name          = "${module.this.id}${module.this.delimiter}cpu${module.this.delimiter}utilization${module.this.delimiter}high"
       comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -56,11 +56,12 @@ locals {
       alarm_actions       = [join("", aws_autoscaling_policy.scale_down.*.arn)]
     }
   }
-  all_alarms = merge(var.custom_alarms, local.default_alarms)
+  default_alarms = var.default_alarms_enabled ? local.default_ec2_alarms : {}
+  all_alarms     = merge(var.custom_alarms, local.default_alarms)
 }
 
 resource "aws_cloudwatch_metric_alarm" "all_alarms" {
-  for_each                  = module.this.enabled && var.default_alarms ? local.all_alarms : null
+  for_each                  = module.this.enabled ? local.all_alarms : null
   alarm_name                = format("%s%s", "${module.this.id}${module.this.delimiter}", each.value.alarm_name)
   comparison_operator       = lookup(each.value, "comparison_operator", null)
   evaluation_periods        = lookup(each.value, "evaluation_periods", null)

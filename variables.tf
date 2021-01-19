@@ -389,6 +389,7 @@ variable "default_alarms" {
   default     = true
   description = "Enable or disable cpu and memory Cloudwatch alarms"
 }
+
 variable "custom_alarms" {
   type = map(object({
     alarm_name                = string
