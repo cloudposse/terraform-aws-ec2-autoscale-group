@@ -403,5 +403,5 @@ variable "custom_alarms" {
     alarm_actions             = list(string)
   }))
   default     = {}
-  description = "List of custom CloudWatch alarms configurations"
+  description = "Map of custom CloudWatch alarms configurations"
 }
