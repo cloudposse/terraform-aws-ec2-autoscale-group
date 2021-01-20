@@ -3,7 +3,7 @@
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.26 |
+| terraform | >= 0.13 |
 | aws | >= 2.0 |
 | null | >= 2.0 |
 | template | >= 2.0 |
@@ -33,6 +33,8 @@
 | cpu\_utilization\_low\_statistic | The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum` | `string` | `"Average"` | no |
 | cpu\_utilization\_low\_threshold\_percent | The value against which the specified statistic is compared | `number` | `10` | no |
 | credit\_specification | Customize the credit specification of the instances | <pre>object({<br>    cpu_credits = string<br>  })</pre> | `null` | no |
+| custom\_alarms | Map of custom CloudWatch alarms configurations | <pre>map(object({<br>    alarm_name                = string<br>    comparison_operator       = string<br>    evaluation_periods        = string<br>    metric_name               = string<br>    namespace                 = string<br>    period                    = string<br>    statistic                 = string<br>    threshold                 = string<br>    treat_missing_data        = string<br>    ok_actions                = list(string)<br>    insufficient_data_actions = list(string)<br>    dimensions_name           = string<br>    dimensions_target         = string<br>    alarm_description         = string<br>    alarm_actions             = list(string)<br>  }))</pre> | `{}` | no |
+| default\_alarms\_enabled | Enable or disable cpu and memory Cloudwatch alarms | `bool` | `true` | no |
 | default\_cooldown | The amount of time, in seconds, after a scaling activity completes before another scaling activity can start | `number` | `300` | no |
 | delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.<br>Defaults to `-` (hyphen). Set to `""` to use no delimiter at all. | `string` | `null` | no |
 | disable\_api\_termination | If `true`, enables EC2 Instance Termination Protection | `bool` | `false` | no |
