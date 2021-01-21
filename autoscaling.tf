@@ -28,56 +28,64 @@ resource "aws_autoscaling_policy" "scale_down" {
 locals {
   default_ec2_alarms = {
     cpu_high = {
-      alarm_name          = "${module.this.id}${module.this.delimiter}cpu${module.this.delimiter}utilization${module.this.delimiter}high"
-      comparison_operator = "GreaterThanOrEqualToThreshold"
-      evaluation_periods  = var.cpu_utilization_high_evaluation_periods
-      metric_name         = "CPUUtilization"
-      namespace           = "AWS/EC2"
-      period              = var.cpu_utilization_high_period_seconds
-      statistic           = var.cpu_utilization_high_statistic
-      threshold           = var.cpu_utilization_high_threshold_percent
-      dimensions_name     = "AutoScalingGroupName"
-      dimensions_target   = join("", aws_autoscaling_group.default.*.name)
-      alarm_description   = "Scale up if CPU utilization is above ${var.cpu_utilization_high_threshold_percent} for ${var.cpu_utilization_high_period_seconds} seconds"
-      alarm_actions       = [join("", aws_autoscaling_policy.scale_up.*.arn)]
+      alarm_name                = "${module.this.id}${module.this.delimiter}cpu${module.this.delimiter}utilization${module.this.delimiter}high"
+      comparison_operator       = "GreaterThanOrEqualToThreshold"
+      evaluation_periods        = var.cpu_utilization_high_evaluation_periods
+      metric_name               = "CPUUtilization"
+      namespace                 = "AWS/EC2"
+      period                    = var.cpu_utilization_high_period_seconds
+      statistic                 = var.cpu_utilization_high_statistic
+      threshold                 = var.cpu_utilization_high_threshold_percent
+      dimensions_name           = "AutoScalingGroupName"
+      dimensions_target         = join("", aws_autoscaling_group.default.*.name)
+      alarm_description         = "Scale up if CPU utilization is above ${var.cpu_utilization_high_threshold_percent} for ${var.cpu_utilization_high_period_seconds} seconds"
+      alarm_actions             = [join("", aws_autoscaling_policy.scale_up.*.arn)]
+      treat_missing_data        = "missing"
+      ok_actions                = []
+      insufficient_data_actions = []
+
     },
     cpu_low = {
-      alarm_name          = "${module.this.id}${module.this.delimiter}cpu${module.this.delimiter}utilization${module.this.delimiter}low"
-      comparison_operator = "LessThanOrEqualToThreshold"
-      evaluation_periods  = var.cpu_utilization_low_evaluation_periods
-      metric_name         = "CPUUtilization"
-      namespace           = "AWS/EC2"
-      period              = var.cpu_utilization_low_period_seconds
-      statistic           = var.cpu_utilization_low_statistic
-      threshold           = var.cpu_utilization_low_threshold_percent
-      dimensions_name     = "AutoScalingGroupName"
-      dimensions_target   = join("", aws_autoscaling_group.default.*.name)
-      alarm_description   = "Scale down if the CPU utilization is below ${var.cpu_utilization_low_threshold_percent} for ${var.cpu_utilization_low_period_seconds} seconds"
-      alarm_actions       = [join("", aws_autoscaling_policy.scale_down.*.arn)]
+      alarm_name                = "${module.this.id}${module.this.delimiter}cpu${module.this.delimiter}utilization${module.this.delimiter}low"
+      comparison_operator       = "LessThanOrEqualToThreshold"
+      evaluation_periods        = var.cpu_utilization_low_evaluation_periods
+      metric_name               = "CPUUtilization"
+      namespace                 = "AWS/EC2"
+      period                    = var.cpu_utilization_low_period_seconds
+      statistic                 = var.cpu_utilization_low_statistic
+      threshold                 = var.cpu_utilization_low_threshold_percent
+      dimensions_name           = "AutoScalingGroupName"
+      dimensions_target         = join("", aws_autoscaling_group.default.*.name)
+      alarm_description         = "Scale down if the CPU utilization is below ${var.cpu_utilization_low_threshold_percent} for ${var.cpu_utilization_low_period_seconds} seconds"
+      alarm_actions             = [join("", aws_autoscaling_policy.scale_down.*.arn)]
+      treat_missing_data        = "missing"
+      ok_actions                = []
+      insufficient_data_actions = []
     }
   }
+
   default_alarms = var.default_alarms_enabled ? local.default_ec2_alarms : {}
-  all_alarms     = module.this.enabled ? merge(var.custom_alarms, local.default_alarms) : {}
+  all_alarms     = module.this.enabled ? merge(local.default_alarms, var.custom_alarms) : {}
 }
 
 resource "aws_cloudwatch_metric_alarm" "all_alarms" {
   for_each                  = local.all_alarms
   alarm_name                = format("%s%s", "${module.this.id}${module.this.delimiter}", each.value.alarm_name)
-  comparison_operator       = lookup(each.value, "comparison_operator", null)
-  evaluation_periods        = lookup(each.value, "evaluation_periods", null)
-  metric_name               = lookup(each.value, "metric_name", null)
-  namespace                 = lookup(each.value, "namespace", null)
-  period                    = lookup(each.value, "period", null)
-  statistic                 = lookup(each.value, "statistic", null)
-  threshold                 = lookup(each.value, "threshold", null)
-  treat_missing_data        = lookup(each.value, "treat_missing_data", null)
-  ok_actions                = lookup(each.value, "ok_actions", null)
-  insufficient_data_actions = lookup(each.value, "insufficient_data_actions", null)
+  comparison_operator       = each.value.comparison_operator
+  evaluation_periods        = each.value.evaluation_periods
+  metric_name               = each.value.metric_name
+  namespace                 = each.value.namespace
+  period                    = each.value.period
+  statistic                 = each.value.statistic
+  threshold                 = each.value.threshold
+  treat_missing_data        = each.value.treat_missing_data
+  ok_actions                = each.value.ok_actions
+  insufficient_data_actions = each.value.insufficient_data_actions
   dimensions = {
-    lookup(each.value, "dimensions_name", null) = lookup(each.value, "dimensions_target", null)
+    (each.value.dimensions_name) = (each.value.dimensions_target)
   }
 
-  alarm_description = lookup(each.value, "alarm_description", null)
-  alarm_actions     = [join("", aws_autoscaling_policy.scale_down.*.arn)]
+  alarm_description = each.value.alarm_description
+  alarm_actions     = each.value.alarm_actions
   tags              = var.tags
 }
