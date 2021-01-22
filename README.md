@@ -122,8 +122,30 @@ module "autoscale_group" {
   autoscaling_policies_enabled           = "true"
   cpu_utilization_high_threshold_percent = "70"
   cpu_utilization_low_threshold_percent  = "20"
+}```
+To enable custom_alerts the map needs to be defined like so :
+```hlc
+alarms = {
+    alb_scale_up = {
+      alarm_name                = "${module.default_label.id}-alb-target-response-time-for-scale-up"
+      comparison_operator       = "GreaterThanThreshold"
+      evaluation_periods        = var.alb_target_group_alarms_evaluation_periods
+      metric_name               = "TargetResponseTime"
+      namespace                 = "AWS/ApplicationELB"
+      period                    = var.alb_target_group_alarms_period
+      statistic                 = "Average"
+      threshold                 = var.alb_target_group_alarms_response_time_max_threshold
+      dimensions_name           = "LoadBalancer"
+      dimensions_target         = data.alb.arn_suffix
+      treat_missing_data        = "missing"
+      ok_actions                = var.alb_target_group_alarms_ok_actions
+      insufficient_data_actions = var.alb_target_group_alarms_insufficient_data_actions
+      alarm_description         = "ALB Target response time is over ${var.alb_target_group_alarms_response_time_max_threshold} for more than ${var.alb_target_group_alarms_period}"
+      alarm_actions             = [module.autoscaling.scale_up_policy_arn]
+    }
 }
 ```
+All those keys are required to be there so if the alarm you are setting does not requiere one or more keys you can just set to empty but do not remove the keys otherwise you could get a weird merge error due to the maps being of different sizes. 
 
 
 
