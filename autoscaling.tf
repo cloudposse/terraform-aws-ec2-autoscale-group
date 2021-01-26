@@ -64,7 +64,7 @@ locals {
     }
   }
 
-  default_alarms = var.default_alarms_enabled ? local.default_ec2_alarms : {}
+  default_alarms = var.autoscaling_policies_enabled && var.default_alarms_enabled ? local.default_ec2_alarms : {}
   all_alarms     = module.this.enabled ? merge(local.default_alarms, var.custom_alarms) : {}
 }
 
