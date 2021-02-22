@@ -154,6 +154,22 @@ resource "aws_autoscaling_group" "default" {
   protect_from_scale_in     = var.protect_from_scale_in
   service_linked_role_arn   = var.service_linked_role_arn
 
+  dynamic "instance_refresh" {
+    for_each = (var.instance_refresh != null ? [var.instance_refresh] : [])
+
+    content {
+      strategy = instance_refresh.value.strategy
+      dynamic "preferences" {
+        for_each = (length(instance_refresh.value.preferences) > 0 ? [instance_refresh.value.preferences] : [])
+        content {
+          instance_warmup        = lookup(preferences.value, "instance_warmup", null)
+          min_healthy_percentage = lookup(preferences.value, "min_healthy_percentage", null)
+        }
+      }
+      triggers = instance_refresh.value.triggers
+    }
+  }
+
   dynamic "launch_template" {
     for_each = (local.launch_template != null ?
     [local.launch_template] : [])

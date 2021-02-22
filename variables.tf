@@ -101,6 +101,20 @@ variable "instance_market_options" {
   default = null
 }
 
+variable "instance_refresh" {
+  description = "The instance refresh definition"
+  type = object({
+    strategy = string
+    preferences = object({
+      instance_warmup        = number
+      min_healthy_percentage = number
+    })
+    triggers = list(string)
+  })
+
+  default = null
+}
+
 variable mixed_instances_policy {
   description = "policy to used mixed group of on demand/spot of differing types. Launch template is automatically generated. https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html#mixed_instances_policy-1"
 

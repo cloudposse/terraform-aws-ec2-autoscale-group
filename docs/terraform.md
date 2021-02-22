@@ -14,6 +14,21 @@
 |------|---------|
 | aws | >= 2.0 |
 
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| this | cloudposse/label/null | 0.24.1 |
+
+## Resources
+
+| Name |
+|------|
+| [aws_autoscaling_group](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/autoscaling_group) |
+| [aws_autoscaling_policy](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/autoscaling_policy) |
+| [aws_cloudwatch_metric_alarm](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/cloudwatch_metric_alarm) |
+| [aws_launch_template](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/launch_template) |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -52,6 +67,7 @@
 | image\_id | The EC2 image ID to launch | `string` | `""` | no |
 | instance\_initiated\_shutdown\_behavior | Shutdown behavior for the instances. Can be `stop` or `terminate` | `string` | `"terminate"` | no |
 | instance\_market\_options | The market (purchasing) option for the instances | <pre>object({<br>    market_type = string<br>    spot_options = object({<br>      block_duration_minutes         = number<br>      instance_interruption_behavior = string<br>      max_price                      = number<br>      spot_instance_type             = string<br>      valid_until                    = string<br>    })<br>  })</pre> | `null` | no |
+| instance\_refresh | The instance refresh definition | <pre>object({<br>    strategy = string<br>    preferences = object({<br>      instance_warmup        = number<br>      min_healthy_percentage = number<br>    })<br>    triggers = list(string)<br>  })</pre> | `null` | no |
 | instance\_type | Instance type to launch | `string` | n/a | yes |
 | key\_name | The SSH key name that should be used for the instance | `string` | `""` | no |
 | label\_key\_case | The letter case of label keys (`tag` names) (i.e. `name`, `namespace`, `environment`, `stage`, `attributes`) to use in `tags`.<br>Possible values: `lower`, `title`, `upper`.<br>Default value: `title`. | `string` | `null` | no |
@@ -105,5 +121,4 @@
 | autoscaling\_group\_name | The AutoScaling Group name |
 | launch\_template\_arn | The ARN of the launch template |
 | launch\_template\_id | The ID of the launch template |
-
 <!-- markdownlint-restore -->
