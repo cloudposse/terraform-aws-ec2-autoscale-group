@@ -141,7 +141,9 @@ module "autoscale_group" {
   autoscaling_policies_enabled           = "true"
   cpu_utilization_high_threshold_percent = "70"
   cpu_utilization_low_threshold_percent  = "20"
-}```
+}
+```
+
 To enable custom_alerts the map needs to be defined like so :
 ```hlc
 alarms = {
@@ -209,10 +211,10 @@ Available targets:
 
 | Name |
 |------|
-| [aws_autoscaling_group](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/autoscaling_group) |
-| [aws_autoscaling_policy](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/autoscaling_policy) |
-| [aws_cloudwatch_metric_alarm](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/cloudwatch_metric_alarm) |
-| [aws_launch_template](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/launch_template) |
+| [aws_autoscaling_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group) |
+| [aws_autoscaling_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_policy) |
+| [aws_cloudwatch_metric_alarm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) |
+| [aws_launch_template](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template) |
 
 ## Inputs
 

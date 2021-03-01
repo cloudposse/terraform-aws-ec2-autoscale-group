@@ -24,10 +24,10 @@
 
 | Name |
 |------|
-| [aws_autoscaling_group](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/autoscaling_group) |
-| [aws_autoscaling_policy](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/autoscaling_policy) |
-| [aws_cloudwatch_metric_alarm](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/cloudwatch_metric_alarm) |
-| [aws_launch_template](https://registry.terraform.io/providers/hashicorp/aws/2.0/docs/resources/launch_template) |
+| [aws_autoscaling_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group) |
+| [aws_autoscaling_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_policy) |
+| [aws_cloudwatch_metric_alarm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) |
+| [aws_launch_template](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template) |
 
 ## Inputs
 

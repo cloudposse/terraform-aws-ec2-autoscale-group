@@ -88,7 +88,9 @@ usage: |2-
     autoscaling_policies_enabled           = "true"
     cpu_utilization_high_threshold_percent = "70"
     cpu_utilization_low_threshold_percent  = "20"
-  }```
+  }
+  ```
+  
   To enable custom_alerts the map needs to be defined like so :
   ```hlc
   alarms = {
