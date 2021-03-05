@@ -76,6 +76,7 @@
 | launch\_template\_version | Launch template version. Can be version number, `$Latest` or `$Default` | `string` | `"$Latest"` | no |
 | load\_balancers | A list of elastic load balancer names to add to the autoscaling group names. Only valid for classic load balancers. For ALBs, use `target_group_arns` instead | `list(string)` | `[]` | no |
 | max\_size | The maximum size of the autoscale group | `number` | n/a | yes |
+| metadata\_http\_tokens | Whether or not the metadata service requires session tokens, also referred<br>to as Instance Metadata Service Version 2 (IMDSv2). Can be "optional" or<br>"required". | `string` | `"optional"` | no |
 | metrics\_granularity | The granularity to associate with the metrics to collect. The only valid value is 1Minute | `string` | `"1Minute"` | no |
 | min\_elb\_capacity | Setting this causes Terraform to wait for this number of instances to show up healthy in the ELB only on creation. Updates will not wait on ELB instance number changes | `number` | `0` | no |
 | min\_size | The minimum size of the autoscale group | `number` | n/a | yes |
