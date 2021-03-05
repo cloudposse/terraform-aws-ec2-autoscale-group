@@ -425,3 +425,18 @@ variable "custom_alarms" {
   default     = {}
   description = "Map of custom CloudWatch alarms configurations"
 }
+
+variable "metadata_http_tokens" {
+  type        = string
+  default     = "optional"
+  description = <<-EOT
+    Whether or not the metadata service requires session tokens, also referred
+    to as Instance Metadata Service Version 2 (IMDSv2). Can be "optional" or
+    "required".
+  EOT
+
+  validation {
+    condition     = var.metadata_http_tokens == "optional" || var.metadata_http_tokens == "required"
+    error_message = "Only 'optional' and 'required' are supported as values."
+  }
+}

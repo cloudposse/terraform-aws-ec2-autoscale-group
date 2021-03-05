@@ -97,6 +97,10 @@ resource "aws_launch_template" "default" {
     security_groups             = var.security_group_ids
   }
 
+  metadata_options {
+    http_tokens = var.metadata_http_tokens
+  }
+
   tag_specifications {
     resource_type = "volume"
     tags          = module.this.tags
