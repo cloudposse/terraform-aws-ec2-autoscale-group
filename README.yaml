@@ -41,7 +41,7 @@ description: |-
   Terraform module to provision [Auto Scaling Group](https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html) and [Launch Template](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-templates.html) on AWS.
 
   The module also creates AutoScaling Policies and CloudWatch Metric Alarms to monitor CPU utilization on the EC2 instances and scale the number of instance in the AutoScaling Group up or down.
-  If you don't want to use the provided functionality, or want to provide your own policies, disable it by setting the variable `autoscaling_policies_enabled` to `"false"`.
+  If you don't want to use the provided functionality, or want to provide your own policies, disable it by setting the variable `autoscaling_policies_enabled` to `false`.
 # How to use this project
 usage: |2-
 
