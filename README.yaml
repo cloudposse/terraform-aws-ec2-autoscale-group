@@ -85,7 +85,7 @@ usage: |2-
     }
 
     # Auto-scaling policies and CloudWatch metric alarms
-    autoscaling_policies_enabled           = "true"
+    autoscaling_policies_enabled           = true
     cpu_utilization_high_threshold_percent = "70"
     cpu_utilization_low_threshold_percent  = "20"
   }
