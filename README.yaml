@@ -77,7 +77,7 @@ usage: |2-
     max_size                    = 3
     wait_for_capacity_timeout   = "5m"
     associate_public_ip_address = true
-    user_data_base64            = "${base64encode(local.userdata)}"
+    user_data_base64            = base64encode(local.userdata)
 
     tags = {
       Tier              = "1"
