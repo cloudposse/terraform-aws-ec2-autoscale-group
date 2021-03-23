@@ -52,6 +52,7 @@
 | default\_alarms\_enabled | Enable or disable cpu and memory Cloudwatch alarms | `bool` | `true` | no |
 | default\_cooldown | The amount of time, in seconds, after a scaling activity completes before another scaling activity can start | `number` | `300` | no |
 | delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.<br>Defaults to `-` (hyphen). Set to `""` to use no delimiter at all. | `string` | `null` | no |
+| desired\_capacity | The desired capacity of the autoscale group | `number` | `null` | no |
 | disable\_api\_termination | If `true`, enables EC2 Instance Termination Protection | `bool` | `false` | no |
 | ebs\_optimized | If true, the launched EC2 instance will be EBS-optimized | `bool` | `false` | no |
 | elastic\_gpu\_specifications | Specifications of Elastic GPU to attach to the instances | <pre>object({<br>    type = string<br>  })</pre> | `null` | no |
