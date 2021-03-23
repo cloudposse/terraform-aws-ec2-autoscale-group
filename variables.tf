@@ -425,3 +425,9 @@ variable "custom_alarms" {
   default     = {}
   description = "Map of custom CloudWatch alarms configurations"
 }
+
+variable "desired_capacity" {
+  type        = number
+  description = "The desired capacity of the autoscale group"
+  default     = null
+}
