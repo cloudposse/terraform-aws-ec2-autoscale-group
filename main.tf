@@ -128,7 +128,7 @@ locals {
       launch_template        = local.launch_template_block
       override               = var.mixed_instances_policy.override
   })
-  desired_capacity = var.desired_capacity == 0 ? var.min_size : var.desired_capacity
+  desired_capacity = var.desired_capacity == null ? var.min_size : var.desired_capacity
 }
 
 resource "aws_autoscaling_group" "default" {
