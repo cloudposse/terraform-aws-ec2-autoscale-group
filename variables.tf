@@ -401,7 +401,7 @@ variable "cpu_utilization_low_statistic" {
 variable "desired_capacity" {
   type        = number
   description = "The number of Amazon EC2 instances that should be running in the group, if not set will use `min_size` as value"
-  default     = 0
+  default     = null
 }
 
 variable "default_alarms_enabled" {
