@@ -426,6 +426,13 @@ variable "custom_alarms" {
   description = "Map of custom CloudWatch alarms configurations"
 }
 
+variable "use_name_prefix" {
+  type        = bool
+  default     = true
+  description = "If `true`, this will use the asg argument `name_prefix` instead of `name`"
+}
+
+
 variable "metadata_http_tokens" {
   type        = string
   default     = "optional"
