@@ -153,6 +153,7 @@ resource "aws_autoscaling_group" "default" {
   wait_for_capacity_timeout = var.wait_for_capacity_timeout
   protect_from_scale_in     = var.protect_from_scale_in
   service_linked_role_arn   = var.service_linked_role_arn
+  max_instance_lifetime     = var.max_instance_lifetime
 
   dynamic "instance_refresh" {
     for_each = (var.instance_refresh != null ? [var.instance_refresh] : [])

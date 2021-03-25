@@ -132,6 +132,24 @@ module "autoscale_group" {
   associate_public_ip_address = true
   user_data_base64            = base64encode(local.userdata)
 
+  # All inputs to `block_device_mappings` have to be defined
+  block_device_mappings = [
+    {
+      device_name  = "/dev/sda1"
+      no_device    = "false"
+      virtual_name = "root"
+      ebs = {
+        encrypted             = true
+        volume_size           = 200
+        delete_on_termination = true
+        iops                  = null
+        kms_key_id            = null
+        snapshot_id           = null
+        volume_type           = "standard"
+      }
+    }
+  ]
+
   tags = {
     Tier              = "1"
     KubernetesCluster = "us-west-2.testing.cloudposse.co"
@@ -263,6 +281,7 @@ Available targets:
 | <a name="input_label_value_case"></a> [label\_value\_case](#input\_label\_value\_case) | The letter case of output label values (also used in `tags` and `id`).<br>Possible values: `lower`, `title`, `upper` and `none` (no transformation).<br>Default value: `lower`. | `string` | `null` | no |
 | <a name="input_launch_template_version"></a> [launch\_template\_version](#input\_launch\_template\_version) | Launch template version. Can be version number, `$Latest` or `$Default` | `string` | `"$Latest"` | no |
 | <a name="input_load_balancers"></a> [load\_balancers](#input\_load\_balancers) | A list of elastic load balancer names to add to the autoscaling group names. Only valid for classic load balancers. For ALBs, use `target_group_arns` instead | `list(string)` | `[]` | no |
+| <a name="input_max_instance_lifetime"></a> [max\_instance\_lifetime](#input\_max\_instance\_lifetime) | The maximum amount of time, in seconds, that an instance can be in service, values must be either equal to 0 or between 604800 and 31536000 seconds | `number` | `null` | no |
 | <a name="input_max_size"></a> [max\_size](#input\_max\_size) | The maximum size of the autoscale group | `number` | n/a | yes |
 | <a name="input_metrics_granularity"></a> [metrics\_granularity](#input\_metrics\_granularity) | The granularity to associate with the metrics to collect. The only valid value is 1Minute | `string` | `"1Minute"` | no |
 | <a name="input_min_elb_capacity"></a> [min\_elb\_capacity](#input\_min\_elb\_capacity) | Setting this causes Terraform to wait for this number of instances to show up healthy in the ELB only on creation. Updates will not wait on ELB instance number changes | `number` | `0` | no |
