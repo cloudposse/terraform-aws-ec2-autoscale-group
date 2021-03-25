@@ -425,3 +425,9 @@ variable "custom_alarms" {
   default     = {}
   description = "Map of custom CloudWatch alarms configurations"
 }
+
+variable "tag_specifications_resource_types" {
+  type        = list(string)
+  default     = ["elastic-gpu", "instance", "spot-instances-request", "volume"]
+  description = "List of tag specifications resource types for the launch template"
+}
