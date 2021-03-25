@@ -37,6 +37,7 @@ module "autoscale_group" {
   wait_for_capacity_timeout   = var.wait_for_capacity_timeout
   associate_public_ip_address = true
   user_data_base64            = base64encode(local.userdata)
+  metadata_http_tokens        = "required"
 
   tags = {
     Tier              = "1"

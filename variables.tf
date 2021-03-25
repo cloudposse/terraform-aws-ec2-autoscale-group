@@ -115,7 +115,7 @@ variable "instance_refresh" {
   default = null
 }
 
-variable mixed_instances_policy {
+variable "mixed_instances_policy" {
   description = "policy to used mixed group of on demand/spot of differing types. Launch template is automatically generated. https://www.terraform.io/docs/providers/aws/r/autoscaling_group.html#mixed_instances_policy-1"
 
   type = object({
@@ -438,6 +438,21 @@ variable "use_name_prefix" {
   description = "If `true`, this will use the asg argument `name_prefix` instead of `name`"
 }
 
+variable "metadata_http_tokens" {
+  type        = string
+  default     = "optional"
+  description = <<-EOT
+    Whether or not the metadata service requires session tokens, also referred
+    to as Instance Metadata Service Version 2 (IMDSv2). Can be "optional" or
+    "required".
+  EOT
+
+  validation {
+    condition     = var.metadata_http_tokens == "optional" || var.metadata_http_tokens == "required"
+    error_message = "Only 'optional' and 'required' are supported as values."
+  }
+}
+
 variable "tag_specifications_resource_types" {
   type        = list(string)
   default     = ["instance", "volume"]
@@ -449,3 +464,4 @@ variable "max_instance_lifetime" {
   default     = null
   description = "The maximum amount of time, in seconds, that an instance can be in service, values must be either equal to 0 or between 604800 and 31536000 seconds"
 }
+
