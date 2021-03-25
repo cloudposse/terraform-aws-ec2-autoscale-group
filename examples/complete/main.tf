@@ -3,7 +3,6 @@ provider "aws" {
 }
 
 module "vpc" {
-  source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=tags/0.17.0"
   source     = "cloudposse/vpc/aws"
   version    = "0.18.1"
   cidr_block = "172.16.0.0/16"
