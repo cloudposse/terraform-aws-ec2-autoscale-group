@@ -432,7 +432,6 @@ variable "use_name_prefix" {
   description = "If `true`, this will use the asg argument `name_prefix` instead of `name`"
 }
 
-
 variable "metadata_http_tokens" {
   type        = string
   default     = "optional"
@@ -447,3 +446,16 @@ variable "metadata_http_tokens" {
     error_message = "Only 'optional' and 'required' are supported as values."
   }
 }
+
+variable "tag_specifications_resource_types" {
+  type        = list(string)
+  default     = ["instance", "volume"]
+  description = "List of tag specification resource types to tag. Valid values are instance, volume, elastic-gpu and spot-instances-request."
+}
+
+variable "max_instance_lifetime" {
+  type        = number
+  default     = null
+  description = "The maximum amount of time, in seconds, that an instance can be in service, values must be either equal to 0 or between 604800 and 31536000 seconds"
+}
+

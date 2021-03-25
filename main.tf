@@ -96,7 +96,7 @@ resource "aws_launch_template" "default" {
     delete_on_termination       = true
     security_groups             = var.security_group_ids
   }
-
+    
   metadata_options {
     http_endpoint               = "enabled"
     http_tokens                 = var.metadata_http_tokens
@@ -108,9 +108,13 @@ resource "aws_launch_template" "default" {
     tags          = module.this.tags
   }
 
-  tag_specifications {
-    resource_type = "instance"
-    tags          = module.this.tags
+  dynamic "tag_specifications" {
+    for_each = var.tag_specifications_resource_types
+
+    content {
+      resource_type = tag_specifications.value
+      tags          = module.this.tags
+    }
   }
 
   tags = module.this.tags
@@ -160,6 +164,7 @@ resource "aws_autoscaling_group" "default" {
   wait_for_capacity_timeout = var.wait_for_capacity_timeout
   protect_from_scale_in     = var.protect_from_scale_in
   service_linked_role_arn   = var.service_linked_role_arn
+  max_instance_lifetime     = var.max_instance_lifetime
 
   dynamic "instance_refresh" {
     for_each = (var.instance_refresh != null ? [var.instance_refresh] : [])
