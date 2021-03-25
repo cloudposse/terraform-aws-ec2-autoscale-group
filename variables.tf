@@ -432,6 +432,12 @@ variable "use_name_prefix" {
   description = "If `true`, this will use the asg argument `name_prefix` instead of `name`"
 }
 
+variable "tag_specifications_resource_types" {
+  type        = list(string)
+  default     = ["instance", "volume"]
+  description = "List of tag specification resource types to tag. Valid values are instance, volume, elastic-gpu and spot-instances-request."
+}
+
 variable "max_instance_lifetime" {
   type        = number
   default     = null

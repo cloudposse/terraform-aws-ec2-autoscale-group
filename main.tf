@@ -97,14 +97,13 @@ resource "aws_launch_template" "default" {
     security_groups             = var.security_group_ids
   }
 
-  tag_specifications {
-    resource_type = "volume"
-    tags          = module.this.tags
-  }
+  dynamic "tag_specifications" {
+    for_each = var.tag_specifications_resource_types
 
-  tag_specifications {
-    resource_type = "instance"
-    tags          = module.this.tags
+    content {
+      resource_type = tag_specifications.value
+      tags          = module.this.tags
+    }
   }
 
   tags = module.this.tags
