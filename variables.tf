@@ -398,6 +398,12 @@ variable "cpu_utilization_low_statistic" {
   description = "The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum`"
 }
 
+variable "desired_capacity" {
+  type        = number
+  description = "The number of Amazon EC2 instances that should be running in the group, if not set will use `min_size` as value"
+  default     = null
+}
+
 variable "default_alarms_enabled" {
   type        = bool
   default     = true

@@ -127,6 +127,7 @@ locals {
       launch_template        = local.launch_template_block
       override               = var.mixed_instances_policy.override
   })
+  desired_capacity = var.desired_capacity == null ? var.min_size : var.desired_capacity
 }
 
 resource "aws_autoscaling_group" "default" {
@@ -153,6 +154,7 @@ resource "aws_autoscaling_group" "default" {
   wait_for_capacity_timeout = var.wait_for_capacity_timeout
   protect_from_scale_in     = var.protect_from_scale_in
   service_linked_role_arn   = var.service_linked_role_arn
+  desired_capacity          = local.desired_capacity
   max_instance_lifetime     = var.max_instance_lifetime
 
   dynamic "instance_refresh" {
