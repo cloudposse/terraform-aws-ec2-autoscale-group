@@ -132,7 +132,8 @@ locals {
 resource "aws_autoscaling_group" "default" {
   count = module.this.enabled ? 1 : 0
 
-  name_prefix               = format("%s%s", module.this.id, module.this.delimiter)
+  name                      = ! var.use_name_prefix ? format("%s%s", module.this.id, module.this.delimiter) : null
+  name_prefix               = var.use_name_prefix ? format("%s%s", module.this.id, module.this.delimiter) : null
   vpc_zone_identifier       = var.subnet_ids
   max_size                  = var.max_size
   min_size                  = var.min_size

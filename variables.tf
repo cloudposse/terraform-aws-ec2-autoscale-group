@@ -426,6 +426,12 @@ variable "custom_alarms" {
   description = "Map of custom CloudWatch alarms configurations"
 }
 
+variable "use_name_prefix" {
+  type        = bool
+  default     = true
+  description = "If `true`, this will use the asg argument `name_prefix` instead of `name`"
+}
+
 variable "tag_specifications_resource_types" {
   type        = list(string)
   default     = ["elastic-gpu", "instance", "spot-instances-request", "volume"]
