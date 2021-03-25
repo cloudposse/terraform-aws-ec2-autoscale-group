@@ -132,6 +132,24 @@ module "autoscale_group" {
   associate_public_ip_address = true
   user_data_base64            = base64encode(local.userdata)
 
+  # All inputs to `block_device_mappings` have to be defined
+  block_device_mappings = [
+    {
+      device_name  = "/dev/sda1"
+      no_device    = "false"
+      virtual_name = "root"
+      ebs = {
+        encrypted             = true
+        volume_size           = 200
+        delete_on_termination = true
+        iops                  = null
+        kms_key_id            = null
+        snapshot_id           = null
+        volume_type           = "standard"
+      }
+    }
+  ]
+
   tags = {
     Tier              = "1"
     KubernetesCluster = "us-west-2.testing.cloudposse.co"
