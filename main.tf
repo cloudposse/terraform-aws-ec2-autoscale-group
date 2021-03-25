@@ -1,19 +1,7 @@
-module "label" {
-  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.19.2"
-  namespace   = var.namespace
-  name        = var.name
-  stage       = var.stage
-  environment = var.environment
-  delimiter   = var.delimiter
-  attributes  = var.attributes
-  tags        = var.tags
-  enabled     = var.enabled
-}
-
 resource "aws_launch_template" "default" {
-  count = var.enabled ? 1 : 0
+  count = module.this.enabled ? 1 : 0
 
-  name_prefix = format("%s%s", module.label.id, var.delimiter)
+  name_prefix = format("%s%s", module.this.id, module.this.delimiter)
 
   dynamic "block_device_mappings" {
     for_each = var.block_device_mappings
@@ -102,7 +90,7 @@ resource "aws_launch_template" "default" {
 
   # https://github.com/terraform-providers/terraform-provider-aws/issues/4570
   network_interfaces {
-    description                 = module.label.id
+    description                 = module.this.id
     device_index                = 0
     associate_public_ip_address = var.associate_public_ip_address
     delete_on_termination       = true
@@ -111,25 +99,25 @@ resource "aws_launch_template" "default" {
 
   tag_specifications {
     resource_type = "volume"
-    tags          = module.label.tags
+    tags          = module.this.tags
   }
 
   tag_specifications {
     resource_type = "instance"
-    tags          = module.label.tags
+    tags          = module.this.tags
   }
 
   tag_specifications {
     resource_type = "spot-instances-request"
-    tags          = module.label.tags
+    tags          = module.this.tags
   }
 
   tag_specifications {
     resource_type = "elastic-gpu"
-    tags          = module.label.tags
+    tags          = module.this.tags
   }
 
-  tags = module.label.tags
+  tags = module.this.tags
 
   lifecycle {
     create_before_destroy = true
@@ -153,9 +141,9 @@ locals {
 }
 
 resource "aws_autoscaling_group" "default" {
-  count = var.enabled ? 1 : 0
+  count = module.this.enabled ? 1 : 0
 
-  name_prefix               = format("%s%s", module.label.id, var.delimiter)
+  name_prefix               = format("%s%s", module.this.id, module.this.delimiter)
   vpc_zone_identifier       = var.subnet_ids
   max_size                  = var.max_size
   min_size                  = var.min_size
@@ -175,6 +163,22 @@ resource "aws_autoscaling_group" "default" {
   wait_for_capacity_timeout = var.wait_for_capacity_timeout
   protect_from_scale_in     = var.protect_from_scale_in
   service_linked_role_arn   = var.service_linked_role_arn
+
+  dynamic "instance_refresh" {
+    for_each = (var.instance_refresh != null ? [var.instance_refresh] : [])
+
+    content {
+      strategy = instance_refresh.value.strategy
+      dynamic "preferences" {
+        for_each = (length(instance_refresh.value.preferences) > 0 ? [instance_refresh.value.preferences] : [])
+        content {
+          instance_warmup        = lookup(preferences.value, "instance_warmup", null)
+          min_healthy_percentage = lookup(preferences.value, "min_healthy_percentage", null)
+        }
+      }
+      triggers = instance_refresh.value.triggers
+    }
+  }
 
   dynamic "launch_template" {
     for_each = (local.launch_template != null ?
@@ -226,10 +230,10 @@ resource "aws_autoscaling_group" "default" {
   }
 
   tags = flatten([
-    for key in keys(module.label.tags) :
+    for key in keys(module.this.tags) :
     {
       key                 = key
-      value               = module.label.tags[key]
+      value               = module.this.tags[key]
       propagate_at_launch = true
     }
   ])

@@ -1,51 +1,3 @@
-variable "namespace" {
-  type        = string
-  description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
-  default     = ""
-}
-
-variable "stage" {
-  type        = string
-  description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
-  default     = ""
-}
-
-variable "environment" {
-  type        = string
-  default     = ""
-  description = "Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT'"
-}
-
-variable "name" {
-  type        = string
-  default     = "app"
-  description = "Solution name, e.g. 'app' or 'cluster'"
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `name`, `namespace`, `stage`, etc."
-}
-
-variable "attributes" {
-  type        = list(string)
-  default     = []
-  description = "Additional attributes (e.g. `1`)"
-}
-
-variable "tags" {
-  type        = map(string)
-  default     = {}
-  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
-}
-
-variable "enabled" {
-  type        = string
-  description = "Whether to create the resources. Set to `false` to prevent the module from creating any resources"
-  default     = "true"
-}
-
 variable "image_id" {
   type        = string
   description = "The EC2 image ID to launch"
@@ -144,6 +96,20 @@ variable "instance_market_options" {
       spot_instance_type             = string
       valid_until                    = string
     })
+  })
+
+  default = null
+}
+
+variable "instance_refresh" {
+  description = "The instance refresh definition"
+  type = object({
+    strategy = string
+    preferences = object({
+      instance_warmup        = number
+      min_healthy_percentage = number
+    })
+    triggers = list(string)
   })
 
   default = null
@@ -430,4 +396,32 @@ variable "cpu_utilization_low_statistic" {
   type        = string
   default     = "Average"
   description = "The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum`"
+}
+
+variable "default_alarms_enabled" {
+  type        = bool
+  default     = true
+  description = "Enable or disable cpu and memory Cloudwatch alarms"
+}
+
+variable "custom_alarms" {
+  type = map(object({
+    alarm_name                = string
+    comparison_operator       = string
+    evaluation_periods        = string
+    metric_name               = string
+    namespace                 = string
+    period                    = string
+    statistic                 = string
+    threshold                 = string
+    treat_missing_data        = string
+    ok_actions                = list(string)
+    insufficient_data_actions = list(string)
+    dimensions_name           = string
+    dimensions_target         = string
+    alarm_description         = string
+    alarm_actions             = list(string)
+  }))
+  default     = {}
+  description = "Map of custom CloudWatch alarms configurations"
 }
