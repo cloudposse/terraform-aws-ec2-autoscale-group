@@ -96,7 +96,7 @@ resource "aws_launch_template" "default" {
     delete_on_termination       = true
     security_groups             = var.security_group_ids
   }
-    
+
   metadata_options {
     http_endpoint               = "enabled"
     http_tokens                 = var.metadata_http_tokens
