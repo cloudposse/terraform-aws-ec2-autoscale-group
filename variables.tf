@@ -434,6 +434,6 @@ variable "use_name_prefix" {
 
 variable "tag_specifications_resource_types" {
   type        = list(string)
-  default     = ["elastic-gpu", "instance", "spot-instances-request", "volume"]
-  description = "List of tag specifications resource types for the launch template"
+  default     = ["instance", "volume"]
+  description = "List of tag specification resource types to tag. Valid values are instance, volume, elastic-gpu and spot-instances-request."
 }
