@@ -134,7 +134,8 @@ locals {
 resource "aws_autoscaling_group" "default" {
   count = module.this.enabled ? 1 : 0
 
-  name_prefix               = format("%s%s", module.this.id, module.this.delimiter)
+  name                      = ! var.use_name_prefix ? format("%s%s", module.this.id, module.this.delimiter) : null
+  name_prefix               = var.use_name_prefix ? format("%s%s", module.this.id, module.this.delimiter) : null
   vpc_zone_identifier       = var.subnet_ids
   max_size                  = var.max_size
   min_size                  = var.min_size
@@ -155,6 +156,7 @@ resource "aws_autoscaling_group" "default" {
   protect_from_scale_in     = var.protect_from_scale_in
   service_linked_role_arn   = var.service_linked_role_arn
   desired_capacity          = local.desired_capacity
+  max_instance_lifetime     = var.max_instance_lifetime
 
   dynamic "instance_refresh" {
     for_each = (var.instance_refresh != null ? [var.instance_refresh] : [])

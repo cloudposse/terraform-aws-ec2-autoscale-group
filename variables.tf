@@ -431,3 +431,15 @@ variable "custom_alarms" {
   default     = {}
   description = "Map of custom CloudWatch alarms configurations"
 }
+
+variable "use_name_prefix" {
+  type        = bool
+  default     = true
+  description = "If `true`, this will use the asg argument `name_prefix` instead of `name`"
+}
+
+variable "max_instance_lifetime" {
+  type        = number
+  default     = null
+  description = "The maximum amount of time, in seconds, that an instance can be in service, values must be either equal to 0 or between 604800 and 31536000 seconds"
+}
