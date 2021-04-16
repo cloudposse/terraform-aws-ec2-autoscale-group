@@ -98,9 +98,9 @@ resource "aws_launch_template" "default" {
   }
 
   metadata_options {
-    http_endpoint               = "enabled"
-    http_tokens                 = var.metadata_http_tokens
-    http_put_response_hop_limit = 1
+    http_endpoint               = (var.metadata_http_endpoint_enabled) ? "enabled" : "disabled"
+    http_put_response_hop_limit = var.metadata_http_put_response_hop_limit
+    http_tokens                 = (var.metadata_http_tokens_required) ? "required" : "optional"
   }
 
   tag_specifications {
@@ -144,8 +144,7 @@ locals {
 resource "aws_autoscaling_group" "default" {
   count = module.this.enabled ? 1 : 0
 
-  name                      = ! var.use_name_prefix ? format("%s%s", module.this.id, module.this.delimiter) : null
-  name_prefix               = var.use_name_prefix ? format("%s%s", module.this.id, module.this.delimiter) : null
+  name_prefix               = format("%s%s", module.this.id, module.this.delimiter)
   vpc_zone_identifier       = var.subnet_ids
   max_size                  = var.max_size
   min_size                  = var.min_size
