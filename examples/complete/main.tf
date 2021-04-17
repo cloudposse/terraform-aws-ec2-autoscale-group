@@ -26,18 +26,18 @@ module "subnets" {
 module "autoscale_group" {
   source = "../../"
 
-  image_id                    = var.image_id
-  instance_type               = var.instance_type
-  instance_market_options     = var.instance_market_options
-  mixed_instances_policy      = var.mixed_instances_policy
-  subnet_ids                  = module.subnets.public_subnet_ids
-  health_check_type           = var.health_check_type
-  min_size                    = var.min_size
-  max_size                    = var.max_size
-  wait_for_capacity_timeout   = var.wait_for_capacity_timeout
-  associate_public_ip_address = true
-  user_data_base64            = base64encode(local.userdata)
-  metadata_http_tokens        = "required"
+  image_id                      = var.image_id
+  instance_type                 = var.instance_type
+  instance_market_options       = var.instance_market_options
+  mixed_instances_policy        = var.mixed_instances_policy
+  subnet_ids                    = module.subnets.public_subnet_ids
+  health_check_type             = var.health_check_type
+  min_size                      = var.min_size
+  max_size                      = var.max_size
+  wait_for_capacity_timeout     = var.wait_for_capacity_timeout
+  associate_public_ip_address   = true
+  user_data_base64              = base64encode(local.userdata)
+  metadata_http_tokens_required = true
 
   tags = {
     Tier              = "1"

@@ -18,6 +18,11 @@ output "autoscaling_group_name" {
   value       = join("", aws_autoscaling_group.default.*.name)
 }
 
+output "autoscaling_group_tags" {
+  description = "A list of tag settings associated with the AutoScaling Group"
+  value       = module.this.enabled ? aws_autoscaling_group.default[0].tags : []
+}
+
 output "autoscaling_group_arn" {
   description = "ARN of the AutoScaling Group"
   value       = join("", aws_autoscaling_group.default.*.arn)

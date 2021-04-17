@@ -432,25 +432,25 @@ variable "custom_alarms" {
   description = "Map of custom CloudWatch alarms configurations"
 }
 
-variable "use_name_prefix" {
+variable "metadata_http_endpoint_enabled" {
   type        = bool
   default     = true
-  description = "If `true`, this will use the asg argument `name_prefix` instead of `name`"
+  description = "Set false to disable the Instance Metadata Service."
 }
 
-variable "metadata_http_tokens" {
-  type        = string
-  default     = "optional"
+variable "metadata_http_put_response_hop_limit" {
+  type        = number
+  default     = 2
   description = <<-EOT
-    Whether or not the metadata service requires session tokens, also referred
-    to as Instance Metadata Service Version 2 (IMDSv2). Can be "optional" or
-    "required".
-  EOT
+    The desired HTTP PUT response hop limit (between 1 and 64) for Instance Metadata Service requests.
+    The default is `2` to support containerized workloads.
+    EOT
+}
 
-  validation {
-    condition     = var.metadata_http_tokens == "optional" || var.metadata_http_tokens == "required"
-    error_message = "Only 'optional' and 'required' are supported as values."
-  }
+variable "metadata_http_tokens_required" {
+  type        = bool
+  default     = true
+  description = "Set true to require IMDS session tokens, disabling Instance Metadata Service Version 1."
 }
 
 variable "tag_specifications_resource_types" {
