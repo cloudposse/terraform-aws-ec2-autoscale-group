@@ -1,3 +1,4 @@
+
 <!-- markdownlint-disable -->
 # terraform-aws-ec2-autoscale-group [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-ec2-autoscale-group.svg)](https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 <!-- markdownlint-restore -->
@@ -32,6 +33,8 @@ Terraform module to provision [Auto Scaling Group](https://www.terraform.io/docs
 The module also creates AutoScaling Policies and CloudWatch Metric Alarms to monitor CPU utilization on the EC2 instances and scale the number of instance in the AutoScaling Group up or down.
 If you don't want to use the provided functionality, or want to provide your own policies, disable it by setting the variable `autoscaling_policies_enabled` to `false`.
 
+At present, although you can set the created AutoScaling Policy type to any legal value, in practice [only `SimpleScaling` is supported](https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/issues/55).
+To use a `StepScaling` or `TargetTrackingScaling` policy, create it yourself and then pass it in the `alarm_actions` field of `custom_alarms`.
 
 ---
 
@@ -57,7 +60,6 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 
 We literally have [*hundreds of terraform modules*][terraform_modules] that are Open Source and well-maintained. Check them out!
-
 
 
 
@@ -299,11 +301,11 @@ Available targets:
 | <a name="input_regex_replace_chars"></a> [regex\_replace\_chars](#input\_regex\_replace\_chars) | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.<br>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
 | <a name="input_scale_down_adjustment_type"></a> [scale\_down\_adjustment\_type](#input\_scale\_down\_adjustment\_type) | Specifies whether the adjustment is an absolute number or a percentage of the current capacity. Valid values are `ChangeInCapacity`, `ExactCapacity` and `PercentChangeInCapacity` | `string` | `"ChangeInCapacity"` | no |
 | <a name="input_scale_down_cooldown_seconds"></a> [scale\_down\_cooldown\_seconds](#input\_scale\_down\_cooldown\_seconds) | The amount of time, in seconds, after a scaling activity completes and before the next scaling activity can start | `number` | `300` | no |
-| <a name="input_scale_down_policy_type"></a> [scale\_down\_policy\_type](#input\_scale\_down\_policy\_type) | The scalling policy type, either `SimpleScaling`, `StepScaling` or `TargetTrackingScaling` | `string` | `"SimpleScaling"` | no |
+| <a name="input_scale_down_policy_type"></a> [scale\_down\_policy\_type](#input\_scale\_down\_policy\_type) | The scaling policy type. Currently only `SimpleScaling` is supported | `string` | `"SimpleScaling"` | no |
 | <a name="input_scale_down_scaling_adjustment"></a> [scale\_down\_scaling\_adjustment](#input\_scale\_down\_scaling\_adjustment) | The number of instances by which to scale. `scale_down_scaling_adjustment` determines the interpretation of this number (e.g. as an absolute number or as a percentage of the existing Auto Scaling group size). A positive increment adds to the current capacity and a negative value removes from the current capacity | `number` | `-1` | no |
 | <a name="input_scale_up_adjustment_type"></a> [scale\_up\_adjustment\_type](#input\_scale\_up\_adjustment\_type) | Specifies whether the adjustment is an absolute number or a percentage of the current capacity. Valid values are `ChangeInCapacity`, `ExactCapacity` and `PercentChangeInCapacity` | `string` | `"ChangeInCapacity"` | no |
 | <a name="input_scale_up_cooldown_seconds"></a> [scale\_up\_cooldown\_seconds](#input\_scale\_up\_cooldown\_seconds) | The amount of time, in seconds, after a scaling activity completes and before the next scaling activity can start | `number` | `300` | no |
-| <a name="input_scale_up_policy_type"></a> [scale\_up\_policy\_type](#input\_scale\_up\_policy\_type) | The scalling policy type, either `SimpleScaling`, `StepScaling` or `TargetTrackingScaling` | `string` | `"SimpleScaling"` | no |
+| <a name="input_scale_up_policy_type"></a> [scale\_up\_policy\_type](#input\_scale\_up\_policy\_type) | The scaling policy type. Currently only `SimpleScaling` is supported | `string` | `"SimpleScaling"` | no |
 | <a name="input_scale_up_scaling_adjustment"></a> [scale\_up\_scaling\_adjustment](#input\_scale\_up\_scaling\_adjustment) | The number of instances by which to scale. `scale_up_adjustment_type` determines the interpretation of this number (e.g. as an absolute number or as a percentage of the existing Auto Scaling group size). A positive increment adds to the current capacity and a negative value removes from the current capacity | `number` | `1` | no |
 | <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | A list of associated security group IDs | `list(string)` | `[]` | no |
 | <a name="input_service_linked_role_arn"></a> [service\_linked\_role\_arn](#input\_service\_linked\_role\_arn) | The ARN of the service-linked role that the ASG will use to call other AWS services | `string` | `""` | no |

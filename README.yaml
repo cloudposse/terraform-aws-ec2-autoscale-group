@@ -42,6 +42,10 @@ description: |-
 
   The module also creates AutoScaling Policies and CloudWatch Metric Alarms to monitor CPU utilization on the EC2 instances and scale the number of instance in the AutoScaling Group up or down.
   If you don't want to use the provided functionality, or want to provide your own policies, disable it by setting the variable `autoscaling_policies_enabled` to `false`.
+
+  At present, although you can set the created AutoScaling Policy type to any legal value, in practice [only `SimpleScaling` is supported](https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/issues/55).
+  To use a `StepScaling` or `TargetTrackingScaling` policy, create it yourself and then pass it in the `alarm_actions` field of `custom_alarms`.
+
 # How to use this project
 usage: |2-
 

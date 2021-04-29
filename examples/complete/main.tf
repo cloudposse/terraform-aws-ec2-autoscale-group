@@ -49,6 +49,23 @@ module "autoscale_group" {
   cpu_utilization_high_threshold_percent = var.cpu_utilization_high_threshold_percent
   cpu_utilization_low_threshold_percent  = var.cpu_utilization_low_threshold_percent
 
+  block_device_mappings = [
+    {
+      device_name  = "/dev/sdb"
+      no_device    = null
+      virtual_name = null
+      ebs = {
+        delete_on_termination = true
+        encrypted             = true
+        volume_size           = 8
+        volume_type           = "gp2"
+        iops                  = null
+        kms_key_id            = null
+        snapshot_id           = null
+      }
+    }
+  ]
+
   context = module.this.context
 }
 
