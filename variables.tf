@@ -323,7 +323,7 @@ variable "scale_up_adjustment_type" {
 variable "scale_up_policy_type" {
   type        = string
   default     = "SimpleScaling"
-  description = "The scalling policy type, either `SimpleScaling`, `StepScaling` or `TargetTrackingScaling`"
+  description = "The scaling policy type. Currently only `SimpleScaling` is supported"
 }
 
 variable "scale_down_cooldown_seconds" {
@@ -347,7 +347,7 @@ variable "scale_down_adjustment_type" {
 variable "scale_down_policy_type" {
   type        = string
   default     = "SimpleScaling"
-  description = "The scalling policy type, either `SimpleScaling`, `StepScaling` or `TargetTrackingScaling`"
+  description = "The scaling policy type. Currently only `SimpleScaling` is supported"
 }
 
 variable "cpu_utilization_high_evaluation_periods" {
