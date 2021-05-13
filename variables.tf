@@ -454,7 +454,7 @@ variable "metadata_http_tokens_required" {
 }
 
 variable "tag_specifications_resource_types" {
-  type        = list(string)
+  type        = set(string)
   default     = ["instance", "volume"]
   description = "List of tag specification resource types to tag. Valid values are instance, volume, elastic-gpu and spot-instances-request."
 }
