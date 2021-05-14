@@ -103,11 +103,6 @@ resource "aws_launch_template" "default" {
     http_tokens                 = (var.metadata_http_tokens_required) ? "required" : "optional"
   }
 
-  tag_specifications {
-    resource_type = "volume"
-    tags          = module.this.tags
-  }
-
   dynamic "tag_specifications" {
     for_each = var.tag_specifications_resource_types
 
