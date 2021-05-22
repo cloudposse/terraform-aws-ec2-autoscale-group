@@ -349,6 +349,7 @@ Like this project? Please give it a ★ on [our GitHub](https://github.com/cloud
 Are you using this project or any of our other projects? Consider [leaving a testimonial][testimonial]. =)
 
 
+
 ## Related Projects
 
 Check out these related projects.
@@ -358,8 +359,6 @@ Check out these related projects.
 - [terraform-aws-ec2-admin-server](https://github.com/cloudposse/terraform-aws-ec2-admin-server) - Terraform module for providing an EC2 instance capable of running admin tasks
 - [terraform-aws-ec2-instance-group](https://github.com/cloudposse/terraform-aws-ec2-instance-group) - Terraform module for provisioning multiple general purpose EC2 hosts for stateful applications
 - [terraform-aws-ec2-ami-snapshot](https://github.com/cloudposse/terraform-aws-ec2-ami-snapshot) - Terraform module to easily generate AMI snapshots to create replica instances
-
-
 
 ## Help
 
