@@ -28,6 +28,16 @@ output "autoscaling_group_arn" {
   value       = join("", aws_autoscaling_group.default.*.arn)
 }
 
+output "autoscaling_scaleup_policy_arn" {
+  description = "ARN of the AutoScaling scale up"
+  value       = join("", aws_autoscaling_policy.scale_up.*.arn)
+}
+
+output "autoscaling_scaledown_policy_arn" {
+  description = "ARN of the AutoScaling scale up"
+  value       = join("", aws_autoscaling_policy.scale_down.*.arn)
+}
+
 output "autoscaling_group_min_size" {
   description = "The minimum size of the autoscale group"
   value       = join("", aws_autoscaling_group.default.*.min_size)
