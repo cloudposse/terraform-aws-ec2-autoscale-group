@@ -57,3 +57,13 @@ output "autoscaling_group_health_check_type" {
   description = "`EC2` or `ELB`. Controls how health checking is done"
   value       = join("", aws_autoscaling_group.default.*.health_check_type)
 }
+
+output "autoscaling_policy_scale_down_arn" {
+  description = "ARN of the AutoScaling policy scale down"
+  value       = join("", aws_autoscaling_policy.scale_down.*.arn)
+}
+
+output "autoscaling_policy_scale_up_arn" {
+  description = "ARN of the AutoScaling policy scale up"
+  value       = join("", aws_autoscaling_policy.scale_up.*.arn)
+}

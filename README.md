@@ -334,6 +334,8 @@ Available targets:
 | <a name="output_autoscaling_group_min_size"></a> [autoscaling\_group\_min\_size](#output\_autoscaling\_group\_min\_size) | The minimum size of the autoscale group |
 | <a name="output_autoscaling_group_name"></a> [autoscaling\_group\_name](#output\_autoscaling\_group\_name) | The AutoScaling Group name |
 | <a name="output_autoscaling_group_tags"></a> [autoscaling\_group\_tags](#output\_autoscaling\_group\_tags) | A list of tag settings associated with the AutoScaling Group |
+| <a name="output_autoscaling_policy_scale_down_arn"></a> [autoscaling\_policy\_scale\_down\_arn](#output\_autoscaling\_policy\_scale\_down\_arn) | ARN of the AutoScaling policy scale down |
+| <a name="output_autoscaling_policy_scale_up_arn"></a> [autoscaling\_policy\_scale\_up\_arn](#output\_autoscaling\_policy\_scale\_up\_arn) | ARN of the AutoScaling policy scale up |
 | <a name="output_launch_template_arn"></a> [launch\_template\_arn](#output\_launch\_template\_arn) | The ARN of the launch template |
 | <a name="output_launch_template_id"></a> [launch\_template\_id](#output\_launch\_template\_id) | The ID of the launch template |
 <!-- markdownlint-restore -->
@@ -347,6 +349,7 @@ Like this project? Please give it a ★ on [our GitHub](https://github.com/cloud
 Are you using this project or any of our other projects? Consider [leaving a testimonial][testimonial]. =)
 
 
+
 ## Related Projects
 
 Check out these related projects.
@@ -356,8 +359,6 @@ Check out these related projects.
 - [terraform-aws-ec2-admin-server](https://github.com/cloudposse/terraform-aws-ec2-admin-server) - Terraform module for providing an EC2 instance capable of running admin tasks
 - [terraform-aws-ec2-instance-group](https://github.com/cloudposse/terraform-aws-ec2-instance-group) - Terraform module for provisioning multiple general purpose EC2 hosts for stateful applications
 - [terraform-aws-ec2-ami-snapshot](https://github.com/cloudposse/terraform-aws-ec2-ami-snapshot) - Terraform module to easily generate AMI snapshots to create replica instances
-
-
 
 ## Help
 
