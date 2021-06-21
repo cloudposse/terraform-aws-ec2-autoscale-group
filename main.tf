@@ -227,11 +227,11 @@ resource "aws_autoscaling_group" "default" {
   }
   
   dynamic "warm_pool" {
-    for_each = var.warm_pool != null ? [1] : []
+    for_each = var.warm_pool != null ? [var.warm_pool] : []
     content {
-      pool_state                  = var.warm_pool.pool_state
-      min_size                    = var.warm_pool.min_size
-      max_group_prepared_capacity = var.warm_pool.max_group_prepared_capacity
+      pool_state                  = try(warm_pool.value.pool_state, null)
+      min_size                    = try(warm_pool.value.min_size, null)
+      max_group_prepared_capacity = try(warm_pool.value.max_group_prepared_capacity, null)
     }
   }
 
