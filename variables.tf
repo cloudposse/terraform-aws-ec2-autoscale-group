@@ -466,7 +466,7 @@ variable "max_instance_lifetime" {
 }
 
 variable "warm_pool" {
-  type        = object({
+  type = object({
     pool_state                  = string
     min_size                    = number
     max_group_prepared_capacity = number

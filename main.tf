@@ -225,7 +225,7 @@ resource "aws_autoscaling_group" "default" {
       }
     }
   }
-  
+
   dynamic "warm_pool" {
     for_each = var.warm_pool != null ? [var.warm_pool] : []
     content {
