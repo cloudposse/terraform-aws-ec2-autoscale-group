@@ -465,3 +465,12 @@ variable "max_instance_lifetime" {
   description = "The maximum amount of time, in seconds, that an instance can be in service, values must be either equal to 0 or between 604800 and 31536000 seconds"
 }
 
+variable "warm_pool" {
+  type        = map(object({
+    pool_state                  = string
+    min_size                    = number
+    max_group_prepared_capacity = number
+  }))
+  description = "If this block is configured, add a Warm Pool to the specified Auto Scaling group. See [warm_pool](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#warm_pool)."
+  default     = {}
+}
