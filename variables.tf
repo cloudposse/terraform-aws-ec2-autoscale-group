@@ -466,11 +466,11 @@ variable "max_instance_lifetime" {
 }
 
 variable "warm_pool" {
-  type        = map(object({
+  type        = object({
     pool_state                  = string
     min_size                    = number
     max_group_prepared_capacity = number
-  }))
+  })
   description = "If this block is configured, add a Warm Pool to the specified Auto Scaling group. See [warm_pool](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#warm_pool)."
-  default     = {}
+  default     = null
 }
