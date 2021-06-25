@@ -80,8 +80,11 @@ resource "aws_launch_template" "default" {
 
   user_data = var.user_data_base64
 
-  iam_instance_profile {
-    name = var.iam_instance_profile_name
+  dynamic "iam_instance_profile" {
+    for_each = var.iam_instance_profile_name != "" ? [var.iam_instance_profile_name] : []
+    content {
+      name = iam_instance_profile.value
+    }
   }
 
   monitoring {
