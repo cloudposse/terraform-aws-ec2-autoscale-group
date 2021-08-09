@@ -163,6 +163,7 @@ resource "aws_autoscaling_group" "default" {
   service_linked_role_arn   = var.service_linked_role_arn
   desired_capacity          = var.desired_capacity
   max_instance_lifetime     = var.max_instance_lifetime
+  capacity_rebalance        = var.capacity_rebalance
 
   dynamic "instance_refresh" {
     for_each = (var.instance_refresh != null ? [var.instance_refresh] : [])
