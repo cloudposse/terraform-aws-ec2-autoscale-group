@@ -57,10 +57,10 @@ variable "enable_monitoring" {
   default     = true
 }
 
-variable "update_default_lt_version" {
+variable "update_default_version" {
   type        = bool
   description = "Whether to update Default version of Launch template each update"
-  default     = true
+  default     = false
 }
 
 variable "ebs_optimized" {
