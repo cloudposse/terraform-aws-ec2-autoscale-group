@@ -57,6 +57,12 @@ variable "enable_monitoring" {
   default     = true
 }
 
+variable "update_default_version" {
+  type        = bool
+  description = "Whether to update Default version of Launch template each update"
+  default     = false
+}
+
 variable "ebs_optimized" {
   type        = bool
   description = "If true, the launched EC2 instance will be EBS-optimized"
