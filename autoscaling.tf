@@ -1,7 +1,6 @@
 # https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ec2-metricscollected.html
-
 locals {
-  autoscaling_enabled = module.this.enabled && var.autoscaling_policies_enabled ? true : false
+  autoscaling_enabled = module.this.enabled && var.autoscaling_policies_enabled
 }
 
 resource "aws_autoscaling_policy" "scale_up" {
@@ -24,7 +23,6 @@ resource "aws_autoscaling_policy" "scale_down" {
   autoscaling_group_name = join("", aws_autoscaling_group.default.*.name)
 }
 
-
 locals {
   default_ec2_alarms = {
     cpu_high = {
@@ -38,12 +36,11 @@ locals {
       threshold                 = var.cpu_utilization_high_threshold_percent
       dimensions_name           = "AutoScalingGroupName"
       dimensions_target         = join("", aws_autoscaling_group.default.*.name)
-      alarm_description         = "Scale up if CPU utilization is above ${var.cpu_utilization_high_threshold_percent} for ${var.cpu_utilization_high_period_seconds} seconds"
+      alarm_description         = "Scale up if CPU utilization is above ${var.cpu_utilization_high_threshold_percent} for ${var.cpu_utilization_high_period_seconds} * {var.cpu_utilization_high_evaluation_periods} seconds"
       alarm_actions             = [join("", aws_autoscaling_policy.scale_up.*.arn)]
       treat_missing_data        = "missing"
       ok_actions                = []
       insufficient_data_actions = []
-
     },
     cpu_low = {
       alarm_name                = "${module.this.id}${module.this.delimiter}cpu${module.this.delimiter}utilization${module.this.delimiter}low"
@@ -56,7 +53,7 @@ locals {
       threshold                 = var.cpu_utilization_low_threshold_percent
       dimensions_name           = "AutoScalingGroupName"
       dimensions_target         = join("", aws_autoscaling_group.default.*.name)
-      alarm_description         = "Scale down if the CPU utilization is below ${var.cpu_utilization_low_threshold_percent} for ${var.cpu_utilization_low_period_seconds} seconds"
+      alarm_description         = "Scale down if the CPU utilization is below ${var.cpu_utilization_low_threshold_percent} for ${var.cpu_utilization_low_period_seconds} * {var.cpu_utilization_high_evaluation_periods} seconds"
       alarm_actions             = [join("", aws_autoscaling_policy.scale_down.*.arn)]
       treat_missing_data        = "missing"
       ok_actions                = []
