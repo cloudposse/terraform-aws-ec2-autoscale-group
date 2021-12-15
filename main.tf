@@ -105,6 +105,7 @@ resource "aws_launch_template" "default" {
     http_endpoint               = (var.metadata_http_endpoint_enabled) ? "enabled" : "disabled"
     http_put_response_hop_limit = var.metadata_http_put_response_hop_limit
     http_tokens                 = (var.metadata_http_tokens_required) ? "required" : "optional"
+    http_protocol_ipv6          = (var.metadata_http_protocol_ipv6_enabled) ? "enabled" : "disabled"
   }
 
   dynamic "tag_specifications" {
