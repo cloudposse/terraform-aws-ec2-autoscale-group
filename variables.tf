@@ -461,7 +461,7 @@ variable "metadata_http_tokens_required" {
 
 variable "metadata_http_protocol_ipv6_enabled" {
   type        = bool
-  default     = true
+  default     = false
   description = "Set true to enable IPv6 in the launch template."
 }
 
