@@ -459,6 +459,12 @@ variable "metadata_http_tokens_required" {
   description = "Set true to require IMDS session tokens, disabling Instance Metadata Service Version 1."
 }
 
+variable "metadata_http_protocol_ipv6_enabled" {
+  type        = bool
+  default     = false
+  description = "Set true to enable IPv6 in the launch template."
+}
+
 variable "tag_specifications_resource_types" {
   type        = set(string)
   default     = ["instance", "volume"]
