@@ -1,3 +1,18 @@
+locals {
+  ecs_cluster_enabled = module.this.enabled && var.create_ecs_cluster ? 1 : 0
+  ecs_user_data       = <<-EOF
+    ${coalesce(var.user_data_base64, "#!/bin/bash")}
+    echo \"ECS_CLUSTER=${module.this.id}\" >> /etc/ecs/ecs.config
+  EOF
+}
+
+resource "aws_ecs_cluster" "default" {
+  count = local.ecs_cluster_enabled
+
+  name = module.this.id
+  tags = module.this.tags
+}
+
 resource "aws_launch_template" "default" {
   count = module.this.enabled ? 1 : 0
 
@@ -79,7 +94,11 @@ resource "aws_launch_template" "default" {
     }
   }
 
-  user_data = var.user_data_base64
+  user_data = (
+    local.ecs_cluster_enabled ?
+    local.ecs_user_data :
+    var.user_data_base64
+  )
 
   dynamic "iam_instance_profile" {
     for_each = var.iam_instance_profile_name != "" ? [var.iam_instance_profile_name] : []
