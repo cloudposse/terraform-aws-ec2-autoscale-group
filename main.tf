@@ -1,14 +1,14 @@
 locals {
-  ecs_cluster_enabled = module.this.enabled && var.create_ecs_cluster ? 1 : 0
+  ecs_cluster_enabled = module.this.enabled && var.create_ecs_cluster
   ecs_user_data = base64encode(<<-EOF
     ${coalesce(base64decode(var.user_data_base64), "#!/bin/bash")}
-    echo \"ECS_CLUSTER=${module.this.id}\" >> /etc/ecs/ecs.config
+    echo "ECS_CLUSTER=${module.this.id}" >> /etc/ecs/ecs.config
   EOF
   )
 }
 
 resource "aws_ecs_cluster" "default" {
-  count = local.ecs_cluster_enabled
+  count = local.ecs_cluster_enabled ? 1 : 0
 
   name = module.this.id
   tags = module.this.tags
