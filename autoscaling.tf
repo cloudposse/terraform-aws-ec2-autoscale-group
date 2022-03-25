@@ -36,7 +36,7 @@ locals {
       threshold                 = var.cpu_utilization_high_threshold_percent
       dimensions_name           = "AutoScalingGroupName"
       dimensions_target         = join("", aws_autoscaling_group.default.*.name)
-      alarm_description         = "Scale up if CPU utilization is above ${var.cpu_utilization_high_threshold_percent} for ${var.cpu_utilization_high_period_seconds} * {var.cpu_utilization_high_evaluation_periods} seconds"
+      alarm_description         = "Scale up if CPU utilization is above ${var.cpu_utilization_high_threshold_percent} for ${var.cpu_utilization_high_period_seconds} * ${var.cpu_utilization_high_evaluation_periods} seconds"
       alarm_actions             = [join("", aws_autoscaling_policy.scale_up.*.arn)]
       treat_missing_data        = "missing"
       ok_actions                = []
@@ -53,7 +53,7 @@ locals {
       threshold                 = var.cpu_utilization_low_threshold_percent
       dimensions_name           = "AutoScalingGroupName"
       dimensions_target         = join("", aws_autoscaling_group.default.*.name)
-      alarm_description         = "Scale down if the CPU utilization is below ${var.cpu_utilization_low_threshold_percent} for ${var.cpu_utilization_low_period_seconds} * {var.cpu_utilization_high_evaluation_periods} seconds"
+      alarm_description         = "Scale down if the CPU utilization is below ${var.cpu_utilization_low_threshold_percent} for ${var.cpu_utilization_low_period_seconds} * ${var.cpu_utilization_high_evaluation_periods} seconds"
       alarm_actions             = [join("", aws_autoscaling_policy.scale_down.*.arn)]
       treat_missing_data        = "missing"
       ok_actions                = []
