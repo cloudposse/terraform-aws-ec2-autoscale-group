@@ -465,6 +465,12 @@ variable "metadata_http_protocol_ipv6_enabled" {
   description = "Set true to enable IPv6 in the launch template."
 }
 
+
+variable "metadata_instance_metadata_tags_enabled" {
+  type        = bool
+  default     = false
+  description = "Set true to enable metadata tags in the launch template."
+}
 variable "tag_specifications_resource_types" {
   type        = set(string)
   default     = ["instance", "volume"]
