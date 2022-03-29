@@ -186,7 +186,7 @@ alarms = {
     }
 }
 ```
-All those keys are required to be there so if the alarm you are setting does not requiere one or more keys you can just set to empty but do not remove the keys otherwise you could get a weird merge error due to the maps being of different sizes. 
+All those keys are required to be there so if the alarm you are setting does not requiere one or more keys you can just set to empty but do not remove the keys otherwise you could get a weird merge error due to the maps being of different sizes.
 
 
 
@@ -291,6 +291,7 @@ Available targets:
 | <a name="input_metadata_http_protocol_ipv6_enabled"></a> [metadata\_http\_protocol\_ipv6\_enabled](#input\_metadata\_http\_protocol\_ipv6\_enabled) | Set true to enable IPv6 in the launch template. | `bool` | `false` | no |
 | <a name="input_metadata_http_put_response_hop_limit"></a> [metadata\_http\_put\_response\_hop\_limit](#input\_metadata\_http\_put\_response\_hop\_limit) | The desired HTTP PUT response hop limit (between 1 and 64) for Instance Metadata Service requests.<br>The default is `2` to support containerized workloads. | `number` | `2` | no |
 | <a name="input_metadata_http_tokens_required"></a> [metadata\_http\_tokens\_required](#input\_metadata\_http\_tokens\_required) | Set true to require IMDS session tokens, disabling Instance Metadata Service Version 1. | `bool` | `true` | no |
+| <a name="input_metadata_instance_metadata_tags_enabled"></a> [metadata\_instance\_metadata\_tags\_enabled](#input\_metadata\_instance\_metadata\_tags\_enabled) | Set true to enable metadata tags in the launch template. | `bool` | `false` | no |
 | <a name="input_metrics_granularity"></a> [metrics\_granularity](#input\_metrics\_granularity) | The granularity to associate with the metrics to collect. The only valid value is 1Minute | `string` | `"1Minute"` | no |
 | <a name="input_min_elb_capacity"></a> [min\_elb\_capacity](#input\_min\_elb\_capacity) | Setting this causes Terraform to wait for this number of instances to show up healthy in the ELB only on creation. Updates will not wait on ELB instance number changes | `number` | `0` | no |
 | <a name="input_min_size"></a> [min\_size](#input\_min\_size) | The minimum size of the autoscale group | `number` | n/a | yes |
