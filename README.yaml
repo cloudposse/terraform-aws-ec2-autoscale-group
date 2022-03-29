@@ -112,7 +112,7 @@ usage: |2-
     cpu_utilization_low_threshold_percent  = "20"
   }
   ```
-  
+
   To enable custom_alerts the map needs to be defined like so :
   ```hlc
   alarms = {
@@ -135,7 +135,7 @@ usage: |2-
       }
   }
   ```
-  All those keys are required to be there so if the alarm you are setting does not requiere one or more keys you can just set to empty but do not remove the keys otherwise you could get a weird merge error due to the maps being of different sizes. 
+  All those keys are required to be there so if the alarm you are setting does not requiere one or more keys you can just set to empty but do not remove the keys otherwise you could get a weird merge error due to the maps being of different sizes.
 
 include:
   - "docs/targets.md"
