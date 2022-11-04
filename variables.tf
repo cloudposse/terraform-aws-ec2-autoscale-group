@@ -455,14 +455,14 @@ variable "metadata_http_put_response_hop_limit" {
 
 variable "metadata_http_tokens_required" {
   type        = bool
-  default     = true
+  default     = false
   description = "Set true to require IMDS session tokens, disabling Instance Metadata Service Version 1."
 }
 
-variable "metadata_http_protocol_ipv6_enabled" {
+variable "metadata_instance_metadata_tags_enabled" {
   type        = bool
-  default     = false
-  description = "Set true to enable IPv6 in the launch template."
+  default     = true
+  description = "Enables or disables access to instance tags from the instance metadata service"
 }
 
 variable "tag_specifications_resource_types" {
