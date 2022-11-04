@@ -455,7 +455,7 @@ variable "metadata_http_put_response_hop_limit" {
 
 variable "metadata_http_tokens_required" {
   type        = bool
-  default     = false
+  default     = true
   description = "Set true to require IMDS session tokens, disabling Instance Metadata Service Version 1."
 }
 
