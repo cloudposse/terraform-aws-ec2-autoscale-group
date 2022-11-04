@@ -461,7 +461,7 @@ variable "metadata_http_tokens_required" {
 
 variable "metadata_instance_metadata_tags_enabled" {
   type        = bool
-  default     = true
+  default     = false
   description = "Enables or disables access to instance tags from the instance metadata service"
 }
 

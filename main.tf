@@ -106,7 +106,6 @@ resource "aws_launch_template" "default" {
     http_put_response_hop_limit = var.metadata_http_put_response_hop_limit
     http_tokens                 = (var.metadata_http_tokens_required) ? "required" : "optional"
     instance_metadata_tags      = (var.metadata_instance_metadata_tags_enabled) ? "enabled" : "disabled"
-
   }
 
   dynamic "tag_specifications" {
