@@ -80,6 +80,7 @@ variable "block_device_mappings" {
       delete_on_termination = bool
       encrypted             = bool
       iops                  = number
+      throughput            = number
       kms_key_id            = string
       snapshot_id           = string
       volume_size           = number
