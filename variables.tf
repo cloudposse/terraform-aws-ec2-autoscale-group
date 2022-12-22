@@ -95,13 +95,13 @@ variable "instance_market_options" {
 
   type = object({
     market_type = string
-    spot_options = object({
-      block_duration_minutes         = number
-      instance_interruption_behavior = string
-      max_price                      = number
-      spot_instance_type             = string
-      valid_until                    = string
-    })
+    spot_options = optional(object({
+      block_duration_minutes         = optional(number)
+      instance_interruption_behavior = optional(string)
+      max_price                      = optional(number)
+      spot_instance_type             = optional(string)
+      valid_until                    = optional(string)
+    }))
   })
 
   default = null
