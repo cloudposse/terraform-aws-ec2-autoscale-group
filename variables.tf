@@ -498,3 +498,11 @@ variable "warm_pool" {
   description = "If this block is configured, add a Warm Pool to the specified Auto Scaling group. See [warm_pool](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#warm_pool)."
   default     = null
 }
+
+variable "instance_reuse_policy" {
+  type = object({
+    reuse_on_scale_in = bool
+  })
+  description = "If warm pool and this block is configured, instances in the Auto Scaling group can be returned to the warm pool on scale in. The default is to terminate instances in the Auto Scaling group when the group scales in."
+  default     = null
+}
