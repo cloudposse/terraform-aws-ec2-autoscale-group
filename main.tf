@@ -253,7 +253,7 @@ resource "aws_autoscaling_group" "default" {
     content {
       key                 = try(tag.key, null)
       value               = try(tag.value, null)
-      propagate_at_launch = true
+      propagate_at_launch = tag.key != null ? true : null
     }
   }
 
