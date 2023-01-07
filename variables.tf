@@ -503,6 +503,6 @@ variable "instance_reuse_policy" {
   type = object({
     reuse_on_scale_in = bool
   })
-  description = "If warm pool and this block is configured, instances in the Auto Scaling group can be returned to the warm pool on scale in. The default is to terminate instances in the Auto Scaling group when the group scales in."
+  description = "If warm pool and this block are configured, instances in the Auto Scaling group can be returned to the warm pool on scale in. The default is to terminate instances in the Auto Scaling group when the group scales in."
   default     = null
 }
