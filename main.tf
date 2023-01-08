@@ -248,14 +248,14 @@ resource "aws_autoscaling_group" "default" {
     }
   }
 
-  dynamic "tag" {
-    for_each = module.this.tags
-    content {
-      key                 = try(tag.key, null)
-      value               = try(tag.value, null)
-      propagate_at_launch = tag.key != null ? true : null
+  tags = flatten([
+    for key in keys(module.this.tags) :
+    {
+      key                 = key
+      value               = module.this.tags[key]
+      propagate_at_launch = true
     }
-  }
+  ])
 
   lifecycle {
     create_before_destroy = true
