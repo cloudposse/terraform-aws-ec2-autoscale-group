@@ -139,6 +139,10 @@ locals {
       launch_template        = local.launch_template_block
       override               = var.mixed_instances_policy.override
   })
+  tags = {
+    for key, value in module.this.tags :
+    key => value if value != "" && value != null
+  }
 }
 
 resource "aws_autoscaling_group" "default" {
@@ -239,11 +243,17 @@ resource "aws_autoscaling_group" "default" {
       pool_state                  = try(warm_pool.value.pool_state, null)
       min_size                    = try(warm_pool.value.min_size, null)
       max_group_prepared_capacity = try(warm_pool.value.max_group_prepared_capacity, null)
+      dynamic "instance_reuse_policy" {
+        for_each = var.instance_reuse_policy != null ? [var.instance_reuse_policy] : []
+        content {
+          reuse_on_scale_in = instance_reuse_policy.value.reuse_on_scale_in
+        }
+      }
     }
   }
 
   dynamic "tag" {
-    for_each = module.this.tags
+    for_each = local.tags
     content {
       key                 = tag.key
       value               = tag.value
