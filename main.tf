@@ -139,6 +139,10 @@ locals {
       launch_template        = local.launch_template_block
       override               = var.mixed_instances_policy.override
   })
+  tags = {
+    for key, value in module.this.tags :
+    key => value if value != "" && value != null
+  }
 }
 
 resource "aws_autoscaling_group" "default" {
@@ -248,21 +252,12 @@ resource "aws_autoscaling_group" "default" {
     }
   }
 
-  # tags = flatten([
-  #   for key in keys(module.this.tags) :
-  #   {
-  #     key                 = key
-  #     value               = module.this.tags[key]
-  #     propagate_at_launch = true
-  #   }
-  # ])
-
   dynamic "tag" {
-    for_each = module.this.tags
+    for_each = local.tags
     content {
-      key                 = try(tag.key, null)
-      value               = try(tag.value, null)
-      propagate_at_launch = tag.key != null ? true : null
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
     }
   }
 
