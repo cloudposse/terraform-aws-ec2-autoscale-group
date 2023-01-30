@@ -74,6 +74,7 @@ resource "aws_cloudwatch_metric_alarm" "all_alarms" {
   namespace                 = each.value.namespace
   period                    = each.value.period
   statistic                 = each.value.statistic
+  extended_statistic        = each.value.extended_statistic
   threshold                 = each.value.threshold
   treat_missing_data        = each.value.treat_missing_data
   ok_actions                = each.value.ok_actions
