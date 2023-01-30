@@ -175,7 +175,6 @@ alarms = {
       namespace                 = "AWS/ApplicationELB"
       period                    = var.alb_target_group_alarms_period
       statistic                 = "Average"
-      extended_statistic        = null
       threshold                 = var.alb_target_group_alarms_response_time_max_threshold
       dimensions_name           = "LoadBalancer"
       dimensions_target         = data.alb.arn_suffix
