@@ -425,6 +425,7 @@ variable "custom_alarms" {
     namespace                 = string
     period                    = string
     statistic                 = string
+    extended_statistic        = string
     threshold                 = string
     treat_missing_data        = string
     ok_actions                = list(string)
