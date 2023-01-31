@@ -33,6 +33,7 @@ locals {
       namespace                 = "AWS/EC2"
       period                    = var.cpu_utilization_high_period_seconds
       statistic                 = var.cpu_utilization_high_statistic
+      extended_statistic        = null
       threshold                 = var.cpu_utilization_high_threshold_percent
       dimensions_name           = "AutoScalingGroupName"
       dimensions_target         = join("", aws_autoscaling_group.default.*.name)
@@ -50,6 +51,7 @@ locals {
       namespace                 = "AWS/EC2"
       period                    = var.cpu_utilization_low_period_seconds
       statistic                 = var.cpu_utilization_low_statistic
+      extended_statistic        = null
       threshold                 = var.cpu_utilization_low_threshold_percent
       dimensions_name           = "AutoScalingGroupName"
       dimensions_target         = join("", aws_autoscaling_group.default.*.name)
