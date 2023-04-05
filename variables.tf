@@ -33,6 +33,12 @@ variable "security_group_ids" {
   default     = []
 }
 
+variable "network_interface_id" {
+  description = "The ID of the network interface to attach"
+  type        = string
+  default     = null
+}
+
 variable "launch_template_version" {
   type        = string
   description = "Launch template version. Can be version number, `$Latest` or `$Default`"
