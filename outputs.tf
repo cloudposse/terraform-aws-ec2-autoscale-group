@@ -20,7 +20,7 @@ output "autoscaling_group_name" {
 
 output "autoscaling_group_tags" {
   description = "A set of maps containing tags associated with the AutoScaling Group"
-  value       = module.this.enabled ? aws_autoscaling_group.default[0].tag : []
+  value       = module.this.enabled ? aws_autoscaling_group.default[0].tags : []
 }
 
 output "autoscaling_group_arn" {
