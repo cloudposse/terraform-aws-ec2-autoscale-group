@@ -340,7 +340,7 @@ Available targets:
 | <a name="output_autoscaling_group_max_size"></a> [autoscaling\_group\_max\_size](#output\_autoscaling\_group\_max\_size) | The maximum size of the autoscale group |
 | <a name="output_autoscaling_group_min_size"></a> [autoscaling\_group\_min\_size](#output\_autoscaling\_group\_min\_size) | The minimum size of the autoscale group |
 | <a name="output_autoscaling_group_name"></a> [autoscaling\_group\_name](#output\_autoscaling\_group\_name) | The AutoScaling Group name |
-| <a name="output_autoscaling_group_tags"></a> [autoscaling\_group\_tags](#output\_autoscaling\_group\_tags) | A list of tag settings associated with the AutoScaling Group |
+| <a name="output_autoscaling_group_tags"></a> [autoscaling\_group\_tags](#output\_autoscaling\_group\_tags) | A set of maps containing tags associated with the AutoScaling Group |
 | <a name="output_autoscaling_policy_scale_down_arn"></a> [autoscaling\_policy\_scale\_down\_arn](#output\_autoscaling\_policy\_scale\_down\_arn) | ARN of the AutoScaling policy scale down |
 | <a name="output_autoscaling_policy_scale_up_arn"></a> [autoscaling\_policy\_scale\_up\_arn](#output\_autoscaling\_policy\_scale\_up\_arn) | ARN of the AutoScaling policy scale up |
 | <a name="output_launch_template_arn"></a> [launch\_template\_arn](#output\_launch\_template\_arn) | The ARN of the launch template |
