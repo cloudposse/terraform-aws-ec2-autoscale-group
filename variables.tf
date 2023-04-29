@@ -1,7 +1,22 @@
 variable "image_id" {
   type        = string
-  description = "The EC2 image ID to launch"
+  description = "The EC2 image ID to launch if use one architecture for EC2"
   default     = ""
+}
+
+variable "image_id_map" {
+  type        = map(string)
+  description = "The EC2 image ID per architecture if use multiple architecture. Overwrite variable filter_for_image_id"
+  default     = null
+}
+
+variable "filter_for_image_id" {
+  type        = map(list(string))
+  description = "Value for filters if use multiple EC2 architecture and get image_id using `data aws_ami`. Overwrite by variable `image_id_map`"
+  default = {
+    "name"             = ["amzn2-ami-ecs-hvm-*"]
+    "root-device-type" = ["ebs"]
+  }
 }
 
 variable "instance_initiated_shutdown_behavior" {
@@ -13,6 +28,7 @@ variable "instance_initiated_shutdown_behavior" {
 variable "instance_type" {
   type        = string
   description = "Instance type to launch"
+  default     = "t3.micro"
 }
 
 variable "iam_instance_profile_name" {

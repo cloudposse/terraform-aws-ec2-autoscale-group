@@ -1,11 +1,11 @@
-output "launch_template_id" {
-  description = "The ID of the launch template"
-  value       = join("", aws_launch_template.default.*.id)
+output "launch_template_ids" {
+  description = "The IDs of the launch templates"
+  value       = values(aws_launch_template.default).*.id
 }
 
-output "launch_template_arn" {
-  description = "The ARN of the launch template"
-  value       = join("", aws_launch_template.default.*.arn)
+output "launch_template_arns" {
+  description = "The ARNs of the launch templates"
+  value       = values(aws_launch_template.default).*.arn
 }
 
 output "autoscaling_group_id" {

@@ -1,10 +1,96 @@
-resource "aws_launch_template" "default" {
-  count = module.this.enabled ? 1 : 0
+locals {
+  mip_override               = var.mixed_instances_policy != null ? lookup(var.mixed_instances_policy, "override", []) : []
+  mip_override_instance_type = length(local.mip_override) > 0 ? var.mixed_instances_policy.override.*.instance_type : []
+}
 
-  name_prefix = format("%s%s", module.this.id, module.this.delimiter)
+data "aws_ec2_instance_type" "ec2" {
+  for_each      = toset(concat([var.instance_type], local.mip_override_instance_type))
+  instance_type = each.key
+}
+
+locals {
+  list_all_architectures_dirt = toset(compact(flatten([for k, v in data.aws_ec2_instance_type.ec2 : lookup(v, "supported_architectures", "")])))
+  list_all_architectures      = [for v in local.list_all_architectures_dirt : v if v != "i386"]
+  default_image_id_map        = length(var.image_id) > 0 ? { "${local.list_all_architectures[0]}" : var.image_id } : null
+  image_id_map                = length(local.list_all_architectures) > 1 ? var.image_id_map : local.default_image_id_map
+}
+
+data "aws_ami" "amazon_linux2_auto" {
+  for_each    = local.image_id_map == null ? local.list_all_architectures : toset([])
+  most_recent = true
+  owners      = ["amazon"]
+
+  dynamic "filter" {
+    for_each = merge(var.filter_for_image_id, { "architecture" = [each.key] })
+    content {
+      name   = filter.key
+      values = filter.value
+    }
+  }
+
+}
+
+data "aws_ami" "image_definied" {
+  for_each    = local.image_id_map != null ? local.image_id_map : {}
+  most_recent = true
+
+  filter {
+    name   = "image-id"
+    values = [each.value]
+  }
+
+}
+
+locals {
+  aws_ami      = merge(data.aws_ami.amazon_linux2_auto, data.aws_ami.image_definied)
+  aws_ami_keys = keys(local.aws_ami)
+  aws_ami_block_device_mappings = {
+    for k, v in local.aws_ami :
+    k => {
+      device_name  = one(v.block_device_mappings.*.device_name)
+      no_device    = one(v.block_device_mappings.*.no_device)
+      virtual_name = one(v.block_device_mappings.*.virtual_name)
+      ebs = {
+        delete_on_termination = one(v.block_device_mappings.*.ebs.delete_on_termination)
+        encrypted             = one(v.block_device_mappings.*.ebs.encrypted)
+        iops                  = 3000
+        kms_key_id            = null
+        snapshot_id           = null
+        throughput            = 125
+        volume_size           = one(v.block_device_mappings.*.ebs.volume_size)
+        volume_type           = "gp3"
+      }
+    }
+  }
+}
+
+module "launch_template_label" {
+
+  for_each = local.aws_ami
+
+  source  = "cloudposse/label/null"
+  version = "0.25.0" # requires Terraform >= 0.13.0
+
+  attributes = [each.key]
+
+  tags = {
+    "Architecture" = each.key
+  }
+
+  context = module.this.context
+}
+
+resource "aws_launch_template" "default" {
+  for_each = module.this.enabled ? local.aws_ami : {}
+
+  name_prefix = format(
+    "%s%s",
+    module.launch_template_label[each.key].id,
+    module.launch_template_label[each.key].delimiter
+  )
 
   dynamic "block_device_mappings" {
-    for_each = var.block_device_mappings
+    for_each = concat([local.aws_ami_block_device_mappings[each.key]], var.block_device_mappings)
     content {
       device_name  = lookup(block_device_mappings.value, "device_name", null)
       no_device    = lookup(block_device_mappings.value, "no_device", null)
@@ -18,6 +104,7 @@ resource "aws_launch_template" "default" {
           iops                  = lookup(block_device_mappings.value.ebs, "iops", null)
           kms_key_id            = lookup(block_device_mappings.value.ebs, "kms_key_id", null)
           snapshot_id           = lookup(block_device_mappings.value.ebs, "snapshot_id", null)
+          throughput            = lookup(block_device_mappings.value.ebs, "throughput", null)
           volume_size           = lookup(block_device_mappings.value.ebs, "volume_size", null)
           volume_type           = lookup(block_device_mappings.value.ebs, "volume_type", null)
         }
@@ -43,7 +130,7 @@ resource "aws_launch_template" "default" {
     }
   }
 
-  image_id                             = var.image_id
+  image_id                             = each.value.id
   instance_initiated_shutdown_behavior = var.instance_initiated_shutdown_behavior
 
   dynamic "instance_market_options" {
@@ -94,7 +181,7 @@ resource "aws_launch_template" "default" {
 
   # https://github.com/terraform-providers/terraform-provider-aws/issues/4570
   network_interfaces {
-    description                 = module.this.id
+    description                 = module.launch_template_label[each.key].id
     device_index                = 0
     associate_public_ip_address = var.associate_public_ip_address
     delete_on_termination       = true
@@ -114,11 +201,11 @@ resource "aws_launch_template" "default" {
 
     content {
       resource_type = tag_specifications.value
-      tags          = module.this.tags
+      tags          = module.launch_template_label[each.key].tags
     }
   }
 
-  tags = module.this.tags
+  tags = module.launch_template_label[each.key].tags
 
   lifecycle {
     create_before_destroy = true
@@ -126,18 +213,23 @@ resource "aws_launch_template" "default" {
 }
 
 locals {
-  launch_template_block = {
-    id      = join("", aws_launch_template.default.*.id)
-    version = var.launch_template_version != "" ? var.launch_template_version : join("", aws_launch_template.default.*.latest_version)
-  }
-  launch_template = (
-    var.mixed_instances_policy == null ? local.launch_template_block
-  : null)
+  launch_template_block = { for architecture in local.list_all_architectures : architecture => {
+    id      = aws_launch_template.default[architecture].id
+    version = var.launch_template_version != "" ? var.launch_template_version : aws_launch_template.default[architecture].latest_version
+  } }
+  launch_template = (var.mixed_instances_policy == null ? local.launch_template_block : null)
+  mixed_instances_policy_override = var.mixed_instances_policy != null ? [for v in lookup(var.mixed_instances_policy, "override", []) : {
+    instance_type     = v["instance_type"]
+    weighted_capacity = v["weighted_capacity"]
+    launch_template_specification = local.launch_template_block[
+      reverse(sort(lookup(data.aws_ec2_instance_type.ec2[v["instance_type"]], "supported_architectures", tolist(local.list_all_architectures))))[0]
+    ]
+  }] : []
   mixed_instances_policy = (
     var.mixed_instances_policy == null ? null : {
       instances_distribution = var.mixed_instances_policy.instances_distribution
-      launch_template        = local.launch_template_block
-      override               = var.mixed_instances_policy.override
+      launch_template        = local.launch_template_block[tolist(local.list_all_architectures)[0]]
+      override               = local.mixed_instances_policy_override
   })
   tags = {
     for key, value in module.this.tags :
@@ -189,11 +281,10 @@ resource "aws_autoscaling_group" "default" {
   }
 
   dynamic "launch_template" {
-    for_each = (local.launch_template != null ?
-    [local.launch_template] : [])
+    for_each = (local.launch_template != null ? local.launch_template : {})
     content {
-      id      = local.launch_template_block.id
-      version = local.launch_template_block.version
+      id      = launch_template.value.id
+      version = launch_template.value.version
     }
   }
 
@@ -231,6 +322,10 @@ resource "aws_autoscaling_group" "default" {
           content {
             instance_type     = lookup(override.value, "instance_type", null)
             weighted_capacity = lookup(override.value, "weighted_capacity", null)
+            launch_template_specification {
+              launch_template_id = lookup((lookup(override.value, "launch_template_specification", null)), "id", null)
+              version            = lookup(lookup(override.value, "launch_template_specification", null), "version", null)
+            }
           }
         }
       }
