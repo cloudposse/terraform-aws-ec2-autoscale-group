@@ -127,8 +127,8 @@ resource "aws_launch_template" "default" {
 
 locals {
   launch_template_block = {
-    id      = join("", aws_launch_template.default.*.id)
-    version = var.launch_template_version != "" ? var.launch_template_version : join("", aws_launch_template.default.*.latest_version)
+    id      = one(aws_launch_template.default[*].id)
+    version = var.launch_template_version != "" ? var.launch_template_version : one(aws_launch_template.default[*].latest_version)
   }
   launch_template = (
     var.mixed_instances_policy == null ? local.launch_template_block
