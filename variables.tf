@@ -117,7 +117,7 @@ variable "instance_refresh" {
       skip_matching          = optional(bool, null)
       auto_rollback          = optional(bool, null)
     })
-    triggers = list(string)
+    triggers = optional(list(string), [])
   })
 
   default = null
