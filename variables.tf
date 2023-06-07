@@ -112,8 +112,10 @@ variable "instance_refresh" {
   type = object({
     strategy = string
     preferences = object({
-      instance_warmup        = number
-      min_healthy_percentage = number
+      instance_warmup        = optional(number, null)
+      min_healthy_percentage = optional(number, null)
+      skip_matching          = optional(bool, null)
+      auto_rollback          = optional(bool, null)
     })
     triggers = list(string)
   })
