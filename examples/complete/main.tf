@@ -3,12 +3,10 @@ provider "aws" {
 }
 
 module "vpc" {
-  source  = "cloudposse/vpc/aws"
-  version = "2.1.0"
-
+  source                  = "cloudposse/vpc/aws"
+  version                 = "2.1.0"
   ipv4_primary_cidr_block = "172.16.0.0/16"
-
-  context = module.this.context
+  context                 = module.this.context
 }
 
 module "subnets" {
@@ -20,8 +18,7 @@ module "subnets" {
   ipv4_cidr_block      = [module.vpc.vpc_cidr_block]
   nat_gateway_enabled  = false
   nat_instance_enabled = false
-
-  context = module.this.context
+  context              = module.this.context
 }
 
 module "autoscale_group" {
