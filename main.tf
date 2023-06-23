@@ -178,7 +178,7 @@ resource "aws_autoscaling_group" "default" {
     content {
       strategy = instance_refresh.value.strategy
       dynamic "preferences" {
-        for_each = (length(instance_refresh.value.preferences) > 0 ? [instance_refresh.value.preferences] : [])
+        for_each = instance_refresh.value.preferences != null ? [instance_refresh.value.preferences] : []
         content {
           instance_warmup        = lookup(preferences.value, "instance_warmup", null)
           min_healthy_percentage = lookup(preferences.value, "min_healthy_percentage", null)
