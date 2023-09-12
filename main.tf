@@ -180,10 +180,12 @@ resource "aws_autoscaling_group" "default" {
       dynamic "preferences" {
         for_each = instance_refresh.value.preferences != null ? [instance_refresh.value.preferences] : []
         content {
-          instance_warmup        = lookup(preferences.value, "instance_warmup", null)
-          min_healthy_percentage = lookup(preferences.value, "min_healthy_percentage", null)
-          skip_matching          = lookup(preferences.value, "skip_matching", null)
-          auto_rollback          = lookup(preferences.value, "auto_rollback", null)
+          instance_warmup              = lookup(preferences.value, "instance_warmup", null)
+          min_healthy_percentage       = lookup(preferences.value, "min_healthy_percentage", null)
+          skip_matching                = lookup(preferences.value, "skip_matching", null)
+          auto_rollback                = lookup(preferences.value, "auto_rollback", null)
+          scale_in_protected_instances = lookup(preferences.value, "scale_in_protected_instances", null)
+          standby_instances            = lookup(preferences.value, "standby_instances", null)
         }
       }
       triggers = instance_refresh.value.triggers
