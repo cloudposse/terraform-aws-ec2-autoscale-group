@@ -116,6 +116,8 @@ variable "instance_refresh" {
       min_healthy_percentage = optional(number, null)
       skip_matching          = optional(bool, null)
       auto_rollback          = optional(bool, null)
+      scale_in_protected_instances = optional(bool, null)
+      standby_instances      = optional(bool, null)
     }), null)
     triggers = optional(list(string), [])
   })
