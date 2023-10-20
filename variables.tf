@@ -112,10 +112,14 @@ variable "instance_refresh" {
   type = object({
     strategy = string
     preferences = optional(object({
-      instance_warmup        = optional(number, null)
-      min_healthy_percentage = optional(number, null)
-      skip_matching          = optional(bool, null)
-      auto_rollback          = optional(bool, null)
+      checkpoint_delay             = optional(number, 3600)
+      checkpoint_percentages       = optional(list(number), [])
+      instance_warmup              = optional(number, null)
+      min_healthy_percentage       = optional(number, null)
+      skip_matching                = optional(bool, null)
+      auto_rollback                = optional(bool, null)
+      scale_in_protected_instances = optional(string, "Ignore") # Can be set to Refresh or Wait
+      standby_instances            = optional(string, "Ignore") # Can be set to Terminate or Wait
     }), null)
     triggers = optional(list(string), [])
   })
