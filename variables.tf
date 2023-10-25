@@ -40,9 +40,16 @@ variable "launch_template_version" {
 }
 
 variable "associate_public_ip_address" {
-  type        = bool
-  description = "Associate a public IP address with an instance in a VPC"
+  type = bool
+  # https://stackoverflow.com/a/76808361
+  description = "Associate a public IP address with an instance in a VPC. If a network_interface id is specified, this can only be false."
   default     = false
+}
+
+variable "network_interface_id" {
+  type        = string
+  description = "The ID of the network interface to attach. If specified, all the other network_interface block arguments are ignored."
+  default     = null
 }
 
 variable "user_data_base64" {
@@ -196,8 +203,15 @@ variable "min_size" {
 }
 
 variable "subnet_ids" {
-  description = "A list of subnet IDs to launch resources in"
   type        = list(string)
+  description = "A list of subnet IDs to launch resources in"
+  default     = null
+}
+
+variable "availability_zones" {
+  type        = list(string)
+  description = "A list of Availability Zones where instances in the Auto Scaling group can be created. Used for launching into the default VPC subnet in each Availability Zone when not using the subnet_ids variable, or for attaching a network interface when an existing network interface ID is specified. Conflicts with subnet_ids."
+  default     = null
 }
 
 variable "default_cooldown" {
