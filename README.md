@@ -39,12 +39,6 @@ To use a `StepScaling` or `TargetTrackingScaling` policy, create it yourself and
 ---
 
 This project is part of our comprehensive ["SweetOps"](https://cpco.io/sweetops) approach towards DevOps.
-[<img align="right" title="Share via Email" src="https://docs.cloudposse.com/images/ionicons/ios-email-outline-2.0.1-16x16-999999.svg"/>][share_email]
-[<img align="right" title="Share on Google+" src="https://docs.cloudposse.com/images/ionicons/social-googleplus-outline-2.0.1-16x16-999999.svg" />][share_googleplus]
-[<img align="right" title="Share on Facebook" src="https://docs.cloudposse.com/images/ionicons/social-facebook-outline-2.0.1-16x16-999999.svg" />][share_facebook]
-[<img align="right" title="Share on Reddit" src="https://docs.cloudposse.com/images/ionicons/social-reddit-outline-2.0.1-16x16-999999.svg" />][share_reddit]
-[<img align="right" title="Share on LinkedIn" src="https://docs.cloudposse.com/images/ionicons/social-linkedin-outline-2.0.1-16x16-999999.svg" />][share_linkedin]
-[<img align="right" title="Share on Twitter" src="https://docs.cloudposse.com/images/ionicons/social-twitter-outline-2.0.1-16x16-999999.svg" />][share_twitter]
 
 
 [![Terraform Open Source Modules](https://docs.cloudposse.com/images/terraform-open-source-modules.svg)][terraform_modules]
@@ -93,10 +87,6 @@ difficulty of keeping the versions in the documentation in sync with the latest 
 We highly recommend that in your code you pin the version to the exact version you are
 using so that your infrastructure remains stable, and update versions in a
 systematic way so that they do not catch you by surprise.
-
-Also, because of a bug in the Terraform registry ([hashicorp/terraform#21417](https://github.com/hashicorp/terraform/issues/21417)),
-the registry shows many of our inputs as required when in fact they are optional.
-The table below correctly indicates which inputs are required.
 
 
 
@@ -210,14 +200,14 @@ Available targets:
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.9 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.9 |
 
 ## Modules
 
@@ -255,7 +245,7 @@ Available targets:
 | <a name="input_cpu_utilization_low_statistic"></a> [cpu\_utilization\_low\_statistic](#input\_cpu\_utilization\_low\_statistic) | The statistic to apply to the alarm's associated metric. Either of the following is supported: `SampleCount`, `Average`, `Sum`, `Minimum`, `Maximum` | `string` | `"Average"` | no |
 | <a name="input_cpu_utilization_low_threshold_percent"></a> [cpu\_utilization\_low\_threshold\_percent](#input\_cpu\_utilization\_low\_threshold\_percent) | The value against which the specified statistic is compared | `number` | `10` | no |
 | <a name="input_credit_specification"></a> [credit\_specification](#input\_credit\_specification) | Customize the credit specification of the instances | <pre>object({<br>    cpu_credits = string<br>  })</pre> | `null` | no |
-| <a name="input_custom_alarms"></a> [custom\_alarms](#input\_custom\_alarms) | Map of custom CloudWatch alarms configurations | <pre>map(object({<br>    alarm_name                = string<br>    comparison_operator       = string<br>    evaluation_periods        = string<br>    metric_name               = string<br>    namespace                 = string<br>    period                    = string<br>    statistic                 = string<br>    threshold                 = string<br>    treat_missing_data        = string<br>    ok_actions                = list(string)<br>    insufficient_data_actions = list(string)<br>    dimensions_name           = string<br>    dimensions_target         = string<br>    alarm_description         = string<br>    alarm_actions             = list(string)<br>  }))</pre> | `{}` | no |
+| <a name="input_custom_alarms"></a> [custom\_alarms](#input\_custom\_alarms) | Map of custom CloudWatch alarms configurations | <pre>map(object({<br>    alarm_name                = string<br>    comparison_operator       = string<br>    evaluation_periods        = string<br>    metric_name               = string<br>    namespace                 = string<br>    period                    = string<br>    statistic                 = string<br>    extended_statistic        = string<br>    threshold                 = string<br>    treat_missing_data        = string<br>    ok_actions                = list(string)<br>    insufficient_data_actions = list(string)<br>    dimensions_name           = string<br>    dimensions_target         = string<br>    alarm_description         = string<br>    alarm_actions             = list(string)<br>  }))</pre> | `{}` | no |
 | <a name="input_default_alarms_enabled"></a> [default\_alarms\_enabled](#input\_default\_alarms\_enabled) | Enable or disable cpu and memory Cloudwatch alarms | `bool` | `true` | no |
 | <a name="input_default_cooldown"></a> [default\_cooldown](#input\_default\_cooldown) | The amount of time, in seconds, after a scaling activity completes before another scaling activity can start | `number` | `300` | no |
 | <a name="input_delimiter"></a> [delimiter](#input\_delimiter) | Delimiter to be used between ID elements.<br>Defaults to `-` (hyphen). Set to `""` to use no delimiter at all. | `string` | `null` | no |
@@ -275,8 +265,9 @@ Available targets:
 | <a name="input_id_length_limit"></a> [id\_length\_limit](#input\_id\_length\_limit) | Limit `id` to this many characters (minimum 6).<br>Set to `0` for unlimited length.<br>Set to `null` for keep the existing setting, which defaults to `0`.<br>Does not affect `id_full`. | `number` | `null` | no |
 | <a name="input_image_id"></a> [image\_id](#input\_image\_id) | The EC2 image ID to launch | `string` | `""` | no |
 | <a name="input_instance_initiated_shutdown_behavior"></a> [instance\_initiated\_shutdown\_behavior](#input\_instance\_initiated\_shutdown\_behavior) | Shutdown behavior for the instances. Can be `stop` or `terminate` | `string` | `"terminate"` | no |
-| <a name="input_instance_market_options"></a> [instance\_market\_options](#input\_instance\_market\_options) | The market (purchasing) option for the instances | <pre>object({<br>    market_type = string<br>    spot_options = object({<br>      block_duration_minutes         = number<br>      instance_interruption_behavior = string<br>      max_price                      = number<br>      spot_instance_type             = string<br>      valid_until                    = string<br>    })<br>  })</pre> | `null` | no |
-| <a name="input_instance_refresh"></a> [instance\_refresh](#input\_instance\_refresh) | The instance refresh definition | <pre>object({<br>    strategy = string<br>    preferences = object({<br>      instance_warmup        = number<br>      min_healthy_percentage = number<br>    })<br>    triggers = list(string)<br>  })</pre> | `null` | no |
+| <a name="input_instance_market_options"></a> [instance\_market\_options](#input\_instance\_market\_options) | The market (purchasing) option for the instances | <pre>object({<br>    market_type = string<br>    spot_options = optional(object({<br>      block_duration_minutes         = optional(number)<br>      instance_interruption_behavior = optional(string)<br>      max_price                      = optional(number)<br>      spot_instance_type             = optional(string)<br>      valid_until                    = optional(string)<br>    }))<br>  })</pre> | `null` | no |
+| <a name="input_instance_refresh"></a> [instance\_refresh](#input\_instance\_refresh) | The instance refresh definition | <pre>object({<br>    strategy = string<br>    preferences = optional(object({<br>      instance_warmup              = optional(number, null)<br>      min_healthy_percentage       = optional(number, null)<br>      skip_matching                = optional(bool, null)<br>      auto_rollback                = optional(bool, null)<br>      scale_in_protected_instances = optional(string, null)<br>      standby_instances            = optional(string, null)<br>    }), null)<br>    triggers = optional(list(string), [])<br>  })</pre> | `null` | no |
+| <a name="input_instance_reuse_policy"></a> [instance\_reuse\_policy](#input\_instance\_reuse\_policy) | If warm pool and this block are configured, instances in the Auto Scaling group can be returned to the warm pool on scale in. The default is to terminate instances in the Auto Scaling group when the group scales in. | <pre>object({<br>    reuse_on_scale_in = bool<br>  })</pre> | `null` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | Instance type to launch | `string` | n/a | yes |
 | <a name="input_key_name"></a> [key\_name](#input\_key\_name) | The SSH key name that should be used for the instance | `string` | `""` | no |
 | <a name="input_label_key_case"></a> [label\_key\_case](#input\_label\_key\_case) | Controls the letter case of the `tags` keys (label names) for tags generated by this module.<br>Does not affect keys of tags passed in via the `tags` input.<br>Possible values: `lower`, `title`, `upper`.<br>Default value: `title`. | `string` | `null` | no |
@@ -352,8 +343,6 @@ Available targets:
 
 Like this project? Please give it a ★ on [our GitHub](https://github.com/cloudposse/terraform-aws-ec2-autoscale-group)! (it helps us **a lot**)
 
-Are you using this project or any of our other projects? Consider [leaving a testimonial][testimonial]. =)
-
 
 
 ## Related Projects
@@ -400,10 +389,6 @@ We deliver 10x the value for a fraction of the cost of a full-time engineer. Our
 
 Join our [Open Source Community][slack] on Slack. It's **FREE** for everyone! Our "SweetOps" community is where you get to talk with others who share a similar vision for how to rollout and manage infrastructure. This is the best place to talk shop, ask questions, solicit feedback, and work together as a community to build totally *sweet* infrastructure.
 
-## Discourse Forums
-
-Participate in our [Discourse Forums][discourse]. Here you'll find answers to commonly asked questions. Most questions will be related to the enormous number of projects we support on our GitHub. Come here to collaborate on answers, find solutions, and get ideas about the products and services we value. It only takes a minute to get started! Just sign in with SSO using your GitHub account.
-
 ## Newsletter
 
 Sign up for [our newsletter][newsletter] that covers everything on our technology radar.  Receive updates on what we're up to on GitHub as well as awesome new projects we discover.
@@ -414,7 +399,18 @@ Sign up for [our newsletter][newsletter] that covers everything on our technolog
 
 [![zoom](https://img.cloudposse.com/fit-in/200x200/https://cloudposse.com/wp-content/uploads/2019/08/Powered-by-Zoom.png")][office_hours]
 
-## Contributing
+## ✨ Contributing
+
+
+
+This project is under active development, and we encourage contributions from our community. 
+Many thanks to our outstanding contributors:
+
+<a href="https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=cloudposse/terraform-aws-ec2-autoscale-group&max=24" />
+</a>
+
+
 
 ### Bug Reports & Feature Requests
 
@@ -437,7 +433,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 ## Copyright
 
-Copyright © 2017-2022 [Cloud Posse, LLC](https://cpco.io/copyright)
+Copyright © 2017-2023 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 
@@ -488,27 +484,7 @@ We're a [DevOps Professional Services][hire] company based in Los Angeles, CA. W
 
 We offer [paid support][commercial_support] on all of our projects.
 
-Check out [our other projects][github], [follow us on twitter][twitter], [apply for a job][jobs], or [hire us][hire] to help with your cloud strategy and implementation.
-
-
-
-### Contributors
-
-<!-- markdownlint-disable -->
-|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] | [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] | [![RB][nitrocode_avatar]][nitrocode_homepage]<br/>[RB][nitrocode_homepage] |
-|---|---|---|---|
-<!-- markdownlint-restore -->
-
-  [osterman_homepage]: https://github.com/osterman
-  [osterman_avatar]: https://img.cloudposse.com/150x150/https://github.com/osterman.png
-  [aknysh_homepage]: https://github.com/aknysh
-  [aknysh_avatar]: https://img.cloudposse.com/150x150/https://github.com/aknysh.png
-  [goruha_homepage]: https://github.com/goruha
-  [goruha_avatar]: https://img.cloudposse.com/150x150/https://github.com/goruha.png
-  [nitrocode_homepage]: https://github.com/nitrocode
-  [nitrocode_avatar]: https://img.cloudposse.com/150x150/https://github.com/nitrocode.png
-
-[![README Footer][readme_footer_img]][readme_footer_link]
+Check out [our other projects][github], [follow us on twitter][twitter], [apply for a job][jobs], or [hire us][hire] to help with your cloud strategy and implementation.[![README Footer][readme_footer_img]][readme_footer_link]
 [![Beacon][beacon]][website]
 <!-- markdownlint-disable -->
   [logo]: https://cloudposse.com/logo-300x69.svg
@@ -518,12 +494,10 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
   [jobs]: https://cpco.io/jobs?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=jobs
   [hire]: https://cpco.io/hire?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=hire
   [slack]: https://cpco.io/slack?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=slack
-  [linkedin]: https://cpco.io/linkedin?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=linkedin
   [twitter]: https://cpco.io/twitter?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=twitter
   [testimonial]: https://cpco.io/leave-testimonial?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=testimonial
   [office_hours]: https://cloudposse.com/office-hours?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=office_hours
   [newsletter]: https://cpco.io/newsletter?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=newsletter
-  [discourse]: https://ask.sweetops.com/?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=discourse
   [email]: https://cpco.io/email?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=email
   [commercial_support]: https://cpco.io/commercial-support?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=commercial_support
   [we_love_open_source]: https://cpco.io/we-love-open-source?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=we_love_open_source
@@ -534,11 +508,5 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
   [readme_footer_link]: https://cloudposse.com/readme/footer/link?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=readme_footer_link
   [readme_commercial_support_img]: https://cloudposse.com/readme/commercial-support/img
   [readme_commercial_support_link]: https://cloudposse.com/readme/commercial-support/link?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-ec2-autoscale-group&utm_content=readme_commercial_support_link
-  [share_twitter]: https://twitter.com/intent/tweet/?text=terraform-aws-ec2-autoscale-group&url=https://github.com/cloudposse/terraform-aws-ec2-autoscale-group
-  [share_linkedin]: https://www.linkedin.com/shareArticle?mini=true&title=terraform-aws-ec2-autoscale-group&url=https://github.com/cloudposse/terraform-aws-ec2-autoscale-group
-  [share_reddit]: https://reddit.com/submit/?url=https://github.com/cloudposse/terraform-aws-ec2-autoscale-group
-  [share_facebook]: https://facebook.com/sharer/sharer.php?u=https://github.com/cloudposse/terraform-aws-ec2-autoscale-group
-  [share_googleplus]: https://plus.google.com/share?url=https://github.com/cloudposse/terraform-aws-ec2-autoscale-group
-  [share_email]: mailto:?subject=terraform-aws-ec2-autoscale-group&body=https://github.com/cloudposse/terraform-aws-ec2-autoscale-group
   [beacon]: https://ga-beacon.cloudposse.com/UA-76589703-4/cloudposse/terraform-aws-ec2-autoscale-group?pixel&cs=github&cm=readme&an=terraform-aws-ec2-autoscale-group
 <!-- markdownlint-restore -->

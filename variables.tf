@@ -96,13 +96,13 @@ variable "instance_market_options" {
 
   type = object({
     market_type = string
-    spot_options = object({
-      block_duration_minutes         = number
-      instance_interruption_behavior = string
-      max_price                      = number
-      spot_instance_type             = string
-      valid_until                    = string
-    })
+    spot_options = optional(object({
+      block_duration_minutes         = optional(number)
+      instance_interruption_behavior = optional(string)
+      max_price                      = optional(number)
+      spot_instance_type             = optional(string)
+      valid_until                    = optional(string)
+    }))
   })
 
   default = null
@@ -112,11 +112,15 @@ variable "instance_refresh" {
   description = "The instance refresh definition"
   type = object({
     strategy = string
-    preferences = object({
-      instance_warmup        = number
-      min_healthy_percentage = number
-    })
-    triggers = list(string)
+    preferences = optional(object({
+      instance_warmup              = optional(number, null)
+      min_healthy_percentage       = optional(number, null)
+      skip_matching                = optional(bool, null)
+      auto_rollback                = optional(bool, null)
+      scale_in_protected_instances = optional(string, null)
+      standby_instances            = optional(string, null)
+    }), null)
+    triggers = optional(list(string), [])
   })
 
   default = null
@@ -426,6 +430,7 @@ variable "custom_alarms" {
     namespace                 = string
     period                    = string
     statistic                 = string
+    extended_statistic        = string
     threshold                 = string
     treat_missing_data        = string
     ok_actions                = list(string)
@@ -497,5 +502,13 @@ variable "warm_pool" {
     max_group_prepared_capacity = number
   })
   description = "If this block is configured, add a Warm Pool to the specified Auto Scaling group. See [warm_pool](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#warm_pool)."
+  default     = null
+}
+
+variable "instance_reuse_policy" {
+  type = object({
+    reuse_on_scale_in = bool
+  })
+  description = "If warm pool and this block are configured, instances in the Auto Scaling group can be returned to the warm pool on scale in. The default is to terminate instances in the Auto Scaling group when the group scales in."
   default     = null
 }

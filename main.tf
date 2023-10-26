@@ -128,8 +128,8 @@ resource "aws_launch_template" "default" {
 
 locals {
   launch_template_block = {
-    id      = join("", aws_launch_template.default.*.id)
-    version = var.launch_template_version != "" ? var.launch_template_version : join("", aws_launch_template.default.*.latest_version)
+    id      = one(aws_launch_template.default[*].id)
+    version = var.launch_template_version != "" ? var.launch_template_version : one(aws_launch_template.default[*].latest_version)
   }
   launch_template = (
     var.mixed_instances_policy == null ? local.launch_template_block
@@ -140,6 +140,10 @@ locals {
       launch_template        = local.launch_template_block
       override               = var.mixed_instances_policy.override
   })
+  tags = {
+    for key, value in module.this.tags :
+    key => value if value != "" && value != null
+  }
 }
 
 resource "aws_autoscaling_group" "default" {
@@ -175,10 +179,14 @@ resource "aws_autoscaling_group" "default" {
     content {
       strategy = instance_refresh.value.strategy
       dynamic "preferences" {
-        for_each = (length(instance_refresh.value.preferences) > 0 ? [instance_refresh.value.preferences] : [])
+        for_each = instance_refresh.value.preferences != null ? [instance_refresh.value.preferences] : []
         content {
-          instance_warmup        = lookup(preferences.value, "instance_warmup", null)
-          min_healthy_percentage = lookup(preferences.value, "min_healthy_percentage", null)
+          instance_warmup              = lookup(preferences.value, "instance_warmup", null)
+          min_healthy_percentage       = lookup(preferences.value, "min_healthy_percentage", null)
+          skip_matching                = lookup(preferences.value, "skip_matching", null)
+          auto_rollback                = lookup(preferences.value, "auto_rollback", null)
+          scale_in_protected_instances = lookup(preferences.value, "scale_in_protected_instances", null)
+          standby_instances            = lookup(preferences.value, "standby_instances", null)
         }
       }
       triggers = instance_refresh.value.triggers
@@ -240,11 +248,17 @@ resource "aws_autoscaling_group" "default" {
       pool_state                  = try(warm_pool.value.pool_state, null)
       min_size                    = try(warm_pool.value.min_size, null)
       max_group_prepared_capacity = try(warm_pool.value.max_group_prepared_capacity, null)
+      dynamic "instance_reuse_policy" {
+        for_each = var.instance_reuse_policy != null ? [var.instance_reuse_policy] : []
+        content {
+          reuse_on_scale_in = instance_reuse_policy.value.reuse_on_scale_in
+        }
+      }
     }
   }
 
   dynamic "tag" {
-    for_each = module.this.tags
+    for_each = local.tags
     content {
       key                 = tag.key
       value               = tag.value
