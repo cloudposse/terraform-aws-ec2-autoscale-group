@@ -40,9 +40,8 @@ variable "launch_template_version" {
 }
 
 variable "associate_public_ip_address" {
-  type = bool
-  # https://stackoverflow.com/a/76808361
-  description = "Associate a public IP address with an instance in a VPC. If a network_interface id is specified, this can only be false."
+  type        = bool
+  description = "Associate a public IP address with an instance in a VPC. If `network_interface_id` is specified, this can only be `false` (see here for more info: https://stackoverflow.com/a/76808361)."
   default     = false
 }
 
