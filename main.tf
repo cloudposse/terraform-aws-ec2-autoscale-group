@@ -25,6 +25,7 @@ resource "aws_launch_template" "default" {
           delete_on_termination = lookup(block_device_mappings.value.ebs, "delete_on_termination", null)
           encrypted             = lookup(block_device_mappings.value.ebs, "encrypted", null)
           iops                  = lookup(block_device_mappings.value.ebs, "iops", null)
+          throughput            = lookup(block_device_mappings.value.ebs, "throughput", null)
           kms_key_id            = lookup(block_device_mappings.value.ebs, "kms_key_id", null)
           snapshot_id           = lookup(block_device_mappings.value.ebs, "snapshot_id", null)
           volume_size           = lookup(block_device_mappings.value.ebs, "volume_size", null)
