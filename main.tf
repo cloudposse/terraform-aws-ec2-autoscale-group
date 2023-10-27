@@ -1,3 +1,12 @@
+data "aws_subnet" "this" {
+  for_each = toset(var.subnet_ids)
+  id       = each.value
+}
+
+locals {
+  availability_zones = [for subnet in data.aws_subnet.this : subnet.availability_zone]
+}
+
 resource "aws_launch_template" "default" {
   count = module.this.enabled ? 1 : 0
 
@@ -150,8 +159,8 @@ resource "aws_autoscaling_group" "default" {
   count = module.this.enabled ? 1 : 0
 
   name_prefix               = format("%s%s", module.this.id, module.this.delimiter)
-  vpc_zone_identifier       = var.availability_zones == null ? var.subnet_ids : null
-  availability_zones        = var.subnet_ids == null ? var.availability_zones : null
+  vpc_zone_identifier       = var.network_interface_id == null ? var.subnet_ids : null
+  availability_zones        = var.network_interface_id != null ? local.availability_zones : null
   max_size                  = var.max_size
   min_size                  = var.min_size
   load_balancers            = var.load_balancers

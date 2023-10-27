@@ -207,12 +207,6 @@ variable "subnet_ids" {
   default     = null
 }
 
-variable "availability_zones" {
-  type        = list(string)
-  description = "A list of Availability Zones where instances in the Auto Scaling group can be created. Used for launching into the default VPC subnet in each Availability Zone when not using the subnet_ids variable, or for attaching a network interface when an existing network interface ID is specified. Conflicts with subnet_ids."
-  default     = null
-}
-
 variable "default_cooldown" {
   type        = number
   description = "The amount of time, in seconds, after a scaling activity completes before another scaling activity can start"
