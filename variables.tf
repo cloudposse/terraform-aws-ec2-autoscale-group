@@ -205,7 +205,6 @@ variable "min_size" {
 variable "subnet_ids" {
   type        = list(string)
   description = "A list of subnet IDs to launch resources in"
-  default     = null
 }
 
 variable "default_cooldown" {
