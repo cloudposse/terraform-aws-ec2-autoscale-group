@@ -3,10 +3,6 @@ data "aws_subnet" "this" {
   id       = each.value
 }
 
-locals {
-  availability_zones = [for subnet in data.aws_subnet.this : subnet.availability_zone]
-}
-
 resource "aws_launch_template" "default" {
   count = module.this.enabled ? 1 : 0
 
@@ -150,6 +146,7 @@ locals {
       launch_template        = local.launch_template_block
       override               = var.mixed_instances_policy.override
   })
+  availability_zones = [for subnet in data.aws_subnet.this : subnet.availability_zone]
   tags = {
     for key, value in module.this.tags :
     key => value if value != "" && value != null
