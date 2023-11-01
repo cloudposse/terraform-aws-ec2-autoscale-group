@@ -58,6 +58,7 @@ module "autoscale_group" {
         volume_size           = 8
         volume_type           = "gp2"
         iops                  = null
+        throughput            = null
         kms_key_id            = null
         snapshot_id           = null
       }
