@@ -1,3 +1,8 @@
+data "aws_subnet" "this" {
+  for_each = length(var.subnet_ids) > 0 ? { for idx, subnet in var.subnet_ids : idx => subnet } : {}
+  id       = each.value
+}
+
 resource "aws_launch_template" "default" {
   count = module.this.enabled ? 1 : 0
 
@@ -95,11 +100,12 @@ resource "aws_launch_template" "default" {
 
   # https://github.com/terraform-providers/terraform-provider-aws/issues/4570
   network_interfaces {
-    description                 = module.this.id
+    description                 = var.network_interface_id == null ? module.this.id : null
     device_index                = 0
-    associate_public_ip_address = var.associate_public_ip_address
-    delete_on_termination       = true
-    security_groups             = var.security_group_ids
+    associate_public_ip_address = var.network_interface_id == null ? var.associate_public_ip_address : null
+    delete_on_termination       = var.network_interface_id == null ? true : false
+    security_groups             = var.network_interface_id == null ? var.security_group_ids : null
+    network_interface_id        = var.network_interface_id
   }
 
   metadata_options {
@@ -140,6 +146,7 @@ locals {
       launch_template        = local.launch_template_block
       override               = var.mixed_instances_policy.override
   })
+  availability_zones = [for subnet in data.aws_subnet.this : subnet.availability_zone]
   tags = {
     for key, value in module.this.tags :
     key => value if value != "" && value != null
@@ -150,7 +157,8 @@ resource "aws_autoscaling_group" "default" {
   count = module.this.enabled ? 1 : 0
 
   name_prefix               = format("%s%s", module.this.id, module.this.delimiter)
-  vpc_zone_identifier       = var.subnet_ids
+  vpc_zone_identifier       = var.network_interface_id == null ? var.subnet_ids : null
+  availability_zones        = var.network_interface_id != null ? local.availability_zones : null
   max_size                  = var.max_size
   min_size                  = var.min_size
   load_balancers            = var.load_balancers
