@@ -1,5 +1,5 @@
 data "aws_subnet" "this" {
-  for_each = length(var.subnet_ids) > 0 ? { for idx, subnet in var.subnet_ids : index => subnet } : {}
+  for_each = length(var.subnet_ids) > 0 ? { for idx, subnet in var.subnet_ids : idx => subnet } : {}
   id       = each.value
 }
 
