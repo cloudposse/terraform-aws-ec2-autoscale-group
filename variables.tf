@@ -41,8 +41,14 @@ variable "launch_template_version" {
 
 variable "associate_public_ip_address" {
   type        = bool
-  description = "Associate a public IP address with an instance in a VPC"
+  description = "Associate a public IP address with an instance in a VPC. If `network_interface_id` is specified, this can only be `false` (see here for more info: https://stackoverflow.com/a/76808361)."
   default     = false
+}
+
+variable "network_interface_id" {
+  type        = string
+  description = "The ID of the network interface to attach. If specified, all the other network_interface block arguments are ignored."
+  default     = null
 }
 
 variable "user_data_base64" {
@@ -73,18 +79,18 @@ variable "block_device_mappings" {
   description = "Specify volumes to attach to the instance besides the volumes specified by the AMI"
 
   type = list(object({
-    device_name  = string
-    no_device    = bool
-    virtual_name = string
+    device_name  = optional(string)
+    no_device    = optional(bool)
+    virtual_name = optional(string)
     ebs = object({
-      delete_on_termination = bool
-      encrypted             = bool
-      iops                  = number
-      throughput            = number
-      kms_key_id            = string
-      snapshot_id           = string
-      volume_size           = number
-      volume_type           = string
+      delete_on_termination = optional(bool)
+      encrypted             = optional(bool)
+      iops                  = optional(number)
+      throughput            = optional(number)
+      kms_key_id            = optional(string)
+      snapshot_id           = optional(string)
+      volume_size           = optional(number)
+      volume_type           = optional(string)
     })
   }))
 
@@ -197,8 +203,8 @@ variable "min_size" {
 }
 
 variable "subnet_ids" {
-  description = "A list of subnet IDs to launch resources in"
   type        = list(string)
+  description = "A list of subnet IDs to launch resources in"
 }
 
 variable "default_cooldown" {
