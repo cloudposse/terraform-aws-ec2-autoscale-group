@@ -14,12 +14,17 @@ license: "APACHE2"
 github_repo: cloudposse/terraform-aws-ec2-autoscale-group
 # Badges to display
 badges:
-  - name: "Latest Release"
-    image: "https://img.shields.io/github/release/cloudposse/terraform-aws-ec2-autoscale-group.svg"
-    url: "https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/releases/latest"
-  - name: "Slack Community"
-    image: "https://slack.cloudposse.com/badge.svg"
-    url: "https://slack.cloudposse.com"
+  - name: Latest Release
+    image: https://img.shields.io/github/release/cloudposse/terraform-aws-ec2-autoscale-group.svg?style=for-the-badge
+    url: https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/releases/latest
+  - name: Last Updated
+    image: https://img.shields.io/github/last-commit/cloudposse/terraform-aws-ec2-autoscale-group.svg?style=for-the-badge
+    url: https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/commits
+  - name: Slack Community
+    image: https://slack.cloudposse.com/for-the-badge.svg
+    url: https://slack.cloudposse.com
+
+# List any related terraform modules that this module may be used with or that this module depends on.
 related:
   - name: "terraform-aws-ec2-instance"
     description: "Terraform module for providing a general purpose EC2 instance"
@@ -141,12 +146,4 @@ include:
   - "docs/targets.md"
   - "docs/terraform.md"
 # Contributors to this project
-contributors:
-  - name: "Erik Osterman"
-    github: "osterman"
-  - name: "Andriy Knysh"
-    github: "aknysh"
-  - name: "Igor Rodionov"
-    github: "goruha"
-  - name: "RB"
-    github: "nitrocode"
+contributors: []
