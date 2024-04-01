@@ -1,0 +1,7 @@
+# Upstream changes from _extends are only recognized when modifications are made to this file in the default branch.
+_extends: .github
+repository:
+  name: terraform-aws-ec2-autoscale-group
+  description: Terraform module to provision Auto Scaling Group and Launch Template on AWS
+  homepage: https://cloudposse.com/accelerate
+  topics: autoscaling, launch, template, aws, autoscaling-policies, cloudwatch-metric, autoscaling-group, ec2, ami, amazon-web-services, hcl2, asg
