@@ -191,6 +191,7 @@ resource "aws_autoscaling_group" "default" {
         content {
           instance_warmup              = lookup(preferences.value, "instance_warmup", null)
           min_healthy_percentage       = lookup(preferences.value, "min_healthy_percentage", null)
+          max_healthy_percentage       = lookup(preferences.value, "max_healthy_percentage", null)
           skip_matching                = lookup(preferences.value, "skip_matching", null)
           auto_rollback                = lookup(preferences.value, "auto_rollback", null)
           scale_in_protected_instances = lookup(preferences.value, "scale_in_protected_instances", null)
