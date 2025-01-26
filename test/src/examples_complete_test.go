@@ -48,5 +48,7 @@ func TestExamplesComplete(t *testing.T) {
 	// Run `terraform output` to get the value of an output variable
 	launchTemplateArn := terraform.Output(t, terraformOptions, "launch_template_arn")
 	// Verify we're getting back the outputs we expect
-	assert.Contains(t, launchTemplateArn, "arn:aws:ec2:us-east-2:126450723953:launch-template")
+	// We check 2 substrings expected in the ARN. We don't want to check the account ID.
+	assert.Contains(t, launchTemplateArn, "arn:aws:ec2:us-east-2")
+	assert.Contains(t, launchTemplateArn, "launch-template")
 }
