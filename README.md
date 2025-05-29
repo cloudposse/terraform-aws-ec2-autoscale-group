@@ -3,7 +3,7 @@
 <!-- markdownlint-disable -->
 <a href="https://cpco.io/homepage"><img src="https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/blob/main/.github/banner.png?raw=true" alt="Project Banner"/></a><br/>
     <p align="right">
-<a href="https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/releases/latest"><img src="https://img.shields.io/github/release/cloudposse/terraform-aws-ec2-autoscale-group.svg?style=for-the-badge" alt="Latest Release"/></a><a href="https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/commits"><img src="https://img.shields.io/github/last-commit/cloudposse/terraform-aws-ec2-autoscale-group.svg?style=for-the-badge" alt="Last Updated"/></a><a href="https://slack.cloudposse.com"><img src="https://slack.cloudposse.com/for-the-badge.svg" alt="Slack Community"/></a></p>
+<a href="https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/releases/latest"><img src="https://img.shields.io/github/release/cloudposse/terraform-aws-ec2-autoscale-group.svg?style=for-the-badge" alt="Latest Release"/></a><a href="https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/commits"><img src="https://img.shields.io/github/last-commit/cloudposse/terraform-aws-ec2-autoscale-group.svg?style=for-the-badge" alt="Last Updated"/></a><a href="https://cloudposse.com/slack"><img src="https://slack.cloudposse.com/for-the-badge.svg" alt="Slack Community"/></a></p>
 <!-- markdownlint-restore -->
 
 <!--
@@ -52,7 +52,6 @@ To use a `StepScaling` or `TargetTrackingScaling` policy, create it yourself and
 
 
 ## Usage
-
 
 ```hcl
 locals {
@@ -155,18 +154,6 @@ All those keys are required to be there so if the alarm you are setting does not
 
 
 
-<!-- markdownlint-disable -->
-## Makefile Targets
-```text
-Available targets:
-
-  help                                Help screen
-  help/all                            Display help for all targets
-  help/short                          This help short screen
-  lint                                Lint terraform code
-
-```
-<!-- markdownlint-restore -->
 <!-- markdownlint-disable -->
 ## Requirements
 
@@ -310,6 +297,11 @@ Available targets:
 | <a name="output_launch_template_arn"></a> [launch\_template\_arn](#output\_launch\_template\_arn) | The ARN of the launch template |
 | <a name="output_launch_template_id"></a> [launch\_template\_id](#output\_launch\_template\_id) | The ID of the launch template |
 <!-- markdownlint-restore -->
+
+
+
+
+
 
 
 ## Related Projects
