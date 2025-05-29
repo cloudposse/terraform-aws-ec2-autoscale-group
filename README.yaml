@@ -22,7 +22,7 @@ badges:
     url: https://github.com/cloudposse/terraform-aws-ec2-autoscale-group/commits
   - name: Slack Community
     image: https://slack.cloudposse.com/for-the-badge.svg
-    url: https://slack.cloudposse.com
+    url: https://cloudposse.com/slack
 
 # List any related terraform modules that this module may be used with or that this module depends on.
 related:
@@ -142,8 +142,5 @@ usage: |2-
   ```
   All those keys are required to be there so if the alarm you are setting does not requiere one or more keys you can just set to empty but do not remove the keys otherwise you could get a weird merge error due to the maps being of different sizes.
 
-include:
-  - "docs/targets.md"
-  - "docs/terraform.md"
-# Contributors to this project
+include: []
 contributors: []
