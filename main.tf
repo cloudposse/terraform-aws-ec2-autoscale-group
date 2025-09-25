@@ -78,7 +78,7 @@ resource "aws_launch_template" "default" {
     }
   }
 
-  user_data = var.user_data_base64
+  user_data = var.user_data != "" ? base64encode(var.user_data) : var.user_data_base64
 
   dynamic "iam_instance_profile" {
     for_each = var.iam_instance_profile_name != "" ? [var.iam_instance_profile_name] : []

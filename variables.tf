@@ -57,6 +57,12 @@ variable "user_data_base64" {
   default     = ""
 }
 
+variable "user_data" {
+  type        = string
+  description = "The cleartext user data to be Base64-encoded to provide when launching the instances"
+  default     = ""
+}
+
 variable "enable_monitoring" {
   type        = bool
   description = "Enable/disable detailed monitoring"
