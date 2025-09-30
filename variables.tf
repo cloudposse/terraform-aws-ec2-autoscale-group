@@ -515,3 +515,14 @@ variable "instance_reuse_policy" {
   description = "If warm pool and this block are configured, instances in the Auto Scaling group can be returned to the warm pool on scale in. The default is to terminate instances in the Auto Scaling group when the group scales in."
   default     = null
 }
+
+variable "cpu_options" {
+  type = object({
+    amd_sev_snp_enabled = optional(bool, null)
+    core_count          = optional(number, null)
+    threads_per_core    = optional(number, null)
+
+  })
+  description = "The CPU options for the instance"
+  default     = null
+}

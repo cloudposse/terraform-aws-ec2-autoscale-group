@@ -87,6 +87,15 @@ resource "aws_launch_template" "default" {
     }
   }
 
+  dynamic "cpu_options" {
+    for_each = var.cpu_options != null ? [var.cpu_options] : []
+    content {
+      amd_sev_snp      = lookup(cpu_options.value, "amd_sev_snp_enabled", null) != null ? (lookup(cpu_options.value, "amd_sev_snp_enabled") ? "enabled" : "disabled") : null
+      core_count       = lookup(cpu_options.value, "core_count", null)
+      threads_per_core = lookup(cpu_options.value, "threads_per_core", null)
+    }
+  }
+
   monitoring {
     enabled = var.enable_monitoring
   }
