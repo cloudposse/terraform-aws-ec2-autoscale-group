@@ -56,6 +56,7 @@ To use a `StepScaling` or `TargetTrackingScaling` policy, create it yourself and
 
 ## Usage
 
+
 ```hcl
 locals {
   userdata = <<-USERDATA
@@ -186,6 +187,7 @@ All those keys are required to be there so if the alarm you are setting does not
 | [aws_autoscaling_policy.scale_up](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_policy) | resource |
 | [aws_cloudwatch_metric_alarm.all_alarms](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_launch_template.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template) | resource |
+| [aws_ec2_instance_type.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ec2_instance_type) | data source |
 | [aws_subnet.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet) | data source |
 
 ## Inputs
