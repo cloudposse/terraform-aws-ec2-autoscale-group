@@ -98,10 +98,10 @@ resource "aws_launch_template" "default" {
   dynamic "cpu_options" {
     for_each = var.cpu_options != null ? [var.cpu_options] : []
     content {
-      amd_sev_snp      = cpu_options.value.amd_sev_snp_enabled != null ? (cpu_options.value.amd_sev_snp_enabled ? "enabled" : "disabled") : null
+      amd_sev_snp = cpu_options.value.amd_sev_snp_enabled != null ? (cpu_options.value.amd_sev_snp_enabled ? "enabled" : "disabled") : null
 
       # if threads_per_core is set and core_count is not set, use the default cores from the instance type
-      core_count       = (
+      core_count = (
         cpu_options.value.core_count != null ? cpu_options.value.core_count : (
           cpu_options.value.threads_per_core == null ? null : one(data.aws_ec2_instance_type.default[*].default_cores)
         )
