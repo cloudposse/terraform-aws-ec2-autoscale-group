@@ -3,6 +3,14 @@ data "aws_subnet" "this" {
   id       = each.value
 }
 
+data "aws_ec2_instance_type" "default" {
+  count = (
+    var.cpu_options != null && var.cpu_options.threads_per_core != null && var.cpu_options.core_count == null ? 1 : 0
+  )
+
+  instance_type = var.instance_type
+}
+
 resource "aws_launch_template" "default" {
   count = module.this.enabled ? 1 : 0
 
@@ -84,6 +92,22 @@ resource "aws_launch_template" "default" {
     for_each = var.iam_instance_profile_name != "" ? [var.iam_instance_profile_name] : []
     content {
       name = iam_instance_profile.value
+    }
+  }
+
+  dynamic "cpu_options" {
+    for_each = var.cpu_options != null ? [var.cpu_options] : []
+    content {
+      amd_sev_snp = cpu_options.value.amd_sev_snp_enabled != null ? (cpu_options.value.amd_sev_snp_enabled ? "enabled" : "disabled") : null
+
+      # if threads_per_core is set and core_count is not set, use the default cores from the instance type
+      core_count = (
+        cpu_options.value.core_count != null ? cpu_options.value.core_count : (
+          cpu_options.value.threads_per_core == null ? null : one(data.aws_ec2_instance_type.default[*].default_cores)
+        )
+      )
+
+      threads_per_core = lookup(cpu_options.value, "threads_per_core", null)
     }
   }
 
