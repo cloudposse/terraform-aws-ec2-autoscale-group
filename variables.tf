@@ -166,16 +166,6 @@ variable "credit_specification" {
   default = null
 }
 
-variable "elastic_gpu_specifications" {
-  description = "Specifications of Elastic GPU to attach to the instances"
-
-  type = object({
-    type = string
-  })
-
-  default = null
-}
-
 variable "disable_api_termination" {
   type        = bool
   description = "If `true`, enables EC2 Instance Termination Protection"

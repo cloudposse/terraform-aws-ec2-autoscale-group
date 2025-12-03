@@ -37,13 +37,6 @@ resource "aws_launch_template" "default" {
   ebs_optimized           = var.ebs_optimized
   update_default_version  = var.update_default_version
 
-  dynamic "elastic_gpu_specifications" {
-    for_each = var.elastic_gpu_specifications != null ? [var.elastic_gpu_specifications] : []
-    content {
-      type = lookup(elastic_gpu_specifications.value, "type", null)
-    }
-  }
-
   image_id                             = var.image_id
   instance_initiated_shutdown_behavior = var.instance_initiated_shutdown_behavior
 
