@@ -5,7 +5,7 @@ data "aws_subnet" "this" {
 
 data "aws_ec2_instance_type" "default" {
   count = (
-    var.cpu_options != null && var.cpu_options.threads_per_core != null && var.cpu_options.core_count == null ? 1 : 0
+    var.cpu_options != null && try(var.cpu_options.threads_per_core, null) != null && try(var.cpu_options.core_count, null) == null ? 1 : 0
   )
 
   instance_type = var.instance_type
